@@ -1,0 +1,9 @@
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\bin\Debug\netcoreapp1.1\LykkePay.Business.deps.json
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\bin\Debug\netcoreapp1.1\LykkePay.Business.dll
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\bin\Debug\netcoreapp1.1\LykkePay.Business.pdb
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\bin\Debug\netcoreapp1.1\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\bin\Debug\netcoreapp1.1\Microsoft.Extensions.Configuration.Abstractions.xml
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\obj\Debug\netcoreapp1.1\LykkePay.Business.AssemblyInfo.cs
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\obj\Debug\netcoreapp1.1\LykkePay.Business.dll
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\obj\Debug\netcoreapp1.1\LykkePay.Business.pdb
+D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePay.Business\obj\Debug\netcoreapp1.1\LykkePay.Business.csprojResolveAssemblyReference.cache
