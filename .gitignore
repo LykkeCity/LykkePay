@@ -1,2 +1,4 @@
-/LykkePayAPI/_ReSharper.Caches
-/LykkePayAPI/.vs
+bin
+obj
+_ReSharper.Caches
+.vs
