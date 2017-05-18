@@ -5,25 +5,28 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using LykkePay.Business.Test.Models;
 using LykkePay.Business;
+using LykkePay.Business.Interfaces;
+using LykkePay.Business.Test.Integrations;
 using Xunit;
 
 namespace LykkePay.Business.Test
 {
     public class SecurityTest 
     {
-        private readonly SecurityHelper _securityHelper;
+        private readonly ISecurityHelper _securityHelper;
         public SecurityTest()
         {
-            _securityHelper = new SecurityHelper();
+            //_securityHelper = new SecurityHelper();
+            _securityHelper = new WebSecurityHelper();
         }
 
         [Fact]
-        public void CheckUncorrectMerchant()
+        public void CheckIncorrectMerchant()
         {
             var result = _securityHelper.CheckRequest(new BaseRequest
             {
                 MerchantId = "100",
-                RequestDate = DateTime.Now,
+                RequestDate = DateTime.Now.ToUniversalTime(),
                 Sign = String.Empty
             });
 
@@ -36,7 +39,7 @@ namespace LykkePay.Business.Test
             var result = _securityHelper.CheckRequest(new BaseRequest
             {
                 MerchantId = "1",
-                RequestDate = DateTime.Now,
+                RequestDate = DateTime.Now.ToUniversalTime(),
                 Sign = String.Empty
             });
 
@@ -49,7 +52,7 @@ namespace LykkePay.Business.Test
             var result = _securityHelper.CheckRequest(new BaseRequest
             {
                 MerchantId = "1",
-                RequestDate = DateTime.Now,
+                RequestDate = DateTime.Now.ToUniversalTime(),
                 Sign = "test"
             });
 
@@ -62,7 +65,7 @@ namespace LykkePay.Business.Test
             var result = _securityHelper.CheckRequest(new BaseRequest
             {
                 MerchantId = "1",
-                RequestDate = DateTime.Now.AddDays(-5),
+                RequestDate = DateTime.Now.ToUniversalTime().AddDays(-5),
                 Sign = "test"
             });
 
@@ -73,7 +76,7 @@ namespace LykkePay.Business.Test
         public void CheckSignCorrect()
         {
 
-            var date = DateTime.Now;
+            var date = DateTime.Now.ToUniversalTime();
             string strToSign = $"1{date:yyyy-MM-dd hh:mm:ss}";
             X509Certificate2 certificate;
             using (var store = new X509Store(StoreName.My, StoreLocation.LocalMachine))
@@ -95,11 +98,11 @@ namespace LykkePay.Business.Test
             Assert.Equal(SecurityErrorType.Ok, result);
         }
 
-        [Fact]
+        [Fact(Skip = "The Web method shold accept exact class. This test supports BL testing only")]
         public void CheckSignCorrectCustomRequest()
         {
 
-            var date = DateTime.Now;
+            var date = DateTime.Now.ToUniversalTime();
             string strToSign = $"1{date:yyyy-MM-dd hh:mm:ss}ttt101asd555";
             X509Certificate2 certificate;
             using (var store = new X509Store(StoreName.My, StoreLocation.LocalMachine))

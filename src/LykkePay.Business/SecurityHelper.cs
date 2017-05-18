@@ -5,10 +5,11 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
+using LykkePay.Business.Interfaces;
 
 namespace LykkePay.Business
 {
-    public class SecurityHelper
+    public class SecurityHelper : ISecurityHelper
     {
         private readonly string _merchantCertPublic = @"-----BEGIN CERTIFICATE-----
 MIIDADCCAeygAwIBAgIQ4A+JAbs4op1HwTcls51w5zAJBgUrDgMCHQUAMBcxFTAT
@@ -37,11 +38,7 @@ nZzG+g==
         //    _configuration = configuration;
         //}
 
-        public SecurityHelper()
-        {
-            
-        }
-
+      
         public SecurityErrorType CheckRequest(BaseRequest request)
         {
             if (request.MerchantId != "1")
@@ -87,7 +84,7 @@ nZzG+g==
             return string.Join(string.Empty, from p in request.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 let val =
                 (p.PropertyType == typeof(DateTime)
-                    ? ((DateTime) p.GetValue(request)).ToString("yyyy-MM-dd hh:mm:ss")
+                    ? ((DateTime) p.GetValue(request)).ToUniversalTime().ToString("yyyy-MM-dd hh:mm:ss")
                     : p.GetValue(request).ToString())
                 where !p.Name.Equals("Sign", StringComparison.CurrentCultureIgnoreCase) && p.CanRead && p.CanWrite
                 orderby p.Name
