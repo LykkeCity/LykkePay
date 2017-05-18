@@ -1,9 +1,0 @@
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\bin\Debug\netcoreapp1.1\TestCertificateRequest.deps.json
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\bin\Debug\netcoreapp1.1\TestCertificateRequest.runtimeconfig.json
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\bin\Debug\netcoreapp1.1\TestCertificateRequest.runtimeconfig.dev.json
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\bin\Debug\netcoreapp1.1\TestCertificateRequest.dll
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\bin\Debug\netcoreapp1.1\TestCertificateRequest.pdb
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\obj\Debug\netcoreapp1.1\TestCertificateRequest.csprojResolveAssemblyReference.cache
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\obj\Debug\netcoreapp1.1\TestCertificateRequest.AssemblyInfo.cs
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\obj\Debug\netcoreapp1.1\TestCertificateRequest.dll
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\TestCertificateRequest\obj\Debug\netcoreapp1.1\TestCertificateRequest.pdb

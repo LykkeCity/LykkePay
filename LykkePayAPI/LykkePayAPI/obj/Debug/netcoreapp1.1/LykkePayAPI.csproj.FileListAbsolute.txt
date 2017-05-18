@@ -1,9 +1,0 @@
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\bin\Debug\netcoreapp1.1\LykkePayAPI.deps.json
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\bin\Debug\netcoreapp1.1\LykkePayAPI.runtimeconfig.json
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\bin\Debug\netcoreapp1.1\LykkePayAPI.runtimeconfig.dev.json
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\bin\Debug\netcoreapp1.1\LykkePayAPI.dll
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\bin\Debug\netcoreapp1.1\LykkePayAPI.pdb
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\obj\Debug\netcoreapp1.1\LykkePayAPI.csprojResolveAssemblyReference.cache
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\obj\Debug\netcoreapp1.1\LykkePayAPI.AssemblyInfo.cs
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\obj\Debug\netcoreapp1.1\LykkePayAPI.dll
-D:\Work\Crossover\Lykke\LykkePay\LykkePayAPI\LykkePayAPI\obj\Debug\netcoreapp1.1\LykkePayAPI.pdb

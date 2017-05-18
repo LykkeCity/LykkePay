@@ -1,0 +1,3 @@
+makecert.exe -sk RootLykkeCA -sky signature -pe -n CN=LykkePayment -r -sr LocalMachine -ss Root LykkeRootCA.cer
+
+makecert.exe -sk Merchant1 -sky exchange -pe -n CN=Merchant1Payment -ir LocalMachine -is Root -ic LykkeRootCA.cer -sr LocalMachine -ss My Merchant1Certificate.cer
