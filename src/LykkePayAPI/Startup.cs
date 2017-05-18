@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LykkePay.Business;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,7 @@ namespace LykkePay.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            BuildContainer(services);
             // Add framework services.
             services.AddMvc();
         }
@@ -36,8 +38,20 @@ namespace LykkePay.API
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            app.UseDeveloperExceptionPage();
 
             app.UseMvc();
+        }
+
+        private void BuildContainer(IServiceCollection services)
+        {
+           // var connectionString = Configuration.GetValue<string>("ConnectionString");
+
+           // var log = new LogToTable(new AzureTableStorage<LogEntity>(connectionString, "Logs", null));
+
+            //services.AddSingleton<ILog>(log);
+            services.AddSingleton(Configuration);
+            services.AddSingleton(new SecurityHelper());
         }
     }
 }
