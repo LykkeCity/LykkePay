@@ -63,7 +63,7 @@ nZzG+g==
             bool isCorrect = false;
             try
             {
-                isCorrect = rsa.VerifyData(Encoding.UTF8.GetBytes(stringToSign), Convert.FromBase64String(request.Sign), HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1);
+                isCorrect = rsa.VerifyData(Encoding.UTF8.GetBytes(stringToSign), Convert.FromBase64String(request.Sign), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             }
             catch { }
             
@@ -84,7 +84,7 @@ nZzG+g==
             return string.Join(string.Empty, from p in request.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 let val =
                 (p.PropertyType == typeof(DateTime)
-                    ? ((DateTime) p.GetValue(request)).ToUniversalTime().ToString("yyyy-MM-dd hh:mm:ss")
+                    ? ((DateTime) p.GetValue(request)).ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")
                     : p.GetValue(request).ToString())
                 where !p.Name.Equals("Sign", StringComparison.CurrentCultureIgnoreCase) && p.CanRead && p.CanWrite
                 orderby p.Name

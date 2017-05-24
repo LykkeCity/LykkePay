@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkePay.Business", "src\Ly
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkePay.Business.Test", "tests\Lykke.Business.Test\LykkePay.Business.Test.csproj", "{0AD220EA-10D3-404C-93A3-40DE5E59F533}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Pay.Server.Rates", "src\Lykke.Pay.Server.Rates\Lykke.Pay.Server.Rates.csproj", "{EB6E203C-5371-4853-91D8-0DC929A86B55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{0AD220EA-10D3-404C-93A3-40DE5E59F533}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AD220EA-10D3-404C-93A3-40DE5E59F533}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AD220EA-10D3-404C-93A3-40DE5E59F533}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB6E203C-5371-4853-91D8-0DC929A86B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB6E203C-5371-4853-91D8-0DC929A86B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB6E203C-5371-4853-91D8-0DC929A86B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB6E203C-5371-4853-91D8-0DC929A86B55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,5 +52,6 @@ Global
 		{AB127D27-7E18-41F4-9DE9-7B690D119A80} = {5FB515FE-D508-4755-B409-5919DAF0602C}
 		{910DDC4F-04A8-4415-8CE3-6EB6BCAE3EE3} = {5FB515FE-D508-4755-B409-5919DAF0602C}
 		{0AD220EA-10D3-404C-93A3-40DE5E59F533} = {DC824363-7709-468E-A2E1-FB9A9C1E4C2C}
+		{EB6E203C-5371-4853-91D8-0DC929A86B55} = {5FB515FE-D508-4755-B409-5919DAF0602C}
 	EndGlobalSection
 EndGlobal

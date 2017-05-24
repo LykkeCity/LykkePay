@@ -86,7 +86,7 @@ namespace LykkePay.Business.Test
             }
             
             var csp = certificate.GetRSAPrivateKey();
-            var sign = Convert.ToBase64String(csp.SignData(Encoding.UTF8.GetBytes(strToSign), HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1));
+            var sign = Convert.ToBase64String(csp.SignData(Encoding.UTF8.GetBytes(strToSign), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
 
             var result = _securityHelper.CheckRequest(new BaseRequest
             {
@@ -112,7 +112,7 @@ namespace LykkePay.Business.Test
             }
 
             var csp = certificate.GetRSAPrivateKey();
-            var sign = Convert.ToBase64String(csp.SignData(Encoding.UTF8.GetBytes(strToSign), HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1));
+            var sign = Convert.ToBase64String(csp.SignData(Encoding.UTF8.GetBytes(strToSign), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
 
             var result = _securityHelper.CheckRequest(new TestRequest
             {
