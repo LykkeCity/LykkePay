@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Lykke.Pay.Server.Rates
+namespace Lykke.Pay.Service.Rates
 {
     public class Program
     {

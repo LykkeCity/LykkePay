@@ -31,6 +31,8 @@ OBEswTDFCkpTVHvDIA5OpzI7J3a9XRAGPLv0ZViM4GU1TTcb37tHIY6qu2VpPgOu
 nZzG+g==
 -----END CERTIFICATE-----";
 
+
+
         // private readonly IConfigurationRoot _configuration;
 
         //public SecurityHelper(IConfigurationRoot configuration)
@@ -38,7 +40,32 @@ nZzG+g==
         //    _configuration = configuration;
         //}
 
-      
+        public SecurityErrorType CheckRequest(string strToSign, string merchantId, string sign)
+        {
+            if (string.IsNullOrEmpty(merchantId) || merchantId != "1")
+            {
+                return SecurityErrorType.MerchantUnknown;
+            }
+
+            if (string.IsNullOrEmpty(sign))
+            {
+                return SecurityErrorType.SignEmpty;
+            }
+
+           var cert = GetCertificate(_merchantCertPublic);
+
+            var rsa = cert.GetRSAPublicKey();
+            bool isCorrect = false;
+            try
+            {
+                isCorrect = rsa.VerifyData(Encoding.UTF8.GetBytes(strToSign), Convert.FromBase64String(sign), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            }
+            catch { }
+
+
+            return isCorrect ? SecurityErrorType.Ok : SecurityErrorType.SignIncorrect;
+        }
+
         public SecurityErrorType CheckRequest(BaseRequest request)
         {
             if (request.MerchantId != "1")

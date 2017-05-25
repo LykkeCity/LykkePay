@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Lykke.Pay.Server.Rates.Code;
+using Lykke.Pay.Service.Rates.Code;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Lykke.Pay.Server.Rates.Controllers
+namespace Lykke.Pay.Service.Rates.Controllers
 {
     [Route("api/[controller]")]
     public class RateController : Controller

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Lykke.Pay.Server.Rates
+namespace Lykke.Pay.Service.Rates
 {
     public class Startup
     {

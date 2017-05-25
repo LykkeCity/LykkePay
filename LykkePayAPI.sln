@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkePay.Business", "src\Ly
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkePay.Business.Test", "tests\Lykke.Business.Test\LykkePay.Business.Test.csproj", "{0AD220EA-10D3-404C-93A3-40DE5E59F533}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Pay.Server.Rates", "src\Lykke.Pay.Server.Rates\Lykke.Pay.Server.Rates.csproj", "{EB6E203C-5371-4853-91D8-0DC929A86B55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Pay.Service.Rates", "src\Lykke.Pay.Server.Rates\Lykke.Pay.Service.Rates.csproj", "{EB6E203C-5371-4853-91D8-0DC929A86B55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

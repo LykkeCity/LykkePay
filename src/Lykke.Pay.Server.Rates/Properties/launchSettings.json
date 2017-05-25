@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Lykke.Pay.Server.Rates": {
+    "Lykke.Pay.Service.Rates": {
         "commandName": "Project",
         "launchBrowser": true,
         "launchUrl": "api/rate",

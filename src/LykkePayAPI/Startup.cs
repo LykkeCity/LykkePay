@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using LykkePay.Business;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -38,6 +40,8 @@ namespace LykkePay.API
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.Use(next => context => { context.Request.EnableRewind(); return next(context); });
             app.UseDeveloperExceptionPage();
 
             app.UseMvc();
@@ -45,13 +49,15 @@ namespace LykkePay.API
 
         private void BuildContainer(IServiceCollection services)
         {
-           // var connectionString = Configuration.GetValue<string>("ConnectionString");
+            // var connectionString = Configuration.GetValue<string>("ConnectionString");
 
-           // var log = new LogToTable(new AzureTableStorage<LogEntity>(connectionString, "Logs", null));
+            // var log = new LogToTable(new AzureTableStorage<LogEntity>(connectionString, "Logs", null));
 
             //services.AddSingleton<ILog>(log);
+            
             services.AddSingleton(Configuration);
             services.AddSingleton(new SecurityHelper());
+            
         }
     }
 }
