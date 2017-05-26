@@ -36,13 +36,13 @@ namespace LykkePay.API.Controllers
                 HttpContext.Request.Body.Position = 0;
                 using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8, true, 1024, true))
                 {
-                    strToSign = reader.ReadToEnd();
+                    strToSign = $"{HttpContext.Request.Headers["Lykke-ApiKey"]}{reader.ReadToEnd()}";
                 }
                 HttpContext.Request.Body.Position = 0;
             }
             else
             {
-                strToSign = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+                strToSign = $"{HttpContext.Request.Headers["Lykke-ApiKey"]}{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
             }
 
             return _securityHelper.CheckRequest(strToSign, HttpContext.Request.Headers["Lykke-Merchant-Id"], HttpContext.Request.Headers["Lykke-Merchant-Sign"]);
