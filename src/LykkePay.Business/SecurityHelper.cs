@@ -31,7 +31,7 @@ OBEswTDFCkpTVHvDIA5OpzI7J3a9XRAGPLv0ZViM4GU1TTcb37tHIY6qu2VpPgOu
 nZzG+g==
 -----END CERTIFICATE-----";
 
-
+        private static string _apiKey = "LYKKEAPIKEYEXAMPLE1";
 
         // private readonly IConfigurationRoot _configuration;
 
@@ -42,6 +42,7 @@ nZzG+g==
 
         public SecurityErrorType CheckRequest(string strToSign, string merchantId, string sign)
         {
+
             if (string.IsNullOrEmpty(merchantId) || merchantId != "1")
             {
                 return SecurityErrorType.MerchantUnknown;
@@ -52,7 +53,9 @@ nZzG+g==
                 return SecurityErrorType.SignEmpty;
             }
 
-           var cert = GetCertificate(_merchantCertPublic);
+            strToSign = $"{_apiKey}{strToSign}";
+
+            var cert = GetCertificate(_merchantCertPublic);
 
             var rsa = cert.GetRSAPublicKey();
             bool isCorrect = false;
