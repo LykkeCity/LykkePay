@@ -59,10 +59,7 @@ namespace Lykke.Pay.Service.Rates.Controllers
                         var assertRate = cacheEntry.FirstOrDefault(ce => ce.AssetPair.Equals(rate.AssetPair));
                         if (assertRate == null)
                         {
-                            assertRate = new AssertPairRate(rate)
-                            {
-                                Accuracy = pairsList.FirstOrDefault(pl=>pl.Id.Equals(rate.AssetPair))?.Accuracy ?? 0
-                            };
+                            assertRate = new AssertPairRate(rate);
                             cacheEntry.Add(assertRate);
                         }
                         else
@@ -70,13 +67,17 @@ namespace Lykke.Pay.Service.Rates.Controllers
                             assertRate.FillRate(rate);
                         }
 
+                        assertRate.Accuracy = (from pl in pairsList
+                                               where pl.Id.Equals(assertRate.AssetPair)
+                                               select pl.Accuracy).FirstOrDefault();
+
                     };
                     channel.BasicConsume(queue: _settings.RabbitMq.QuoteFeed, noAck: true, consumer: consumer);
 
                     while ((from pl in pairsList
-                           join ce in cacheEntry on pl.Id equals ce.AssetPair
-                           where ce.IsReady()
-                           select ce).Count() < _settings.AccessCrossCount)
+                            join ce in cacheEntry on pl.Id equals ce.AssetPair
+                            where ce.IsReady()
+                            select ce).Count() < _settings.AccessCrossCount)
                     {
                         var loaded = pairsList.Where(pl => cacheEntry.Any(ce => ce.AssetPair.Equals(pl.Id))).ToList();
                         var ready = cacheEntry.Where(ce => ce.IsReady()).ToList();
@@ -88,12 +89,15 @@ namespace Lykke.Pay.Service.Rates.Controllers
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(_settings.CacheTimeout));
 
-                _cache.Set(CacheKeys.Rates, cacheEntry.Where(ce => ce.IsReady()).ToList(), cacheEntryOptions);
+                _cache.Set(CacheKeys.Rates, ((from pl in pairsList
+                                              join ce in cacheEntry on pl.Id equals ce.AssetPair
+                                              where ce.IsReady()
+                                              select ce)).ToList(), cacheEntryOptions);
             }
 
             return Json(cacheEntry);
         }
 
-       
+
     }
 }
