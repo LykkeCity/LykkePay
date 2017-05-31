@@ -1,0 +1,17 @@
+﻿{
+    "PayServiceRates": {
+        "Services": {
+            "MarginTradingAssetService": "http://dictionary-dev.lykkex.net/api/MarginTradingAsset"
+        },
+        "CacheTimeout": 5,
+        "RabbitDelay": 50,
+        "AccessCrossCount": 24,
+        "RabbitMq": {
+            "Host": "me-dev.lykke.com",
+            "Port": 5672,
+            "Username": "lykke.history",
+            "Password": "lykke.history",
+            "QuoteFeed": "lykke.quotefeed.lykkepayservicepay"
+        }
+    }
+}

@@ -7,6 +7,6 @@ namespace Lykke.Pay.Service.Rates.Code
 {
     public enum CacheKeys
     {
-        Entry
+        Rates
     }
 }
