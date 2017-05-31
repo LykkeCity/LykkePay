@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  apirunner:
+    image: lykkex/payservicerates
+    ports:
+     - "80:3001"
+    environment:
+     - ConnectionString=UseDevelopmentStorage=true
