@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using Lykke.Common.Entities.Pay;
 using Lykke.Common.Entities.Security;
 using LykkePay.API.Code;
-using Microsoft.AspNetCore.Hosting.Internal;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -47,21 +45,20 @@ namespace LykkePay.API.Controllers
             {
                 strToSign = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
             }
-
+          
             var respone = await _client.PostAsync(_payApiSettings.Services.MerchantAuthService, new StringContent(
                 JsonConvert.SerializeObject(new MerchantAuthRequest
                 {
-                    MerchantId = HttpContext.Request.Headers["Lykke-Merchant-Id"],
+                    MerchantId = HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "",
                     StringToSign = strToSign,
-                    Sign = HttpContext.Request.Headers["Lykke-Merchant-Sign"]
+                    Sign = HttpContext.Request.Headers["Lykke-Merchant-Sign"].ToString() ?? ""
                 }), Encoding.UTF8, "application/json"));
-
-            return (SecurityErrorType) int.Parse(await respone.Content.ReadAsStringAsync());
+            return (SecurityErrorType)int.Parse(await respone.Content.ReadAsStringAsync());
         }
 
 
         // POST api/assetPairRates/assertId
-        [HttpPost("assertId")]
+        [HttpPost("{assertId}")]
         public async Task<AssertPairRateResponse> Post([FromBody]AssertPairRateRequest request, string assertId)
         {
             var isValude = await ValidateRequest();
@@ -75,7 +72,7 @@ namespace LykkePay.API.Controllers
             try
             {
                 rates = JsonConvert.DeserializeObject<List<AssertPairRate>>(
-                    await(await _client.GetAsync(_payApiSettings.Services.PayServiceService)).Content
+                    await (await _client.GetAsync(_payApiSettings.Services.PayServiceService)).Content
                         .ReadAsStringAsync());
 
                 if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
@@ -92,13 +89,13 @@ namespace LykkePay.API.Controllers
             rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, request, true);
             rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, request, false);
 
-            return null;
+            return new AssertPairRateResponse(rate, SecurityErrorType.Ok);
         }
 
         private float CalculateValue(float value, int accuracy, AssertPairRateRequest request, bool isPluse)
         {
             float fee = value * (request.Persent / 100f);
-            fee += (float) Math.Pow(10, -1 * accuracy) * request.Pips;
+            fee += (float)Math.Pow(10, -1 * accuracy) * request.Pips;
             fee += request.FixedFee;
             if (isPluse)
             {
@@ -108,6 +105,6 @@ namespace LykkePay.API.Controllers
         }
 
 
-      
+
     }
 }
