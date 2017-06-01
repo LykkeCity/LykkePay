@@ -1,0 +1,8 @@
+﻿{
+    "PayApi": {
+        "Services": {
+            "MerchantAuthService": "http://dictionary-dev.lykkex.net/api/MarginTradingAsset",
+            "PayServiceService": "http://dictionary-dev.lykkex.net/api/MarginTradingAsset"
+        }
+    }
+}
