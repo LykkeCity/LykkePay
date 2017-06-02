@@ -68,7 +68,7 @@ namespace Lykke.Pay.Service.Rates.Controllers
                             where pl.Id.Equals(assertRate.AssetPair)
                             select pl.Accuracy).FirstOrDefault();
 
-                        await Task.Delay(1);
+                        await Task.FromResult(true);
                     });
                 _subscriber.Start();
                
