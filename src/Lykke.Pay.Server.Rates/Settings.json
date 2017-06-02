@@ -11,7 +11,8 @@
             "Port": 5672,
             "Username": "lykke.history",
             "Password": "lykke.history",
-            "QuoteFeed": "lykke.quotefeed.lykkepayservicepay"
+            "QuoteFeed": "lykke.quotefeed.lykkepayservicepay",
+            "ExchangeName": "lykke.quotefeed"
         }
     }
 }

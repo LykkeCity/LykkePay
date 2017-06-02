@@ -10,7 +10,7 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.Common.Entities" Version="1.0.15" />
+    <PackageReference Include="Lykke.Common.Entities" Version="1.0.16" />
     <PackageReference Include="Lykke.Pkg.SettingsReader" Version="1.0.31" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />

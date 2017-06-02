@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Lykke.Pay.Service.Rates.Code
+﻿namespace Lykke.Pay.Service.Rates.Code
 {
     public class Settings
     {
@@ -27,6 +22,7 @@ namespace Lykke.Pay.Service.Rates.Code
         public string Username { get; set; }
         public string Password { get; set; }
         public string QuoteFeed { get; set; }
+        public string ExchangeName { get; set; }
     }
 
     public class ServicesSettings
