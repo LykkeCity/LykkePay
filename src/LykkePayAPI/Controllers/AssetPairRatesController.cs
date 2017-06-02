@@ -57,6 +57,33 @@ namespace LykkePay.API.Controllers
         }
 
 
+        [HttpGet("{assertId}")]
+        public async Task<AssertPairRateResponse> Get(string assertId)
+        {
+           
+            List<AssertPairRate> rates;
+
+            try
+            {
+                rates = JsonConvert.DeserializeObject<List<AssertPairRate>>(
+                    await (await _client.GetAsync(_payApiSettings.Services.PayServiceService)).Content
+                        .ReadAsStringAsync());
+
+                if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    return new AssertPairRateResponse(null, SecurityErrorType.AssertEmpty);
+                }
+            }
+            catch
+            {
+                return new AssertPairRateResponse(null, SecurityErrorType.AssertEmpty);
+            }
+
+            var rate = rates.First(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase));
+           
+            return new AssertPairRateResponse(rate, SecurityErrorType.Ok);
+        }
+
         // POST api/assetPairRates/assertId
         [HttpPost("{assertId}")]
         public async Task<AssertPairRateResponse> Post([FromBody]AssertPairRateRequest request, string assertId)
@@ -94,9 +121,8 @@ namespace LykkePay.API.Controllers
 
         private float CalculateValue(float value, int accuracy, AssertPairRateRequest request, bool isPluse)
         {
-            float fee = value * (request.Persent / 100f);
+            float fee = value * (request.Percent / 100f);
             fee += (float)Math.Pow(10, -1 * accuracy) * request.Pips;
-            fee += request.FixedFee;
             if (isPluse)
             {
                 return value + fee;
