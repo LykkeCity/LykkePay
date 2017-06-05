@@ -5,7 +5,7 @@
         },
         "CacheTimeout": 5,
         "RabbitDelay": 50,
-        "AccessCrossCount": 24,
+        "AccessCrossCount": 16,
         "RabbitMq": {
             "Host": "me-dev.lykke.com",
             "Port": 5672,

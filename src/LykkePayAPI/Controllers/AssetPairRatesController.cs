@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Lykke.Common.Entities.Pay;
 using Lykke.Common.Entities.Security;
 using LykkePay.API.Code;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -45,7 +46,7 @@ namespace LykkePay.API.Controllers
             {
                 strToSign = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
             }
-          
+
             var respone = await _client.PostAsync(_payApiSettings.Services.MerchantAuthService, new StringContent(
                 JsonConvert.SerializeObject(new MerchantAuthRequest
                 {
@@ -58,9 +59,9 @@ namespace LykkePay.API.Controllers
 
 
         [HttpGet("{assertId}")]
-        public async Task<AssertPairRateResponse> Get(string assertId)
+        public async Task<IActionResult> Get(string assertId)
         {
-           
+
             List<AssertPairRate> rates;
 
             try
@@ -71,27 +72,35 @@ namespace LykkePay.API.Controllers
 
                 if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    return new AssertPairRateResponse(null, SecurityErrorType.AssertEmpty);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             }
             catch
             {
-                return new AssertPairRateResponse(null, SecurityErrorType.AssertEmpty);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
             var rate = rates.First(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase));
-           
-            return new AssertPairRateResponse(rate, SecurityErrorType.Ok);
+
+            return Json(rate);
         }
 
         // POST api/assetPairRates/assertId
         [HttpPost("{assertId}")]
-        public async Task<AssertPairRateResponse> Post([FromBody]AssertPairRateRequest request, string assertId)
+        public async Task<IActionResult> Post([FromBody]AssertPairRateRequest request, string assertId)
         {
             var isValude = await ValidateRequest();
             if (isValude != SecurityErrorType.Ok)
             {
-                return new AssertPairRateResponse(null, isValude);
+                switch (isValude)
+                {
+                    case SecurityErrorType.AssertEmpty:
+                        return StatusCode(StatusCodes.Status500InternalServerError);
+                    case SecurityErrorType.MerchantUnknown:
+                    case SecurityErrorType.SignEmpty:
+                        return BadRequest();
+                    case SecurityErrorType.SignIncorrect:
+                        return Forbid();
+                }
             }
 
             List<AssertPairRate> rates;
@@ -104,19 +113,19 @@ namespace LykkePay.API.Controllers
 
                 if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    return new AssertPairRateResponse(null, SecurityErrorType.AssertEmpty);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             }
             catch
             {
-                return new AssertPairRateResponse(null, SecurityErrorType.AssertEmpty);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
             var rate = rates.First(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase));
             rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, request, true);
             rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, request, false);
 
-            return new AssertPairRateResponse(rate, SecurityErrorType.Ok);
+            return new JsonResult(rate);
         }
 
         private float CalculateValue(float value, int accuracy, AssertPairRateRequest request, bool isPluse)

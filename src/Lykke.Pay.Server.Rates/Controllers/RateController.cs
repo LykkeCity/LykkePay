@@ -117,8 +117,16 @@ namespace Lykke.Pay.Service.Rates.Controllers
                         where ce.IsReady()
                         select ce).Count() < _settings.AccessCrossCount)
                 {
-                    var loaded = pairsList.Where(pl => cntList.Any(ce => ce.AssetPair.Equals(pl.Id))).ToList();
-                    var ready = cntList.Where(ce => ce.IsReady()).ToList();
+                    var rates = string.Join("\n", pairsList.Select(r => r.Id));
+                   // var items = (from pl in pairsList
+                        //join ce in cntList on pl.Id equals ce.AssetPair
+                        //where ce.IsReady()
+                        //select ce).ToList();
+                   // var realRates = string.Join("\n", items.Select(r => r.AssetPair));
+                    //var loadedRates = string.Join("\n", cntList.Select(r => r.AssetPair));
+                    //var loadedRatesReady = string.Join("\n", cntList.Where(r=>r.IsReady()).Select(r => r.AssetPair));
+                    //var loaded = pairsList.Where(pl => cntList.Any(ce => ce.AssetPair.Equals(pl.Id))).ToList();
+                    //var ready = cntList.Where(ce => ce.IsReady()).ToList();
                     await Task.Delay(_settings.RabbitDelay);
                     cntList = new List<AssertPairRate>(cacheEntry);
                 }
