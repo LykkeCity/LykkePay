@@ -9,11 +9,19 @@
     {
         public ServicesSettings Services { get; set; }
         public RabbitMqSettings RabbitMq { get; set; }
+        public DbSettings Db { get; set; }
         public int CacheTimeout { get; set; }
         public int RabbitDelay { get; set; }
         public int AccessCrossCount { get; set; }
+        public int SlowActivityTimeout { get; set; }
     }
 
+
+    public class DbSettings
+    {
+        public string AssertHistoryConnString { get; set; }
+
+    }
 
     public class RabbitMqSettings
     {

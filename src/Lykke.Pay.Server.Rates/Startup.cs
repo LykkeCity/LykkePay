@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Common;
 using Common.Application;
+using Lykke.AzureRepositories;
 using Lykke.Common.Entities.Pay;
 using Lykke.Pay.Service.Rates.Code;
 using Lykke.RabbitMqBroker.Subscriber;
@@ -67,7 +68,8 @@ namespace Lykke.Pay.Service.Rates
             services.AddSingleton(_settings.PayServiceRates);
             services.AddSingleton(new HttpClient());
             services.AddSingleton(subscriber);
-
+            services.RegisterRepositories(_settings.PayServiceRates.Db.AssertHistoryConnString, null);
+            
 
         }
 

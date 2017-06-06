@@ -3,9 +3,13 @@
         "Services": {
             "MarginTradingAssetService": "http://dictionary-dev.lykkex.net/api/MarginTradingAsset"
         },
+        "Db": {
+            "AssertHistoryConnString": "UseDevelopmentStorage=true"
+        },
+        "SlowActivityTimeout": 1200,
         "CacheTimeout": 5,
         "RabbitDelay": 50,
-        "AccessCrossCount": 16,
+        "AccessCrossCount": 24,
         "RabbitMq": {
             "Host": "me-dev.lykke.com",
             "Port": 5672,
