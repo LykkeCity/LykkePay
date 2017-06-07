@@ -91,6 +91,7 @@ namespace Lykke.Pay.Service.Rates.Controllers
 
                     if ((DateTime.UtcNow - _startCollectingInfo).TotalMilliseconds > _settings.SlowActivityTimeout)
                     {
+                        
                         var cEntry =
                             new List<AssertPairRate>((from apr in (await _assertPairHistoryRepository.GetAllAsync())
                                                       orderby apr.StoredTime descending
@@ -101,7 +102,7 @@ namespace Lykke.Pay.Service.Rates.Controllers
                                                           Ask = (float)apr.Ask,
                                                           Accuracy = apr.Accuracy
                                                       }).Take(_settings.AccessCrossCount));
-                        if (cEntry.Count > _settings.AccessCrossCount)
+                        if (cEntry.Count >= _settings.AccessCrossCount)
                         {
                             listCompletedPairs = new List<AssertPairRate>(cEntry);
                             break;
