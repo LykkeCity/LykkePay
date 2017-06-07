@@ -1,0 +1,9 @@
+﻿{
+    "PayServiceGenAddress": {
+        "Db": {
+            "PrivateKeysConnString": "UseDevelopmentStorage=true"
+        },
+        "DataEncriptionPassword": "Test",
+        "GenerateKeySize": 1024 
+    }
+}
