@@ -1,22 +1,12 @@
 ﻿{
     "PayServiceRates": {
         "Services": {
+            "MarketProfileService": "http://13.93.116.252:5030/api/MarketProfile",
             "MarginTradingAssetService": "http://dictionary-dev.lykkex.net/api/MarginTradingAsset"
         },
         "Db": {
             "AssertHistoryConnString": "UseDevelopmentStorage=true"
         },
-        "SlowActivityTimeout": 1200,
-        "CacheTimeout": 5,
-        "RabbitDelay": 50,
-        "AccessCrossCount": 24,
-        "RabbitMq": {
-            "Host": "me-dev.lykke.com",
-            "Port": 5672,
-            "Username": "lykke.history",
-            "Password": "lykke.history",
-            "QuoteFeed": "lykke.quotefeed.lykkepayservicepay",
-            "ExchangeName": "lykke.quotefeed"
-        }
+        "CacheTimeout": 5
     }
 }

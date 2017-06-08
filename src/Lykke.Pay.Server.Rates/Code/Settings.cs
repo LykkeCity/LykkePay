@@ -8,12 +8,9 @@
     public class PayServiceRatesSettings
     {
         public ServicesSettings Services { get; set; }
-        public RabbitMqSettings RabbitMq { get; set; }
         public DbSettings Db { get; set; }
         public int CacheTimeout { get; set; }
-        public int RabbitDelay { get; set; }
-        public int AccessCrossCount { get; set; }
-        public int SlowActivityTimeout { get; set; }
+       
     }
 
 
@@ -23,18 +20,10 @@
 
     }
 
-    public class RabbitMqSettings
-    {
-        public string Host { get; set; }
-        public int Port { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string QuoteFeed { get; set; }
-        public string ExchangeName { get; set; }
-    }
-
+   
     public class ServicesSettings
     {
+        public string MarketProfileService { get; set; }
         public string MarginTradingAssetService { get; set; }
 
     }

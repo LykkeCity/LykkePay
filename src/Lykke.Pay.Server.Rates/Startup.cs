@@ -1,18 +1,11 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Common;
-using Common.Application;
+﻿using System.Net.Http;
 using Lykke.AzureRepositories;
-using Lykke.Common.Entities.Pay;
 using Lykke.Pay.Service.Rates.Code;
-using Lykke.RabbitMqBroker.Subscriber;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RabbitMQ.Client;
 
 namespace Lykke.Pay.Service.Rates
 {
@@ -54,20 +47,9 @@ namespace Lykke.Pay.Service.Rates
 #endif
 
 
-            var connectionsString = $"amqp://{_settings.PayServiceRates.RabbitMq.Username}:{_settings.PayServiceRates.RabbitMq.Password}@{_settings.PayServiceRates.RabbitMq.Host}:{_settings.PayServiceRates.RabbitMq.Port}";
-            var subscriberSettings = new RabbitMqSubscriberSettings()
-            {
-                ConnectionString = connectionsString,
-                QueueName = _settings.PayServiceRates.RabbitMq.QuoteFeed,
-                ExchangeName = _settings.PayServiceRates.RabbitMq.ExchangeName,
-                IsDurable = true
-            };
-            var subscriber = new RabbitMqSubscriber<PairRate>(subscriberSettings);
-
-
+          
             services.AddSingleton(_settings.PayServiceRates);
             services.AddSingleton(new HttpClient());
-            services.AddSingleton(subscriber);
             services.RegisterRepositories(_settings.PayServiceRates.Db.AssertHistoryConnString, null);
             
 
