@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using Lykke.AzureRepositories;
 using Lykke.Pay.Service.Rates.Code;
 using Microsoft.AspNetCore.Builder;
