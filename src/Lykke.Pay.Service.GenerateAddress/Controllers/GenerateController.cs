@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace Lykke.Pay.Service.GenerateAddress.Controllers
 {
-    [Produces("application/json")]
+
     [Route("api/generate")]
     public class GenerateController : Controller
     {
