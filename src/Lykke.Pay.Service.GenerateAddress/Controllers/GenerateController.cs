@@ -9,6 +9,7 @@ using Lykke.Common.Entities.Pay;
 using Lykke.Common.Entities.Security;
 using Lykke.Core;
 using Lykke.Pay.Service.GenerateAddress.Code;
+using Lykke.Signing.Client;
 using Newtonsoft.Json;
 
 namespace Lykke.Pay.Service.GenerateAddress.Controllers
@@ -19,11 +20,14 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
     {
         private readonly PayServiceGenAddressSettings _settings;
         private readonly IMerchantWalletRepository _merchantWalletRepository;
+        private readonly ILykkeSigningAPI _lykkeSigningAPI;
 
-        public GenerateController(PayServiceGenAddressSettings settings, IMerchantWalletRepository merchantWalletRepository)
+        public GenerateController(PayServiceGenAddressSettings settings, IMerchantWalletRepository merchantWalletRepository, ILykkeSigningAPI lykkeSigningAPI)
         {
             _settings = settings;
             _merchantWalletRepository = merchantWalletRepository;
+            _lykkeSigningAPI = lykkeSigningAPI;
+
         }
 
         // POST api/values
@@ -35,25 +39,45 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
                 return string.Empty;
             }
 
-            using (var rsa = RSA.Create())
+
+            var keyInfo = await _lykkeSigningAPI.ApiBitcoinKeyGetWithHttpMessagesAsync();
+            var publicKey = keyInfo.Body;
+
+            var dateToStore = new AssertPrivKeyPair
             {
-                rsa.KeySize = _settings.GenerateKeySize;
-                var pbl = rsa.ExportParameters(true);
+                AssertId = request.AssertId,
+                PublicLey = publicKey.PubKey,
+                Address = publicKey.Address
+            };
 
-                var dateToStore = new AssertPrivKeyPair
-                {
-                    AssertId = request.AssertId,
-                    PrivateKey = pbl.GetPrivateKey()
-                };
+            var encriptedData = SavePrimaryKey(JsonConvert.SerializeObject(dateToStore));
+            await _merchantWalletRepository.SaveNewAddress(new MerchantWalletEntity
+            {
+                MerchantId = request.MerchantId,
+                Data = encriptedData
+            });
 
-                var encriptedData = SavePrimaryKey(JsonConvert.SerializeObject(dateToStore));
-                await _merchantWalletRepository.SaveNewAddress(new MerchantWalletEntity
-                {
-                    MerchantId = request.MerchantId,
-                    Data = encriptedData
-                });
-                return pbl.GetPublicKey();
-            }
+            return publicKey.Address;
+
+            //using (var rsa = RSA.Create())
+            //{
+            //    rsa.KeySize = _settings.GenerateKeySize;
+            //    var pbl = rsa.ExportParameters(true);
+
+            //    var dateToStore = new AssertPrivKeyPair
+            //    {
+            //        AssertId = request.AssertId,
+            //        PrivateKey = pbl.GetPrivateKey()
+            //    };
+
+            //    var encriptedData = SavePrimaryKey(JsonConvert.SerializeObject(dateToStore));
+            //    await _merchantWalletRepository.SaveNewAddress(new MerchantWalletEntity
+            //    {
+            //        MerchantId = request.MerchantId,
+            //        Data = encriptedData
+            //    });
+            //    return pbl.GetPublicKey();
+            //}
 
         }
 

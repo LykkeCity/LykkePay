@@ -2,7 +2,8 @@
     "PayApi": {
         "Services": {
             "MerchantAuthService": "https://merchantauth-dev.lykkex.net/api/auth",
-            "PayServiceService": "https://payrates-dev.lykkex.net/api/rate"
+            "PayServiceService": "https://payrates-dev.lykkex.net/api/rate",
+            "GenerateAddressService": "https://paygenaddr-dev.lykkex.net/api/generate"
         }
     }
 }

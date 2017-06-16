@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using Lykke.Common.Entities.Pay;
+using Lykke.Common.Entities.Security;
 using LykkePay.API.Code;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace LykkePay.API.Controllers
 {
@@ -27,15 +32,25 @@ namespace LykkePay.API.Controllers
             {
                 return isValid;
             }
-            byte[] publicKey = new byte[1024 / 8];
-            using (var rng = RandomNumberGenerator.Create())
+
+            var respone = await HttpClient.PostAsync(PayApiSettings.Services.GenerateAddressService, new StringContent(
+                JsonConvert.SerializeObject(new GenerateAddressRequest
+                {
+                    MerchantId = HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "",
+                    AssertId = assertId
+                }), Encoding.UTF8, "application/json"));
+
+            if (respone.StatusCode != HttpStatusCode.OK)
             {
-                rng.GetBytes(publicKey);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
+
+            var publicKey = await respone.Content.ReadAsStringAsync();
+
             var result = new
             {
                 Currency = assertId,
-                Address = Convert.ToBase64String(publicKey)
+                Address = publicKey
             };
             return Json(result);
         }

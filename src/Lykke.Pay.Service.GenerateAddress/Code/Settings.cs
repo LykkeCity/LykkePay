@@ -10,6 +10,12 @@
         public DbSettings Db { get; set; }
         public string DataEncriptionPassword { get; set; }
         public int GenerateKeySize { get; set; }
+        public Services Services { get; set; }
+    }
+
+    public class Services
+    {
+        public string  SignServiceUrl { get; set; }
     }
 
 

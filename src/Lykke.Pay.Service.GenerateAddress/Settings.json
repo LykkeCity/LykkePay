@@ -4,6 +4,9 @@
             "PrivateKeysConnString": "UseDevelopmentStorage=true"
         },
         "DataEncriptionPassword": "Test",
-        "GenerateKeySize": 1024 
+        "GenerateKeySize": 1024,
+        "Services": {
+            "SignServiceUrl": "http://13.93.116.252:5566"
+        } 
     }
 }

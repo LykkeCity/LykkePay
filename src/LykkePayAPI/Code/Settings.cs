@@ -17,5 +17,7 @@
 
         public string PayServiceService { get; set; }
 
+        public string GenerateAddressService { get; set; }
+
     }
 }

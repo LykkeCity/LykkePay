@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Lykke.SettingsReader;
+using Lykke.Signing.Client;
 
 namespace Lykke.Pay.Service.GenerateAddress
 {
@@ -51,7 +52,7 @@ namespace Lykke.Pay.Service.GenerateAddress
 
             services.AddSingleton(settings.PayServiceGenAddress);
             services.RegisterRepositories(settings.PayServiceGenAddress.Db.PrivateKeysConnString, null);
-
+            services.AddSingleton<ILykkeSigningAPI>(new LykkeSigningAPI(new Uri(settings.PayServiceGenAddress.Services.SignServiceUrl)));
 
         }
 
