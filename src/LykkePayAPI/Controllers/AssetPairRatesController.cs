@@ -57,7 +57,7 @@ namespace LykkePay.API.Controllers
         public async Task<IActionResult> Post([FromBody]AssertPairRateRequest request, string assertId)
         {
             var isValid = await ValidateRequest();
-            if ((isValid as OkObjectResult)?.StatusCode != Ok().StatusCode)
+            if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
             {
                 return isValid;
             }
