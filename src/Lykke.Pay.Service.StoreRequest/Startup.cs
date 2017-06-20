@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Lykke.AzureRepositories;
+using Lykke.Pay.Service.StoreRequest.Code;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,11 +20,30 @@ namespace Lykke.Pay.Service.StoreRequest
             Configuration = builder.Build();
         }
 
+        private void BuildConfiguration(IServiceCollection services)
+        {
+            var connectionString = Configuration.GetValue<string>("ConnectionString");
+
+#if DEBUG
+            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
+#else
+            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
+#endif
+
+
+
+
+            services.AddSingleton(settings.PayServiceStoreRequest);
+            services.RegisterRepositories(settings.PayServiceStoreRequest.Db.RequestStoreConnString, null);
+
+        }
+
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            BuildConfiguration(services);
             // Add framework services.
             services.AddMvc();
         }
