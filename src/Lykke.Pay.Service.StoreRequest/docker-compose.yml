@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  apirunner:
+    image: lykkex/payservicestorerequest
+    ports:
+     - "80:3004"
+    environment:
+     - ConnectionString=UseDevelopmentStorage=true
