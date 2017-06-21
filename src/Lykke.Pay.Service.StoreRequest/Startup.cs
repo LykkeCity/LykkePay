@@ -1,4 +1,5 @@
-﻿using Lykke.AzureRepositories;
+﻿using System;
+using Lykke.AzureRepositories;
 using Lykke.Pay.Service.StoreRequest.Code;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
