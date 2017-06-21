@@ -2,10 +2,10 @@
 {
     public class Markup
     {
-        public string Percent { get; set; }
+        public float Percent { get; set; }
 
-        public string Pips { get; set; }
+        public int Pips { get; set; }
 
-        public string FixedFee { get; set; }
+        public float FixedFee { get; set; }
     }
 }

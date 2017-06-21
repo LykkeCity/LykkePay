@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace LykkePay.API.Controllers
 {
-    [Route("api/Transfer")]
-    public class TransferController : BaseController
+    [Route("api/ExchangeTransfer")]
+    public class ExchangeTransferController : BaseController
     {
-       
-        // POST api/values
+        public ExchangeTransferController(PayApiSettings payApiSettings, HttpClient client) : base(payApiSettings, client)
+        {
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]TransferRequest request)
+        public async Task<IActionResult> Post([FromBody] ExchangeTransferRequest request)
         {
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
@@ -29,12 +28,5 @@ namespace LykkePay.API.Controllers
 
             return Content(store.RequestId);
         }
-
-        public TransferController(PayApiSettings payApiSettings, HttpClient client) : base(payApiSettings, client)
-        {
-        }
     }
-
-
-       
 }
