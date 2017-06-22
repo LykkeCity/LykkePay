@@ -1,11 +1,15 @@
 ﻿using System;
+using System.IO;
 using Lykke.AzureRepositories;
+using Lykke.Core.Log;
 using Lykke.Pay.Service.StoreRequest.Code;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
+using Swashbuckle.Swagger.Model;
 
 namespace Lykke.Pay.Service.StoreRequest
 {
@@ -35,7 +39,7 @@ namespace Lykke.Pay.Service.StoreRequest
 
 
             services.AddSingleton(settings.PayServiceStoreRequest);
-            services.RegisterRepositories(settings.PayServiceStoreRequest.Db.RequestStoreConnString, null);
+            services.RegisterRepositories(settings.PayServiceStoreRequest.Db.RequestStoreConnString, (ILog)null);
 
         }
 
@@ -47,6 +51,23 @@ namespace Lykke.Pay.Service.StoreRequest
             BuildConfiguration(services);
             // Add framework services.
             services.AddMvc();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SingleApiVersion(new Info
+                {
+                    Version = "v1",
+                    Title = "Lykke Pay Service StoreRequest Micro Service"
+                });
+                options.DescribeAllEnumsAsStrings();
+
+                //Determine base path for the application.
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+
+                //Set the comments path for the swagger json and ui.
+                var xmlPath = Path.Combine(basePath, "Lykke.Pay.Service.StoreRequest.xml");
+                options.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +77,8 @@ namespace Lykke.Pay.Service.StoreRequest
             loggerFactory.AddDebug();
 
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUi();
         }
     }
 }

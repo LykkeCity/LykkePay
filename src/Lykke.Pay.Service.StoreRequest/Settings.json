@@ -1,7 +1,7 @@
 ﻿{
     "PayServiceStoreRequest": {
         "Db": {
-            "PrivateKeysConnString": "UseDevelopmentStorage=true"
+            "RequestStoreConnString": "UseDevelopmentStorage=true"
         }
     }
 }

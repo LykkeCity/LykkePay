@@ -7,9 +7,9 @@
 	<PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.42" />
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.45" />
     <PackageReference Include="Lykke.Common.Entities" Version="1.0.23" />
-    <PackageReference Include="Lykke.Core" Version="1.0.42" />
+    <PackageReference Include="Lykke.Core" Version="1.0.45" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.37" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
