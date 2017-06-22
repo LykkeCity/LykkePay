@@ -1,5 +1,4 @@
-﻿using Lykke.AzureRepositories;
-using Lykke.Core;
+﻿
 
 namespace LykkePay.API.Models
 {
@@ -14,17 +13,17 @@ namespace LykkePay.API.Models
         public string ProgressUrl { get; set; }
         public string OrderId { get; set; }
 
-        public MerchantPayRequest GetRequest()
+        public Lykke.Pay.Service.StoreRequest.Client.Models.MerchantPayRequest GetRequest()
         {
-            return new MerchantPayRequest
+            return new Lykke.Pay.Service.StoreRequest.Client.Models.MerchantPayRequest
             {
                 
-                MerchantPayRequestStatus = MerchantPayRequestStatus.New,
-                MerchantPayRequestType = MerchantPayRequestType.Transfer,
-                MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing,
+                MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString(),
+                MerchantPayRequestType = MerchantPayRequestType.Transfer.ToString(),
+                MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing.ToString(),
                 DestinationAddress = DestinationAddress,
                 SourceAddress = SourceAddress,
-                Amount = Amount,
+                Amount = (double)Amount,
                 AssetId = AssetId,
                 SuccessUrl = SuccessUrl,
                 ErrorUrl = ErrorUrl,

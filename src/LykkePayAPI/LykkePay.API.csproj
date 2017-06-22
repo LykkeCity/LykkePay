@@ -13,7 +13,6 @@
     <None Remove="wwwroot\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.47" />
     <PackageReference Include="Lykke.Common.Entities" Version="1.0.23" />
     <PackageReference Include="Lykke.Core" Version="1.0.47" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.1" />

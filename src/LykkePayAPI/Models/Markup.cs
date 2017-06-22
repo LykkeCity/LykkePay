@@ -1,4 +1,7 @@
-﻿namespace LykkePay.API.Models
+﻿using System;
+using Lykke.Pay.Service.StoreRequest.Client.Models;
+
+namespace LykkePay.API.Models
 {
     public class Markup
     {
@@ -7,5 +10,10 @@
         public int Pips { get; set; }
 
         public float FixedFee { get; set; }
+
+        public static implicit operator IPayFee(Markup v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

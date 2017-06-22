@@ -1,9 +1,9 @@
-﻿using Lykke.AzureRepositories;
+﻿
 
 namespace LykkePay.API.Models
 {
     interface IStoreRequest
     {
-        MerchantPayRequest GetRequest();
+        Lykke.Pay.Service.StoreRequest.Client.Models.MerchantPayRequest GetRequest();
     }
 }
