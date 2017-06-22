@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Common.Log;
 using Lykke.AzureRepositories;
 using Lykke.Pay.Service.GenerateAddress.Code;
 using Microsoft.AspNetCore.Builder;
@@ -51,7 +52,7 @@ namespace Lykke.Pay.Service.GenerateAddress
           
 
             services.AddSingleton(settings.PayServiceGenAddress);
-            services.RegisterRepositories(settings.PayServiceGenAddress.Db.PrivateKeysConnString, null);
+            services.RegisterRepositories(settings.PayServiceGenAddress.Db.PrivateKeysConnString, (ILog)null);
             services.AddSingleton<ILykkeSigningAPI>(new LykkeSigningAPI(new Uri(settings.PayServiceGenAddress.Services.SignServiceUrl)));
 
         }

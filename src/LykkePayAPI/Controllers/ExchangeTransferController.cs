@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Lykke.Pay.Service.StoreRequest.Client;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +11,10 @@ namespace LykkePay.API.Controllers
     [Route("api/ExchangeTransfer")]
     public class ExchangeTransferController : BaseController
     {
-        public ExchangeTransferController(PayApiSettings payApiSettings, HttpClient client) : base(payApiSettings, client)
+        private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
+        public ExchangeTransferController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient) : base(payApiSettings, client)
         {
+            _storeRequestClient = storeRequestClient;
         }
 
         [HttpPost]
@@ -25,6 +28,8 @@ namespace LykkePay.API.Controllers
 
             var store = request.GetRequest();
             store.MerchantId = MerchantId;
+
+            await _storeRequestClient.ApiStorePostAsync(store);
 
             return Content(store.RequestId);
         }

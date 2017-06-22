@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Lykke.Common.Entities.Pay;
+using Lykke.Pay.Service.StoreRequest.Client;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
 using Microsoft.AspNetCore.Http;
@@ -15,8 +16,10 @@ namespace LykkePay.API.Controllers
     [Route("api/Purchase")]
     public class PurchaseController : BaseController
     {
-        public PurchaseController(PayApiSettings payApiSettings, HttpClient client) : base(payApiSettings, client)
+        private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
+        public PurchaseController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient) : base(payApiSettings, client)
         {
+            _storeRequestClient = storeRequestClient;
         }
 
         [HttpPost]
@@ -28,9 +31,14 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
+            var store = request.GetRequest();
+            store.MerchantId = MerchantId;
 
+            await _storeRequestClient.ApiStorePostAsync(store);
 
-            throw new NotImplementedException();
+            return Content(store.RequestId);
+
+            
         }
     }
 }
