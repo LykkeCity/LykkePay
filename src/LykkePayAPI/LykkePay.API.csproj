@@ -14,7 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Lykke.Common.Entities" Version="1.0.23" />
-    <PackageReference Include="Lykke.Core" Version="1.0.47" />
+    <PackageReference Include="Lykke.Core" Version="1.0.49" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.1" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.37" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.1" />

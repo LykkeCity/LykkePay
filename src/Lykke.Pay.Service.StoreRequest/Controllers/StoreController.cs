@@ -17,7 +17,7 @@ namespace Lykke.Pay.Service.StoreRequest.Controllers
 
         // POST api/Store
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]MerchantPayRequest request)
+        public async Task<IActionResult> Post([FromBody]IMerchantPayRequest request)
         {
             await _merchantPayRequestRepository.SaveRequestAsync(request);
             return Content(request.RequestId);

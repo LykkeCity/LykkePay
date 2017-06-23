@@ -1,5 +1,7 @@
 ﻿
 
+using Lykke.Core;
+
 namespace LykkePay.API.Models
 {
     public class TransferRequest : IStoreRequest

@@ -5,6 +5,7 @@ using Lykke.Pay.Service.StoreRequest.Client;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace LykkePay.API.Controllers
 {
@@ -29,7 +30,8 @@ namespace LykkePay.API.Controllers
             var store = request.GetRequest();
             store.MerchantId = MerchantId;
 
-            await _storeRequestClient.ApiStorePostAsync(store);
+            var requ = JsonConvert.SerializeObject(store);
+
 
             return Content(store.RequestId);
         }

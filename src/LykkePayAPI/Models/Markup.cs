@@ -13,7 +13,7 @@ namespace LykkePay.API.Models
 
         public static implicit operator IPayFee(Markup v)
         {
-            throw new NotImplementedException();
+            return new IPayFee(v.Percent, v.Pips, v.FixedFee);
         }
     }
 }
