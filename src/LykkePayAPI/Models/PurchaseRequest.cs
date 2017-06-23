@@ -26,11 +26,11 @@ namespace LykkePay.API.Models
         public Markup Markup { get; set; }
 
 
-        public virtual Lykke.Pay.Service.StoreRequest.Client.Models.IMerchantPayRequest GetRequest()
+        public virtual Lykke.Pay.Service.StoreRequest.Client.Models.PayRequest GetRequest()
         {
-            return new Lykke.Pay.Service.StoreRequest.Client.Models.IMerchantPayRequest
+            return new Lykke.Pay.Service.StoreRequest.Client.Models.PayRequest
             {
-                Markup = new Markup
+                Markup = new Lykke.Pay.Service.StoreRequest.Client.Models.PayFee
                 {
                     FixedFee = Markup.FixedFee,
                     Percent = Markup.Percent,

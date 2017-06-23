@@ -16,9 +16,9 @@ namespace LykkePay.API.Models
         public string ProgressUrl { get; set; }
         public string OrderId { get; set; }
 
-        public Lykke.Pay.Service.StoreRequest.Client.Models.IMerchantPayRequest GetRequest()
+        public Lykke.Pay.Service.StoreRequest.Client.Models.PayRequest GetRequest()
         {
-            return new Lykke.Pay.Service.StoreRequest.Client.Models.IMerchantPayRequest
+            return new Lykke.Pay.Service.StoreRequest.Client.Models.PayRequest
             {
                 
                 MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString(),
