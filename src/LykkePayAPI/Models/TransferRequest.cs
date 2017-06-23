@@ -1,5 +1,6 @@
 ﻿
 
+using System;
 using Lykke.Core;
 
 namespace LykkePay.API.Models
@@ -15,9 +16,9 @@ namespace LykkePay.API.Models
         public string ProgressUrl { get; set; }
         public string OrderId { get; set; }
 
-        public Lykke.Pay.Service.StoreRequest.Client.Models.MerchantPayRequest GetRequest()
+        public Lykke.Pay.Service.StoreRequest.Client.Models.IMerchantPayRequest GetRequest()
         {
-            return new Lykke.Pay.Service.StoreRequest.Client.Models.MerchantPayRequest
+            return new Lykke.Pay.Service.StoreRequest.Client.Models.IMerchantPayRequest
             {
                 
                 MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString(),
@@ -30,7 +31,8 @@ namespace LykkePay.API.Models
                 SuccessUrl = SuccessUrl,
                 ErrorUrl = ErrorUrl,
                 ProgressUrl = ProgressUrl,
-                OrderId = OrderId
+                OrderId = OrderId,
+                RequestId = Guid.NewGuid().ToString()
             };
         }
     }
