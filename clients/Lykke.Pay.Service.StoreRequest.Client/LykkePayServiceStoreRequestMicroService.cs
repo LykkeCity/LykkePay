@@ -17,6 +17,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using System;
 
     public partial class LykkePayServiceStoreRequestMicroService : ServiceClient<LykkePayServiceStoreRequestMicroService>, ILykkePayServiceStoreRequestMicroService
     {
@@ -453,5 +454,9 @@ namespace Lykke.Pay.Service.StoreRequest.Client
             return _result;
         }
 
+        public Task ApiStoreByMerchantIdGetWithHttpMessagesAsync(Func<object> p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

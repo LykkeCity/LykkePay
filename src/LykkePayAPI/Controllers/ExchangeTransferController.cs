@@ -29,7 +29,7 @@ namespace LykkePay.API.Controllers
 
             var store = request.GetRequest();
             store.MerchantId = MerchantId;
-
+            var json = JsonConvert.SerializeObject(store);
             await _storeRequestClient.ApiStorePostWithHttpMessagesAsync(store);
 
             return Content(store.RequestId);

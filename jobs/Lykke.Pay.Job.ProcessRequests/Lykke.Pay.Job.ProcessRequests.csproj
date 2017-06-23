@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.56" />
+    <PackageReference Include="Lykke.Core" Version="1.0.56" />
+    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\clients\Lykke.Pay.Service.StoreRequest.Client\Lykke.Pay.Service.StoreRequest.Client.csproj" />
+  </ItemGroup>
+
+</Project>
