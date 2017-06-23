@@ -35,6 +35,14 @@ namespace Lykke.Pay.Service.StoreRequest.Client
         JsonSerializerSettings DeserializationSettings { get; }
 
 
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> ApiStoreGetWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
         /// <param name='request'>
         /// </param>
         /// <param name='customHeaders'>
@@ -43,7 +51,17 @@ namespace Lykke.Pay.Service.StoreRequest.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiStorePostWithHttpMessagesAsync(IMerchantPayRequest request = default(IMerchantPayRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> ApiStorePostWithHttpMessagesAsync(PayRequest request = default(PayRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='merchantId'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> ApiStoreByMerchantIdGetWithHttpMessagesAsync(string merchantId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

@@ -19,9 +19,28 @@ namespace Lykke.Pay.Service.StoreRequest.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            public static void ApiStoreGet(this ILykkePayServiceStoreRequestMicroService operations)
+            {
+                operations.ApiStoreGetAsync().GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task ApiStoreGetAsync(this ILykkePayServiceStoreRequestMicroService operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.ApiStoreGetWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
             /// <param name='request'>
             /// </param>
-            public static void ApiStorePost(this ILykkePayServiceStoreRequestMicroService operations, IMerchantPayRequest request = default(IMerchantPayRequest))
+            public static void ApiStorePost(this ILykkePayServiceStoreRequestMicroService operations, PayRequest request = default(PayRequest))
             {
                 operations.ApiStorePostAsync(request).GetAwaiter().GetResult();
             }
@@ -34,9 +53,32 @@ namespace Lykke.Pay.Service.StoreRequest.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiStorePostAsync(this ILykkePayServiceStoreRequestMicroService operations, IMerchantPayRequest request = default(IMerchantPayRequest), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task ApiStorePostAsync(this ILykkePayServiceStoreRequestMicroService operations, PayRequest request = default(PayRequest), CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.ApiStorePostWithHttpMessagesAsync(request, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='merchantId'>
+            /// </param>
+            public static void ApiStoreByMerchantIdGet(this ILykkePayServiceStoreRequestMicroService operations, string merchantId)
+            {
+                operations.ApiStoreByMerchantIdGetAsync(merchantId).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='merchantId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task ApiStoreByMerchantIdGetAsync(this ILykkePayServiceStoreRequestMicroService operations, string merchantId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.ApiStoreByMerchantIdGetWithHttpMessagesAsync(merchantId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
     }

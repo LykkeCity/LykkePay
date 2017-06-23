@@ -11,18 +11,18 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class IMerchantPayRequest
+    public partial class PayRequest
     {
         /// <summary>
-        /// Initializes a new instance of the IMerchantPayRequest class.
+        /// Initializes a new instance of the PayRequest class.
         /// </summary>
-        public IMerchantPayRequest()
+        public PayRequest()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the IMerchantPayRequest class.
+        /// Initializes a new instance of the PayRequest class.
         /// </summary>
         /// <param name="merchantPayRequestStatus">Possible values include:
         /// 'New', 'InProgress', 'Failed', 'Completed'</param>
@@ -30,7 +30,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         /// 'Purchase', 'Transfer', 'ExchangeTransfer'</param>
         /// <param name="merchantPayRequestNotification">Possible values
         /// include: 'Nothing', 'InProgress', 'Success', 'Error'</param>
-        public IMerchantPayRequest(string merchantId = default(string), string requestId = default(string), string transactionId = default(string), object markup = default(object), string merchantPayRequestStatus = default(string), string merchantPayRequestType = default(string), string merchantPayRequestNotification = default(string), string sourceAddress = default(string), string destinationAddress = default(string), string assetPair = default(string), double? amount = default(double?), string assetId = default(string), string successUrl = default(string), string errorUrl = default(string), string progressUrl = default(string), string orderId = default(string))
+        public PayRequest(string merchantId = default(string), string requestId = default(string), string transactionId = default(string), PayFee markup = default(PayFee), string merchantPayRequestStatus = default(string), string merchantPayRequestType = default(string), string merchantPayRequestNotification = default(string), string sourceAddress = default(string), string destinationAddress = default(string), string assetPair = default(string), double? amount = default(double?), string assetId = default(string), string successUrl = default(string), string errorUrl = default(string), string progressUrl = default(string), string orderId = default(string))
         {
             MerchantId = merchantId;
             RequestId = requestId;
@@ -74,7 +74,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "markup")]
-        public object Markup { get; set; }
+        public PayFee Markup { get; set; }
 
         /// <summary>
         /// Gets or sets possible values include: 'New', 'InProgress',
