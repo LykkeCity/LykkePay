@@ -11,9 +11,6 @@ namespace LykkePay.API.Models
 
         public float FixedFee { get; set; }
 
-        public static implicit operator IPayFee(Markup v)
-        {
-            return new IPayFee(v.Percent, v.Pips, v.FixedFee);
-        }
+        
     }
 }

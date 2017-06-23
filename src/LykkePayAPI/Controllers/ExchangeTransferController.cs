@@ -30,9 +30,6 @@ namespace LykkePay.API.Controllers
             var store = request.GetRequest();
             store.MerchantId = MerchantId;
 
-            var requ = JsonConvert.SerializeObject(store);
-
-
             return Content(store.RequestId);
         }
     }

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Lykke.Core;
 
 namespace LykkePay.API.Models
@@ -25,9 +26,9 @@ namespace LykkePay.API.Models
         public Markup Markup { get; set; }
 
 
-        public virtual Lykke.Pay.Service.StoreRequest.Client.Models.MerchantPayRequest GetRequest()
+        public virtual Lykke.Pay.Service.StoreRequest.Client.Models.IMerchantPayRequest GetRequest()
         {
-            return new Lykke.Pay.Service.StoreRequest.Client.Models.MerchantPayRequest
+            return new Lykke.Pay.Service.StoreRequest.Client.Models.IMerchantPayRequest
             {
                 Markup = new Markup
                 {
@@ -45,7 +46,8 @@ namespace LykkePay.API.Models
                 SuccessUrl = SuccessUrl,
                 ErrorUrl = ErrorUrl,
                 ProgressUrl = ProgressUrl,
-                OrderId = OrderId
+                OrderId = OrderId,
+                RequestId = Guid.NewGuid().ToString()
             };
         }
     }
