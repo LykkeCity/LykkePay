@@ -11,26 +11,26 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class MerchantPayRequest
+    public partial class IMerchantPayRequest
     {
         /// <summary>
-        /// Initializes a new instance of the MerchantPayRequest class.
+        /// Initializes a new instance of the IMerchantPayRequest class.
         /// </summary>
-        public MerchantPayRequest()
+        public IMerchantPayRequest()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the MerchantPayRequest class.
+        /// Initializes a new instance of the IMerchantPayRequest class.
         /// </summary>
         /// <param name="merchantPayRequestStatus">Possible values include:
         /// 'New', 'InProgress', 'Failed', 'Completed'</param>
         /// <param name="merchantPayRequestType">Possible values include:
-        /// 'Purchase', 'Transfer'</param>
+        /// 'Purchase', 'Transfer', 'ExchangeTransfer'</param>
         /// <param name="merchantPayRequestNotification">Possible values
         /// include: 'Nothing', 'InProgress', 'Success', 'Error'</param>
-        public MerchantPayRequest(string merchantId = default(string), string requestId = default(string), string transactionId = default(string), IPayFee markup = default(IPayFee), string merchantPayRequestStatus = default(string), string merchantPayRequestType = default(string), string merchantPayRequestNotification = default(string), string sourceAddress = default(string), string destinationAddress = default(string), string assetPair = default(string), double? amount = default(double?), string assetId = default(string), string successUrl = default(string), string errorUrl = default(string), string progressUrl = default(string), string orderId = default(string), string partitionKey = default(string), string rowKey = default(string), System.DateTime? timestamp = default(System.DateTime?), string eTag = default(string))
+        public IMerchantPayRequest(string merchantId = default(string), string requestId = default(string), string transactionId = default(string), object markup = default(object), string merchantPayRequestStatus = default(string), string merchantPayRequestType = default(string), string merchantPayRequestNotification = default(string), string sourceAddress = default(string), string destinationAddress = default(string), string assetPair = default(string), double? amount = default(double?), string assetId = default(string), string successUrl = default(string), string errorUrl = default(string), string progressUrl = default(string), string orderId = default(string))
         {
             MerchantId = merchantId;
             RequestId = requestId;
@@ -48,10 +48,6 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
             ErrorUrl = errorUrl;
             ProgressUrl = progressUrl;
             OrderId = orderId;
-            PartitionKey = partitionKey;
-            RowKey = rowKey;
-            Timestamp = timestamp;
-            ETag = eTag;
             CustomInit();
         }
 
@@ -78,7 +74,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "markup")]
-        public IPayFee Markup { get; set; }
+        public object Markup { get; set; }
 
         /// <summary>
         /// Gets or sets possible values include: 'New', 'InProgress',
@@ -88,7 +84,8 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         public string MerchantPayRequestStatus { get; set; }
 
         /// <summary>
-        /// Gets or sets possible values include: 'Purchase', 'Transfer'
+        /// Gets or sets possible values include: 'Purchase', 'Transfer',
+        /// 'ExchangeTransfer'
         /// </summary>
         [JsonProperty(PropertyName = "merchantPayRequestType")]
         public string MerchantPayRequestType { get; set; }
@@ -144,26 +141,6 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "orderId")]
         public string OrderId { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "partitionKey")]
-        public string PartitionKey { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "rowKey")]
-        public string RowKey { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "timestamp")]
-        public System.DateTime? Timestamp { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "eTag")]
-        public string ETag { get; set; }
 
     }
 }
