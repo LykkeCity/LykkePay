@@ -21,7 +21,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client
             /// </param>
             /// <param name='request'>
             /// </param>
-            public static void ApiStorePost(this ILykkePayServiceStoreRequestMicroService operations, MerchantPayRequest request = default(MerchantPayRequest))
+            public static void ApiStorePost(this ILykkePayServiceStoreRequestMicroService operations, IMerchantPayRequest request = default(IMerchantPayRequest))
             {
                 operations.ApiStorePostAsync(request).GetAwaiter().GetResult();
             }
@@ -34,7 +34,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiStorePostAsync(this ILykkePayServiceStoreRequestMicroService operations, MerchantPayRequest request = default(MerchantPayRequest), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task ApiStorePostAsync(this ILykkePayServiceStoreRequestMicroService operations, IMerchantPayRequest request = default(IMerchantPayRequest), CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.ApiStorePostWithHttpMessagesAsync(request, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }

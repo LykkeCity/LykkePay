@@ -156,7 +156,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiStorePostWithHttpMessagesAsync(MerchantPayRequest request = default(MerchantPayRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> ApiStorePostWithHttpMessagesAsync(IMerchantPayRequest request = default(IMerchantPayRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;

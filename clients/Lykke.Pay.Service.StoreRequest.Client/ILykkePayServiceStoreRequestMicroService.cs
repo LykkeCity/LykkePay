@@ -43,7 +43,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiStorePostWithHttpMessagesAsync(MerchantPayRequest request = default(MerchantPayRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> ApiStorePostWithHttpMessagesAsync(IMerchantPayRequest request = default(IMerchantPayRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }
