@@ -24,6 +24,8 @@ namespace LykkePay.API.Controllers
             HttpClient = client;
         }
 
+        protected string MerchantId => HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "";
+
         protected async Task<IActionResult> ValidateRequest()
         {
             string strToSign;
@@ -43,13 +45,14 @@ namespace LykkePay.API.Controllers
                 strToSign = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
             }
 
+            var strToSend = JsonConvert.SerializeObject(new MerchantAuthRequest
+            {
+                MerchantId = MerchantId,
+                StringToSign = strToSign,
+                Sign = HttpContext.Request.Headers["Lykke-Merchant-Sign"].ToString() ?? ""
+            });
             var respone = await HttpClient.PostAsync(PayApiSettings.Services.MerchantAuthService, new StringContent(
-                JsonConvert.SerializeObject(new MerchantAuthRequest
-                {
-                    MerchantId = HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "",
-                    StringToSign = strToSign,
-                    Sign = HttpContext.Request.Headers["Lykke-Merchant-Sign"].ToString() ?? ""
-                }), Encoding.UTF8, "application/json"));
+                strToSend, Encoding.UTF8, "application/json"));
             var isValid = (SecurityErrorType)int.Parse(await respone.Content.ReadAsStringAsync());
             if (isValid != SecurityErrorType.Ok)
             {

@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Common.Log;
+using System.IO;
 using Lykke.AzureRepositories;
-using Lykke.Pay.Service.GenerateAddress.Code;
+using Lykke.Core.Log;
+using Lykke.Pay.Service.StoreRequest.Code;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Lykke.SettingsReader;
-using Lykke.Signing.Client;
+using Microsoft.Extensions.PlatformAbstractions;
+using Swashbuckle.Swagger.Model;
 
-namespace Lykke.Pay.Service.GenerateAddress
+namespace Lykke.Pay.Service.StoreRequest
 {
     public class Startup
     {
@@ -28,6 +25,24 @@ namespace Lykke.Pay.Service.GenerateAddress
             Configuration = builder.Build();
         }
 
+        private void BuildConfiguration(IServiceCollection services)
+        {
+            var connectionString = Configuration.GetValue<string>("ConnectionString");
+
+#if DEBUG
+            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
+#else
+            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
+#endif
+
+
+
+
+            services.AddSingleton(settings.PayServiceStoreRequest);
+            services.RegisterRepositories(settings.PayServiceStoreRequest.Db.RequestStoreConnString, (ILog)null);
+
+        }
+
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -36,25 +51,23 @@ namespace Lykke.Pay.Service.GenerateAddress
             BuildConfiguration(services);
             // Add framework services.
             services.AddMvc();
-        }
 
-        private void BuildConfiguration(IServiceCollection services)
-        {
-            var connectionString = Configuration.GetValue<string>("ConnectionString");
-           
-#if DEBUG
-            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
-#else
-            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
-#endif
+            services.AddSwaggerGen(options =>
+            {
+                options.SingleApiVersion(new Info
+                {
+                    Version = "v1",
+                    Title = "Lykke Pay Service StoreRequest Micro Service"
+                });
+                options.DescribeAllEnumsAsStrings();
 
+                //Determine base path for the application.
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
 
-          
-
-            services.AddSingleton(settings.PayServiceGenAddress);
-            services.RegisterRepositories(settings.PayServiceGenAddress.Db.PrivateKeysConnString, (ILog)null);
-            services.AddSingleton<ILykkeSigningAPI>(new LykkeSigningAPI(new Uri(settings.PayServiceGenAddress.Services.SignServiceUrl)));
-
+                //Set the comments path for the swagger json and ui.
+                var xmlPath = Path.Combine(basePath, "Lykke.Pay.Service.StoreRequest.xml");
+                options.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +77,8 @@ namespace Lykke.Pay.Service.GenerateAddress
             loggerFactory.AddDebug();
 
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUi();
         }
     }
 }

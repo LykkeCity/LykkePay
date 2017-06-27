@@ -1,0 +1,7 @@
+﻿{
+    "PayServiceStoreRequest": {
+        "Db": {
+            "RequestStoreConnString": "UseDevelopmentStorage=true"
+        }
+    }
+}

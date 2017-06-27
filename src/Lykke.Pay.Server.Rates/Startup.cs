@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using Lykke.AzureRepositories;
+using Lykke.Core.Log;
 using Lykke.Pay.Service.Rates.Code;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,7 +52,7 @@ namespace Lykke.Pay.Service.Rates
           
             services.AddSingleton(_settings.PayServiceRates);
             services.AddSingleton(new HttpClient());
-            services.RegisterRepositories(_settings.PayServiceRates.Db.AssertHistoryConnString, null);
+            services.RegisterRepositories(_settings.PayServiceRates.Db.AssertHistoryConnString, (ILog)null);
             
 
         }
