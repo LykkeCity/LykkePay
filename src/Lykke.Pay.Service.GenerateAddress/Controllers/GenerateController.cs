@@ -16,17 +16,15 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
 {
 
     [Route("api/generate")]
-    public class GenerateController : Controller
+    public class GenerateController : BaseController
     {
-        private readonly PayServiceGenAddressSettings _settings;
         private readonly IMerchantWalletRepository _merchantWalletRepository;
-        private readonly ILykkeSigningAPI _lykkeSigningAPI;
+        private readonly ILykkeSigningAPI _lykkeSigningApi;
 
-        public GenerateController(PayServiceGenAddressSettings settings, IMerchantWalletRepository merchantWalletRepository, ILykkeSigningAPI lykkeSigningAPI)
+        public GenerateController(PayServiceGenAddressSettings settings, IMerchantWalletRepository merchantWalletRepository, ILykkeSigningAPI lykkeSigningApi) : base(settings)
         {
-            _settings = settings;
             _merchantWalletRepository = merchantWalletRepository;
-            _lykkeSigningAPI = lykkeSigningAPI;
+            _lykkeSigningApi = lykkeSigningApi;
 
         }
 
@@ -40,18 +38,18 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
             }
 
 
-            var keyInfo = await _lykkeSigningAPI.ApiBitcoinKeyGetWithHttpMessagesAsync();
+            var keyInfo = await _lykkeSigningApi.ApiBitcoinKeyGetWithHttpMessagesAsync();
             var publicKey = keyInfo.Body;
 
             var dateToStore = new AssertPrivKeyPair
             {
                 AssertId = request.AssertId,
-                PublicLey = publicKey.PubKey,
+                PublicKey = publicKey.PubKey,
                 Address = publicKey.Address
             };
 
-            var encriptedData = SavePrimaryKey(JsonConvert.SerializeObject(dateToStore));
-            await _merchantWalletRepository.SaveNewAddress(new MerchantWalletEntity
+            var encriptedData = EncryptData(JsonConvert.SerializeObject(dateToStore));
+            await _merchantWalletRepository.SaveNewAddressAsync(new MerchantWalletEntity
             {
                 MerchantId = request.MerchantId,
                 Data = encriptedData
@@ -81,31 +79,6 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
 
         }
 
-        private string SavePrimaryKey(string getPrivateKey)
-        {
-
-            byte[] result;
-            using (var aes = Aes.Create())
-            using (var md5 = MD5.Create())
-            using (var sha256 = SHA256.Create())
-            {
-                aes.Key = sha256.ComputeHash(Encoding.UTF8.GetBytes(_settings.DataEncriptionPassword));
-                aes.IV = md5.ComputeHash(Encoding.UTF8.GetBytes(_settings.DataEncriptionPassword));
-
-                using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
-                using (var resultStream = new MemoryStream())
-                {
-                    using (var aesStream = new CryptoStream(resultStream, encryptor, CryptoStreamMode.Write))
-                    using (var plainStream = new MemoryStream(Encoding.UTF8.GetBytes(getPrivateKey)))
-                    {
-                        plainStream.CopyTo(aesStream);
-                    }
-
-                    result = resultStream.ToArray();
-                }
-            }
-
-            return Convert.ToBase64String(result);
-        }
+        
     }
 }
