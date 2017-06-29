@@ -45,7 +45,7 @@ namespace Lykke.Pay.Service.GenerateAddress
                 options.SingleApiVersion(new Info
                 {
                     Version = "v1",
-                    Title = "Lykke Pay Service StoreRequest Micro Service"
+                    Title = "Lykke Pay Service GenerateAddress Micro Service"
                 });
                 options.DescribeAllEnumsAsStrings();
 
