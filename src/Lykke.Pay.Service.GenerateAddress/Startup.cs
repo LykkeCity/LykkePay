@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Lykke.SettingsReader;
 using Lykke.Signing.Client;
+using Microsoft.Extensions.PlatformAbstractions;
+using Swashbuckle.Swagger.Model;
 
 namespace Lykke.Pay.Service.GenerateAddress
 {
@@ -36,6 +39,23 @@ namespace Lykke.Pay.Service.GenerateAddress
             BuildConfiguration(services);
             // Add framework services.
             services.AddMvc();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SingleApiVersion(new Info
+                {
+                    Version = "v1",
+                    Title = "Lykke Pay Service StoreRequest Micro Service"
+                });
+                options.DescribeAllEnumsAsStrings();
+
+                //Determine base path for the application.
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+
+                //Set the comments path for the swagger json and ui.
+                var xmlPath = Path.Combine(basePath, "Lykke.Pay.Service.GenerateAddress.xml");
+                options.IncludeXmlComments(xmlPath);
+            });
         }
 
         private void BuildConfiguration(IServiceCollection services)
@@ -64,6 +84,8 @@ namespace Lykke.Pay.Service.GenerateAddress
             loggerFactory.AddDebug();
 
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUi();
         }
     }
 }
