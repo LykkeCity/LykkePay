@@ -52,6 +52,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
             await _merchantWalletRepository.SaveNewAddressAsync(new MerchantWalletEntity
             {
                 MerchantId = request.MerchantId,
+                WalletAddress = publicKey.Address,
                 Data = encriptedData
             });
 

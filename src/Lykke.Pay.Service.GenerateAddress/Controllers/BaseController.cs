@@ -63,7 +63,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
                 using (var resultStream = new MemoryStream())
                 {
                     using (var aesStream = new CryptoStream(resultStream, decryptor, CryptoStreamMode.Write))
-                    using (var plainStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+                    using (var plainStream = new MemoryStream(Convert.FromBase64String(data)))
                     {
                         plainStream.CopyTo(aesStream);
                     }
@@ -72,7 +72,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
                 }
             }
 
-            return Convert.ToBase64String(result);
+            return Encoding.UTF8.GetString(result);
         }
 
         

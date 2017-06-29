@@ -1,7 +1,8 @@
 ﻿{
     "PayServiceGenAddress": {
         "Db": {
-            "PrivateKeysConnString": "UseDevelopmentStorage=true"
+            //"PrivateKeysConnString": "UseDevelopmentStorage=true"
+            "PrivateKeysConnString": "DefaultEndpointsProtocol=https;AccountName=lkedevmerchant;AccountKey=P8KnE1uRj9jDsacNCMAJ2krit+cpMtMjQHh+f19PIfe9ygfSBuvMqFb894oB9gSf8wf5pRGoS2j1pnmSAdKxKQ==;EndpointSuffix=core.windows.net"
         },
         "DataEncriptionPassword": "Test",
         "GenerateKeySize": 1024,

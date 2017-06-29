@@ -36,7 +36,9 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
         public async Task<IEnumerable<WalletInfo>> Get()
         {
             var wallets = await GetWallets();
+
             return from w in wallets
+                   where !string.IsNullOrEmpty(w.Item2.Address)
                 select new WalletInfo
                 {
                     Amount = w.Item2.Amount,
@@ -50,9 +52,14 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
         [HttpGet("{walletAddress}")]
         public async Task<WalletInfo> Get(string walletAddress)
         {
+            if (string.IsNullOrEmpty(walletAddress))
+            {
+                return null;
+            }
+
             var wallets = await GetWallets();
             return (from w in wallets
-                    where w.Item2.Address.Equals(walletAddress)
+                    where walletAddress.Equals(w.Item2.Address)
                 select new WalletInfo
                 {
                     Amount = w.Item2.Amount,
@@ -68,7 +75,12 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
             var wallets = await GetWallets();
             foreach (var cr in changeRequest)
             {
-                var w = wallets.FirstOrDefault(wa => wa.Item2.Address.Equals(cr.WalletAddress));
+                if (string.IsNullOrEmpty(cr.WalletAddress))
+                {
+                    continue;
+                }
+
+                var w = wallets.FirstOrDefault(wa => cr.WalletAddress.Equals(wa.Item2.Address));
                 if (w == null)
                 {
                     continue;
@@ -76,10 +88,11 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
 
                 w.Item2.Amount += cr.DeltaAmount;
 
-                var encriptedData = EncryptData(JsonConvert.SerializeObject(w));
+                var encriptedData = EncryptData(JsonConvert.SerializeObject(w.Item2));
                 await _merchantWalletRepository.SaveNewAddressAsync(new MerchantWalletEntity
                 {
                     MerchantId = w.Item1,
+                    WalletAddress = w.Item2.Address,
                     Data = encriptedData
                 });
                 var ipAddress = Request.HttpContext.GetRealIp();

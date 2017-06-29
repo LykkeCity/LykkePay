@@ -13,10 +13,10 @@
     <None Remove="wwwroot\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.Common.Entities" Version="1.0.23" />
-    <PackageReference Include="Lykke.Core" Version="1.0.58" />
-    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.8" />
-    <PackageReference Include="Lykke.SettingsReader" Version="1.0.37" />
+    <PackageReference Include="Lykke.Common.Entities" Version="1.0.24" />
+    <PackageReference Include="Lykke.Core" Version="1.0.63" />
+    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.9" />
+    <PackageReference Include="Lykke.SettingsReader" Version="1.0.38" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
