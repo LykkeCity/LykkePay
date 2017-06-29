@@ -490,7 +490,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
             return _result;
         }
 
-        /// <param name='walletAddress'>
+        /// <param name='merchantId'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -513,11 +513,11 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<WalletInfo>> ApiWalletByWalletAddressGetWithHttpMessagesAsync(string walletAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<WalletInfo>>> ApiWalletByMerchantIdGetWithHttpMessagesAsync(string merchantId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (walletAddress == null)
+            if (merchantId == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "walletAddress");
+                throw new ValidationException(ValidationRules.CannotBeNull, "merchantId");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -526,14 +526,14 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("walletAddress", walletAddress);
+                tracingParameters.Add("merchantId", merchantId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "ApiWalletByWalletAddressGet", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "ApiWalletByMerchantIdGet", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/wallet/{walletAddress}").ToString();
-            _url = _url.Replace("{walletAddress}", System.Uri.EscapeDataString(walletAddress));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/wallet/{merchantId}").ToString();
+            _url = _url.Replace("{merchantId}", System.Uri.EscapeDataString(merchantId));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -593,7 +593,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<WalletInfo>();
+            var _result = new HttpOperationResponse<IList<WalletInfo>>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -602,7 +602,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<WalletInfo>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<IList<WalletInfo>>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

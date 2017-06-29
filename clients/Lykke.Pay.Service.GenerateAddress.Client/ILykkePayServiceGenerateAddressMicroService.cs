@@ -63,7 +63,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
         /// </param>
         Task<HttpOperationResponse> ApiWalletPostWithHttpMessagesAsync(IList<WallerChangeRequest> changeRequest = default(IList<WallerChangeRequest>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
-        /// <param name='walletAddress'>
+        /// <param name='merchantId'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -71,7 +71,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<WalletInfo>> ApiWalletByWalletAddressGetWithHttpMessagesAsync(string walletAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<WalletInfo>>> ApiWalletByMerchantIdGetWithHttpMessagesAsync(string merchantId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

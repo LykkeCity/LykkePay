@@ -92,24 +92,24 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='walletAddress'>
+            /// <param name='merchantId'>
             /// </param>
-            public static WalletInfo ApiWalletByWalletAddressGet(this ILykkePayServiceGenerateAddressMicroService operations, string walletAddress)
+            public static IList<WalletInfo> ApiWalletByMerchantIdGet(this ILykkePayServiceGenerateAddressMicroService operations, string merchantId)
             {
-                return operations.ApiWalletByWalletAddressGetAsync(walletAddress).GetAwaiter().GetResult();
+                return operations.ApiWalletByMerchantIdGetAsync(merchantId).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='walletAddress'>
+            /// <param name='merchantId'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<WalletInfo> ApiWalletByWalletAddressGetAsync(this ILykkePayServiceGenerateAddressMicroService operations, string walletAddress, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<WalletInfo>> ApiWalletByMerchantIdGetAsync(this ILykkePayServiceGenerateAddressMicroService operations, string merchantId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiWalletByWalletAddressGetWithHttpMessagesAsync(walletAddress, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.ApiWalletByMerchantIdGetWithHttpMessagesAsync(merchantId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
