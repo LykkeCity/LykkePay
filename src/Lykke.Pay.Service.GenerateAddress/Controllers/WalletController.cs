@@ -24,9 +24,10 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
         }
 
 
-        private async Task<List<Tuple<string,AssertPrivKeyPair>>> GetWallets()
+        private async Task<List<Tuple<string,AssertPrivKeyPair>>> GetWallets(string merchantId = null)
         {
-            var wallets = await _merchantWalletRepository.GetAllAddressAsync();
+            var wallets = string.IsNullOrEmpty(merchantId) ?  await _merchantWalletRepository.GetAllAddressAsync() :
+                await _merchantWalletRepository.GetAllAddressOfMerchantAsync(merchantId);
             return (from w in wallets
                 select new Tuple<string, AssertPrivKeyPair>(w.MerchantId, JsonConvert.DeserializeObject<AssertPrivKeyPair>(DecryptData(w.Data)))).ToList();
         }
@@ -49,23 +50,23 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{walletAddress}")]
-        public async Task<WalletInfo> Get(string walletAddress)
+        [HttpGet("{merchantId}")]
+        public async Task<IEnumerable<WalletInfo>> Get(string merchantId)
         {
-            if (string.IsNullOrEmpty(walletAddress))
+            if (string.IsNullOrEmpty(merchantId))
             {
                 return null;
             }
 
-            var wallets = await GetWallets();
-            return (from w in wallets
-                    where walletAddress.Equals(w.Item2.Address)
+            var wallets = await GetWallets(merchantId);
+            return from w in wallets
+                where !string.IsNullOrEmpty(w.Item2.Address)
                 select new WalletInfo
                 {
                     Amount = w.Item2.Amount,
                     Assert = w.Item2.AssertId,
                     WalletAddress = w.Item2.Address
-                }).FirstOrDefault();
+                };
         }
 
         // POST api/values

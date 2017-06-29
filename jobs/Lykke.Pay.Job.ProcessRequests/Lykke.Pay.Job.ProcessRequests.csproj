@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.63" />
-    <PackageReference Include="Lykke.Core" Version="1.0.63" />
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.64" />
+    <PackageReference Include="Lykke.Core" Version="1.0.64" />
     <PackageReference Include="Lykke.MatchingEngineConnector" Version="1.0.8" />
     <PackageReference Include="Lykke.MatchingEngineConnector.Abstractions" Version="1.0.8" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.9" />
