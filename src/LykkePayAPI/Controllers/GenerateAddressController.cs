@@ -42,7 +42,7 @@ namespace LykkePay.API.Controllers
             });
             
 
-            var publicKey = response.;
+            var publicKey = response.Body.Address;
 
             var result = new
             {
