@@ -9,6 +9,7 @@ using Lykke.Common.Entities.Pay;
 using Lykke.Common.Entities.Security;
 using Lykke.Core;
 using Lykke.Pay.Service.GenerateAddress.Code;
+using Lykke.Pay.Service.GenerateAddress.Models;
 using Lykke.Signing.Client;
 using Newtonsoft.Json;
 
@@ -30,11 +31,11 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
 
         // POST api/values
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]GenerateAddressRequest request)
+        public async Task<GenerateAddressModel> Post([FromBody]GenerateAddressRequest request)
         {
             if (string.IsNullOrEmpty(request?.MerchantId) || string.IsNullOrEmpty(request.AssertId))
             {
-                return Json(new {Address = string.Empty});
+                return new GenerateAddressModel { Address = string.Empty};
             }
 
 
@@ -56,7 +57,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
                 Data = encriptedData
             });
 
-            return Json(new { publicKey.Address });
+            return new GenerateAddressModel { Address = publicKey.Address };
 
             //using (var rsa = RSA.Create())
             //{
