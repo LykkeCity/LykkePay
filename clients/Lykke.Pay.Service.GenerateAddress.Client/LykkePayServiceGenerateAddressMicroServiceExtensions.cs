@@ -23,9 +23,9 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
             /// </param>
             /// <param name='request'>
             /// </param>
-            public static void ApiGeneratePost(this ILykkePayServiceGenerateAddressMicroService operations, GenerateAddressRequest request = default(GenerateAddressRequest))
+            public static GenerateAddressModel ApiGeneratePost(this ILykkePayServiceGenerateAddressMicroService operations, GenerateAddressRequest request = default(GenerateAddressRequest))
             {
-                operations.ApiGeneratePostAsync(request).GetAwaiter().GetResult();
+                return operations.ApiGeneratePostAsync(request).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -36,9 +36,12 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiGeneratePostAsync(this ILykkePayServiceGenerateAddressMicroService operations, GenerateAddressRequest request = default(GenerateAddressRequest), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<GenerateAddressModel> ApiGeneratePostAsync(this ILykkePayServiceGenerateAddressMicroService operations, GenerateAddressRequest request = default(GenerateAddressRequest), CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiGeneratePostWithHttpMessagesAsync(request, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                using (var _result = await operations.ApiGeneratePostWithHttpMessagesAsync(request, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
 
             /// <param name='operations'>

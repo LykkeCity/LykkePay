@@ -43,7 +43,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiGeneratePostWithHttpMessagesAsync(GenerateAddressRequest request = default(GenerateAddressRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<GenerateAddressModel>> ApiGeneratePostWithHttpMessagesAsync(GenerateAddressRequest request = default(GenerateAddressRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
