@@ -30,7 +30,7 @@ namespace LykkePay.API.Controllers
         public async Task<IActionResult> Get(string assertId)
         {
             var isValid = await ValidateRequest();
-            if (1!= 1 && (isValid as OkResult)?.StatusCode != Ok().StatusCode)
+            if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
             {
                 return isValid;
             }

@@ -20,6 +20,6 @@
         public string GenerateAddressService { get; set; }
 
         public string StoreRequestService { get; set; }
-
+        public string BitcoinApi { get; set; }
     }
 }
