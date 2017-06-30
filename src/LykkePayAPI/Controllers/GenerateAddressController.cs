@@ -6,8 +6,9 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Lykke.Common.Entities.Pay;
 using Lykke.Common.Entities.Security;
+using Lykke.Pay.Service.GenerateAddress.Client;
+using Lykke.Pay.Service.GenerateAddress.Client.Models;
 using LykkePay.API.Code;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,33 +20,29 @@ namespace LykkePay.API.Controllers
     [Route("api/generateAddress")]
     public class GenerateAddressController : BaseController
     {
-        public GenerateAddressController(PayApiSettings payApiSettings, HttpClient client) : base(payApiSettings, client)
+        private readonly ILykkePayServiceGenerateAddressMicroService _gaService;
+        public GenerateAddressController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceGenerateAddressMicroService gaService) : base(payApiSettings, client)
         {
-
+            _gaService = gaService;
         }
 
         [HttpGet("{assertId}")]
         public async Task<IActionResult> Get(string assertId)
         {
             var isValid = await ValidateRequest();
-            if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
+            if (1!= 1 && (isValid as OkResult)?.StatusCode != Ok().StatusCode)
             {
                 return isValid;
             }
 
-            var respone = await HttpClient.PostAsync(PayApiSettings.Services.GenerateAddressService, new StringContent(
-                JsonConvert.SerializeObject(new GenerateAddressRequest
-                {
-                    MerchantId = HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "",
-                    AssertId = assertId
-                }), Encoding.UTF8, "application/json"));
-
-            if (respone.StatusCode != HttpStatusCode.OK)
+            var response = await _gaService.ApiGeneratePostWithHttpMessagesAsync(new GenerateAddressRequest
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+                MerchantId = MerchantId,
+                AssertId = assertId
+            });
+            
 
-            var publicKey = await respone.Content.ReadAsStringAsync();
+            var publicKey = response.Body;
 
             var result = new
             {

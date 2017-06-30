@@ -32,6 +32,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\clients\Lykke.Pay.Service.GenerateAddress.Client\Lykke.Pay.Service.GenerateAddress.Client.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="Dockerfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

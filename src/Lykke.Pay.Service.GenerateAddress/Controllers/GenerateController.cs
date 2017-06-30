@@ -30,11 +30,11 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
 
         // POST api/values
         [HttpPost]
-        public async Task<string> Post([FromBody]GenerateAddressRequest request)
+        public async Task<IActionResult> Post([FromBody]GenerateAddressRequest request)
         {
             if (string.IsNullOrEmpty(request?.MerchantId) || string.IsNullOrEmpty(request.AssertId))
             {
-                return string.Empty;
+                return Json(new {Address = string.Empty});
             }
 
 
@@ -56,7 +56,7 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
                 Data = encriptedData
             });
 
-            return publicKey.Address;
+            return Json(new { publicKey.Address });
 
             //using (var rsa = RSA.Create())
             //{
@@ -80,6 +80,6 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
 
         }
 
-        
+
     }
 }
