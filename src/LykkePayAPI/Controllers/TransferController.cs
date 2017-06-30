@@ -58,12 +58,11 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
-            var result = new TransferReturn
+            var result = new TransferInProgressReturn
             {
-                TransferStatus = TransferStatus.TransferInProgress,
-                TransferResponse = new TransferResponse
+                TransferResponse = new TransferInProgressResponse
                 {
-                    Settlement = Settlement.TransactionDetected,
+                    Settlement = Settlement.TRANSACTION_DETECTED,
                     TimeStamp = DateTime.UtcNow.Ticks,
                     Currency = request.AssetId
                 }
@@ -79,12 +78,11 @@ namespace LykkePay.API.Controllers
                                                             .Equals(l.Address)) == null))
                 {
                     return Json(
-                        new TransferReturn
+                        new TransferErrorReturn
                         {
-                            TransferStatus = TransferStatus.TransferError,
-                            TransferResponse = new TransferResponse
+                            TransferResponse = new TransferErrorResponse
                             {
-                                TransferError = TransferError.InvalidAddress,
+                                TransferError = TransferError.INVALID_ADDRESS,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             }
                         });
@@ -105,12 +103,11 @@ namespace LykkePay.API.Controllers
                 if (!store.Amount.HasValue || store.Amount.Value <= 0)
                 {
                     return Json(
-                        new TransferReturn
+                        new TransferErrorReturn
                         {
-                            TransferStatus = TransferStatus.TransferError,
-                            TransferResponse = new TransferResponse
+                            TransferResponse = new TransferErrorResponse
                             {
-                                TransferError = TransferError.InvalidAmount,
+                                TransferError = TransferError.INVALID_AMOUNT,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             }
                         });
@@ -141,12 +138,11 @@ namespace LykkePay.API.Controllers
                 if (amountToPay > 0)
                 {
                     return Json(
-                        new TransferReturn
+                        new TransferErrorReturn
                         {
-                            TransferStatus = TransferStatus.TransferError,
-                            TransferResponse = new TransferResponse
+                            TransferResponse = new TransferErrorResponse
                             {
-                                TransferError = TransferError.InvalidAmount,
+                                TransferError = TransferError.INVALID_AMOUNT,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             }
                         });
@@ -167,12 +163,11 @@ namespace LykkePay.API.Controllers
                 if (resData?.TransactionId == null)
                 {
                     return Json(
-                        new TransferReturn
+                        new TransferErrorReturn
                         {
-                            TransferStatus = TransferStatus.TransferError,
-                            TransferResponse = new TransferResponse
+                            TransferResponse = new TransferErrorResponse
                             {
-                                TransferError = TransferError.TransferNotConfirmed,
+                                TransferError = TransferError.TRANSACTION_NOT_CONFIRMED,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             }
                         });
@@ -184,12 +179,11 @@ namespace LykkePay.API.Controllers
             catch (Exception e)
             {
                 return Json(
-                    new TransferReturn
+                    new TransferErrorReturn
                     {
-                        TransferStatus = TransferStatus.TransferError,
-                        TransferResponse = new TransferResponse
+                        TransferResponse = new TransferErrorResponse
                         {
-                            TransferError = TransferError.InternalError,
+                            TransferError = TransferError.INTERNAL_ERROR,
                             TimeStamp = DateTime.UtcNow.Ticks
                         }
                     });

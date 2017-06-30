@@ -7,45 +7,50 @@ using Newtonsoft.Json.Converters;
 
 namespace Lykke.Pay.Common
 {
-    public enum TransferError
+    public class TransferSuccessReturn
     {
-        NotError,
-        TransferNotConfirmed,
-        InvalidAmount,
-        InvalidAddress,
-        InternalError
-    }
-    public enum TransferStatus
-    {
-        TransferConfirmed,
-        TransferInProgress,
-        TransferError
-    }
-    public enum Settlement
-    {
-        NotApplicable,
-        TransactionDetected
-    }
-    public class TransferReturn
-    {
-        public TransferReturn()
+        public TransferSuccessReturn()
         {
-            TransferResponse = new TransferResponse
-            {
-                Settlement = Settlement.NotApplicable,
-                TransferError = TransferError.NotError
-            };
+            TransferStatus = TransferStatus.TRANSFER_CONFIRMED;
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public TransferStatus TransferStatus { get; set; }
 
-        public TransferResponse TransferResponse { get; set; }
+        public TransferSuccessResponse TransferResponse { get; set; }
 
-}
+    }
 
-    
-    public class TransferResponse
+    public class TransferInProgressReturn
+    {
+        public TransferInProgressReturn()
+        {
+            TransferStatus = TransferStatus.TRANSFER_INPROGRESS;
+        }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public TransferStatus TransferStatus { get; set; }
+
+        public TransferInProgressResponse TransferResponse { get; set; }
+
+    }
+
+    public class TransferErrorReturn
+    {
+        public TransferErrorReturn()
+        {
+            TransferStatus = TransferStatus.TRANSFER_ERROR;
+        }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public TransferStatus TransferStatus { get; set; }
+
+        public TransferErrorResponse TransferResponse { get; set; }
+
+    }
+
+
+    public class TransferSuccessResponse
     {
         public string Currency { get; set; }
 
@@ -57,14 +62,34 @@ namespace Lykke.Pay.Common
 
         public string TransactionId { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public Settlement Settlement { get; set; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public TransferError TransferError { get; set; }
 
 
     }
 
-   
+    public class TransferInProgressResponse
+    {
+        public string Currency { get; set; }
+
+        public long TimeStamp { get; set; }
+
+        public string TransactionId { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Settlement Settlement { get; set; }
+
+
+    }
+
+    public class TransferErrorResponse
+    {
+      
+        public long TimeStamp { get; set; }
+
+       
+        [JsonConverter(typeof(StringEnumConverter))]
+        public TransferError TransferError { get; set; }
+
+    }
+
+
 }
