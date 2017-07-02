@@ -1,6 +1,8 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Lykke.Core;
+using Lykke.Pay.Service.StoreRequest.Client;
 
 namespace Lykke.Pay.Job.ProcessRequests.RequestFactory
 {
@@ -8,10 +10,10 @@ namespace Lykke.Pay.Job.ProcessRequests.RequestFactory
     {
         public override async Task Handle()
         {
-            throw new NotImplementedException();
+            await Task.Delay(10);
         }
 
-        public PurchaseRequestHandler(IMerchantPayRequest payRequest) : base(payRequest)
+        public PurchaseRequestHandler(IMerchantPayRequest payRequest, LykkePayJobProcessRequestsSettings settings) : base(payRequest, settings)
         {
         }
     }

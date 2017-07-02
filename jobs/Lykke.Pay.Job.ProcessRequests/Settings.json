@@ -1,0 +1,10 @@
+﻿{
+    "LykkePayJobProcessRequests": {
+        "Services": {
+            "LykkePayServiceStoreRequestMicroService": "https://storerequest-dev.lykkex.net/"
+        },
+        "DB": {
+            "MerchantWalletConnectionString": "DefaultEndpointsProtocol=https;AccountName=lkedevmerchant;AccountKey=P8KnE1uRj9jDsacNCMAJ2krit+cpMtMjQHh+f19PIfe9ygfSBuvMqFb894oB9gSf8wf5pRGoS2j1pnmSAdKxKQ==;EndpointSuffix=core.windows.net"
+        }
+    }
+}

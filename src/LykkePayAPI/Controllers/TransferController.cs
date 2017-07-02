@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
 using Bitcoint.Api.Client.Models;
+using Lykke.Core;
 using Lykke.Pay.Common;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
@@ -173,6 +174,7 @@ namespace LykkePay.API.Controllers
                         });
                 }
                 store.TransactionId = resData.TransactionId.Value.ToString();
+                store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
                 await _storeRequestClient.ApiStorePostWithHttpMessagesAsync(store);
                 result.TransferResponse.TransactionId = store.TransactionId;
             }
