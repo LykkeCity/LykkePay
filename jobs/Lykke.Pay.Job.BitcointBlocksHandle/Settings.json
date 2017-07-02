@@ -1,0 +1,14 @@
+﻿{
+    "LykkePayJobBitcointHandle": {
+        "Rpc": {
+            "UserName": "bitcoinrpc",
+            "Password": "!Lykke2",
+            "Url": "http://40.113.151.120:18332"
+        },
+        "DB": {
+            "MerchantWalletConnectionString": "DefaultEndpointsProtocol=https;AccountName=lkedevmerchant;AccountKey=P8KnE1uRj9jDsacNCMAJ2krit+cpMtMjQHh+f19PIfe9ygfSBuvMqFb894oB9gSf8wf5pRGoS2j1pnmSAdKxKQ==;EndpointSuffix=core.windows.net"
+        },
+        "NumberOfConfirm": 3,
+        "DataEncriptionPassword": "Test"
+    }
+}
