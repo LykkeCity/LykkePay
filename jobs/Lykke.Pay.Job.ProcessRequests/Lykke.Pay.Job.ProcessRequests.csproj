@@ -19,8 +19,8 @@
   <ItemGroup>
     <PackageReference Include="Lykke.AzureRepositories" Version="1.0.67" />
     <PackageReference Include="Lykke.Core" Version="1.0.67" />
-    <PackageReference Include="Lykke.MatchingEngineConnector" Version="1.0.8" />
-    <PackageReference Include="Lykke.MatchingEngineConnector.Abstractions" Version="1.0.8" />
+    <PackageReference Include="Lykke.MatchingEngineConnector" Version="1.0.9" />
+    <PackageReference Include="Lykke.MatchingEngineConnector.Abstractions" Version="1.0.9" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.9" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.38" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.2" />
@@ -29,6 +29,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\clients\Bitcoint.Api.Client\Bitcoint.Api.Client.csproj" />
   </ItemGroup>
 
 </Project>

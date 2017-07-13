@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.67" />
+    <PackageReference Include="Lykke.Common" Version="1.1.76" />
+    <PackageReference Include="Lykke.Common.Entities" Version="1.0.26" />
+    <PackageReference Include="Lykke.Core" Version="1.0.67" />
+    <PackageReference Include="Lykke.Pay.Service.Wallets.Client" Version="1.0.5" />
+    <PackageReference Include="Lykke.RabbitMqBroker" Version="1.0.65" />
+    <PackageReference Include="NBitcoin" Version="4.0.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lykke.Job.BitcoinTransactionAggregator.Core\Lykke.Job.BitcoinTransactionAggregator.Core.csproj" />
+  </ItemGroup>
+
+</Project>

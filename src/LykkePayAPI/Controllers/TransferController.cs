@@ -38,15 +38,17 @@ namespace LykkePay.API.Controllers
             {
                 return null;
             }
-
+            
             var walletResult = await _generateAddressClient.ApiWalletByMerchantIdGetWithHttpMessagesAsync(MerchantId);
-            return (from w in walletResult.Body
+            var res = (from w in walletResult.Body
                     where request.AssetId.Equals(w.Assert, StringComparison.CurrentCultureIgnoreCase)
                     select new ToOneAddress
                     {
                         Address = w.WalletAddress,
                         Amount = (decimal?)w.Amount
                     }).ToList();
+            //var ww = res.Where(www => www.Address == "mqiPrLxjrPd8ihF67Fo5zqVCD4kvSoG16P").FirstOrDefault();
+            return res;
         }
 
         // POST api/values
@@ -72,6 +74,7 @@ namespace LykkePay.API.Controllers
             {
                 var store = request.GetRequest();
                 store.MerchantId = MerchantId;
+                store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
 
                 var list = await GetListOfSources(request);
                 if (list == null || list.Count == 0 || (!string.IsNullOrEmpty(store.SourceAddress) &&
@@ -126,8 +129,9 @@ namespace LykkePay.API.Controllers
                     var amout = Math.Max(src.Amount.Value, amountToPay);
                     if (amout > amountToPay)
                     {
-                        amountToPay = 0;
                         src.Amount = amountToPay;
+                        amountToPay = 0;
+                        
                     }
                     else
                     {

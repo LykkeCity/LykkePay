@@ -71,6 +71,7 @@ namespace Lykke.Pay.Job.BitcointBlocksHandle
            
             int blockNumner = await bitcoinRepo.GetNextBlockId();
             int blockHeight = await client.GetBlockCountAsync();
+            blockNumner = 1152735;
             while (blockNumner <= blockHeight - (generalSettings.LykkePayJobBitcointHandle.NumberOfConfirm - 1))
             {
                 var wallets = await GetWallets(merchantWalletRepository,
@@ -79,6 +80,8 @@ namespace Lykke.Pay.Job.BitcointBlocksHandle
                 var inTransactions = new List<String>();
                 foreach (var transaction in block.Transactions)
                 {
+                    var txId = transaction.GetHash().ToString();
+
                     foreach (var txIn in transaction.Inputs)
                     {
 

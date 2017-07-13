@@ -5,7 +5,8 @@
             "PayServiceService": "https://payrates-dev.lykkex.net/api/rate",
             "GenerateAddressService": "https://paygenaddr-dev.lykkex.net/",
             "StoreRequestService": "https://storerequest-dev.lykkex.net/",
-            "BitcoinApi": "http://13.93.116.252/"
+            "BitcoinApi": "http://52.164.252.39/"
+
         }
     }
 }

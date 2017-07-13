@@ -713,6 +713,32 @@ namespace Bitcoint.Api.Client
                 }
             }
 
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='limit'>
+            /// </param>
+            public static object ApiOffchainCommitmentBroadcastsGet(this IBitcoinApi operations, int? limit = default(int?))
+            {
+                return operations.ApiOffchainCommitmentBroadcastsGetAsync(limit).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='limit'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> ApiOffchainCommitmentBroadcastsGetAsync(this IBitcoinApi operations, int? limit = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ApiOffchainCommitmentBroadcastsGetWithHttpMessagesAsync(limit, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
             /// <summary>
             /// Creates cash out transaction without signs
             /// </summary>
@@ -778,6 +804,38 @@ namespace Bitcoint.Api.Client
             }
 
             /// <summary>
+            /// Return transaction hash by internal id
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='transactionId'>
+            /// </param>
+            public static object ApiTransactionByTransactionIdGet(this IBitcoinApi operations, System.Guid transactionId)
+            {
+                return operations.ApiTransactionByTransactionIdGetAsync(transactionId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Return transaction hash by internal id
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='transactionId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> ApiTransactionByTransactionIdGetAsync(this IBitcoinApi operations, System.Guid transactionId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ApiTransactionByTransactionIdGetWithHttpMessagesAsync(transactionId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
             /// Returns 2-of-2 multisig with exchange key and provided public key
             /// </summary>
             /// <remarks>
@@ -814,6 +872,34 @@ namespace Bitcoint.Api.Client
             public static async Task<GetWalletResult> ApiWalletByClientPubKeyGetAsync(this IBitcoinApi operations, string clientPubKey, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ApiWalletByClientPubKeyGetWithHttpMessagesAsync(clientPubKey, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Returns all registered multisigs
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            public static object ApiWalletAllGet(this IBitcoinApi operations)
+            {
+                return operations.ApiWalletAllGetAsync().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Returns all registered multisigs
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> ApiWalletAllGetAsync(this IBitcoinApi operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ApiWalletAllGetWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

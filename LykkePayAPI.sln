@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bitcoint.Api.Client", "clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Common", "src\Lykke.Pay.Common\Lykke.Pay.Common.csproj", "{FA009631-49E3-4A2A-B44A-65B446B08446}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Pay.Job.BitcointBlocksHandle", "jobs\Lykke.Pay.Job.BitcointBlocksHandle\Lykke.Pay.Job.BitcointBlocksHandle.csproj", "{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Job.BitcointBlocksHandle", "jobs\Lykke.Pay.Job.BitcointBlocksHandle\Lykke.Pay.Job.BitcointBlocksHandle.csproj", "{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

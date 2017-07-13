@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
+using Bitcoint.Api.Client;
+using Bitcoint.Api.Client.Models;
+using Common.Log;
 using Lykke.AzureRepositories;
 using Lykke.AzureRepositories.Azure.Tables;
+using Lykke.AzureRepositories.Log;
 using Lykke.Core;
-using Lykke.Pay.Service.StoreRequest.Client;
 
 namespace Lykke.Pay.Job.ProcessRequests.RequestFactory
 {
@@ -11,12 +15,27 @@ namespace Lykke.Pay.Job.ProcessRequests.RequestFactory
     {
         private readonly IBitcoinAggRepository _bitcoinRepo;
         private readonly IMerchantPayRequestRepository _merchantPayRequestRepository;
+        private readonly IBitcoinApi _bitcoinApi;
         public override async Task Handle()
         {
             
             if (MerchantPayRequest.MerchantPayRequestStatus != MerchantPayRequestStatus.InProgress)
             {
                 return;
+            }
+
+            Guid gTransactionId;
+            if (Guid.TryParse(MerchantPayRequest.TransactionId, out gTransactionId))
+            {
+                var resp = await _bitcoinApi.ApiTransactionByTransactionIdGetWithHttpMessagesAsync(gTransactionId);
+                var trnResponce = resp.Body as TransactionHashResponse;
+                if (resp.Response.StatusCode != HttpStatusCode.OK || trnResponce == null)
+                {
+                    return;
+                }
+
+                MerchantPayRequest.TransactionId = trnResponce.TransactionHash;
+                await _merchantPayRequestRepository.SaveRequestAsync(MerchantPayRequest);
             }
 
             var transaction = await _bitcoinRepo.GetWalletTransactionAsync(MerchantPayRequest.DestinationAddress, MerchantPayRequest.TransactionId);
@@ -44,6 +63,8 @@ namespace Lykke.Pay.Job.ProcessRequests.RequestFactory
             _merchantPayRequestRepository =
                 new MerchantPayRequestRepository(
                     new AzureTableStorage<MerchantPayRequest>(settings.Db.MerchantWalletConnectionString, "MerchantPayRequest", null));
+
+            _bitcoinApi = new BitcoinApi(new Uri("http://52.164.252.39/"));
         }
 
        

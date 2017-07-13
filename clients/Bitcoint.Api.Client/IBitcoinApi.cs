@@ -309,6 +309,16 @@ namespace Bitcoint.Api.Client
         /// </param>
         Task<HttpOperationResponse<object>> ApiOffchainAssetBalancesGetWithHttpMessagesAsync(string asset = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='limit'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> ApiOffchainCommitmentBroadcastsGetWithHttpMessagesAsync(int? limit = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
         /// <summary>
         /// Creates cash out transaction without signs
         /// </summary>
@@ -336,6 +346,19 @@ namespace Bitcoint.Api.Client
         Task<HttpOperationResponse<ApiException>> ApiTransactionBroadcastPostWithHttpMessagesAsync(BroadcastTransactionRequest model = default(BroadcastTransactionRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// Return transaction hash by internal id
+        /// </summary>
+        /// <param name='transactionId'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> ApiTransactionByTransactionIdGetWithHttpMessagesAsync(System.Guid transactionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// Returns 2-of-2 multisig with exchange key and provided public key
         /// </summary>
         /// <remarks>
@@ -352,6 +375,17 @@ namespace Bitcoint.Api.Client
         /// The cancellation token.
         /// </param>
         Task<HttpOperationResponse<GetWalletResult>> ApiWalletByClientPubKeyGetWithHttpMessagesAsync(string clientPubKey, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Returns all registered multisigs
+        /// </summary>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> ApiWalletAllGetWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }
