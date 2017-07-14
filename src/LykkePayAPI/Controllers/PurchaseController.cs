@@ -1,25 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Lykke.Common.Entities.Pay;
+using Bitcoint.Api.Client;
+using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LykkePay.API.Controllers
 {
     //[Produces("application/json")]
     [Route("api/Purchase")]
-    public class PurchaseController : BaseController
+    public class PurchaseController : BaseTransactionController
     {
-        private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
-        public PurchaseController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient) : base(payApiSettings, client)
+
+        public PurchaseController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient, ILykkePayServiceGenerateAddressMicroService generateAddressClient) 
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient)
         {
-            _storeRequestClient = storeRequestClient;
+            
         }
 
         [HttpPost]
@@ -34,7 +32,7 @@ namespace LykkePay.API.Controllers
             var store = request.GetRequest();
             store.MerchantId = MerchantId;
 
-            await _storeRequestClient.ApiStorePostAsync(store);
+            await StoreRequestClient.ApiStorePostAsync(store);
 
             return Content(store.RequestId);
 

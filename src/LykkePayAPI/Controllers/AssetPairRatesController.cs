@@ -18,7 +18,8 @@ namespace LykkePay.API.Controllers
     {
        
 
-        public AssetPairRatesController(PayApiSettings payApiSettings, HttpClient client) : base(payApiSettings, client)
+        public AssetPairRatesController(PayApiSettings payApiSettings, HttpClient client) 
+            : base(payApiSettings, client)
         {
            
         }

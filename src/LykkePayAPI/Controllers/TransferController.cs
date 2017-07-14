@@ -17,39 +17,17 @@ using TransferRequest = LykkePay.API.Models.TransferRequest;
 namespace LykkePay.API.Controllers
 {
     [Route("api/Transfer")]
-    public class TransferController : BaseController
+    public class TransferController : BaseTransactionController
     {
-        private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
+      
 
-        private readonly IBitcoinApi _bitcointApiClient;
-
-        private readonly ILykkePayServiceGenerateAddressMicroService _generateAddressClient;
-
-        public TransferController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient, ILykkePayServiceGenerateAddressMicroService generateAddressClient) : base(payApiSettings, client)
+        public TransferController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient, ILykkePayServiceGenerateAddressMicroService generateAddressClient) 
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient)
         {
-            _storeRequestClient = storeRequestClient;
-            _bitcointApiClient = bitcointApiClient;
-            _generateAddressClient = generateAddressClient;
+
         }
 
-        private async Task<List<ToOneAddress>> GetListOfSources(TransferRequest request)
-        {
-            if (string.IsNullOrEmpty(request.AssetId))
-            {
-                return null;
-            }
-            
-            var walletResult = await _generateAddressClient.ApiWalletByMerchantIdGetWithHttpMessagesAsync(MerchantId);
-            var res = (from w in walletResult.Body
-                    where request.AssetId.Equals(w.Assert, StringComparison.CurrentCultureIgnoreCase)
-                    select new ToOneAddress
-                    {
-                        Address = w.WalletAddress,
-                        Amount = (decimal?)w.Amount
-                    }).ToList();
-            //var ww = res.Where(www => www.Address == "mqiPrLxjrPd8ihF67Fo5zqVCD4kvSoG16P").FirstOrDefault();
-            return res;
-        }
+        
 
         // POST api/values
         [HttpPost]
@@ -61,142 +39,8 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
-            var result = new TransferInProgressReturn
-            {
-                TransferResponse = new TransferInProgressResponse
-                {
-                    Settlement = Settlement.TRANSACTION_DETECTED,
-                    TimeStamp = DateTime.UtcNow.Ticks,
-                    Currency = request.AssetId
-                }
-            };
-            try
-            {
-                var store = request.GetRequest();
-                store.MerchantId = MerchantId;
-                store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
+            return await PostTransfer(request.AssetId, request.GetRequest());
 
-                var list = await GetListOfSources(request);
-                if (list == null || list.Count == 0 || (!string.IsNullOrEmpty(store.SourceAddress) &&
-                                                        list.FirstOrDefault(l => store.SourceAddress
-                                                            .Equals(l.Address)) == null))
-                {
-                    return Json(
-                        new TransferErrorReturn
-                        {
-                            TransferResponse = new TransferErrorResponse
-                            {
-                                TransferError = TransferError.INVALID_ADDRESS,
-                                TimeStamp = DateTime.UtcNow.Ticks
-                            }
-                        });
-                }
-
-
-                var sourceList = new List<ToOneAddress>();
-                if (!string.IsNullOrEmpty(store.SourceAddress))
-                {
-                    sourceList.Add(list.First(l => store.SourceAddress
-                        .Equals(l.Address)));
-                }
-                else
-                {
-                    sourceList.AddRange(list);
-                }
-
-                if (!store.Amount.HasValue || store.Amount.Value <= 0)
-                {
-                    return Json(
-                        new TransferErrorReturn
-                        {
-                            TransferResponse = new TransferErrorResponse
-                            {
-                                TransferError = TransferError.INVALID_AMOUNT,
-                                TimeStamp = DateTime.UtcNow.Ticks
-                            }
-                        });
-                }
-
-                decimal amountToPay = (decimal)store.Amount.Value;
-                foreach (var src in sourceList)
-                {
-                    if (!src.Amount.HasValue || src.Amount.Value == 0 || amountToPay == 0)
-                    {
-                        src.Amount = 0;
-                        continue;
-                    }
-
-                    var amout = Math.Max(src.Amount.Value, amountToPay);
-                    if (amout > amountToPay)
-                    {
-                        src.Amount = amountToPay;
-                        amountToPay = 0;
-                        
-                    }
-                    else
-                    {
-                        amountToPay -= amout;
-                    }
-
-                }
-
-                if (amountToPay > 0)
-                {
-                    return Json(
-                        new TransferErrorReturn
-                        {
-                            TransferResponse = new TransferErrorResponse
-                            {
-                                TransferError = TransferError.INVALID_AMOUNT,
-                                TimeStamp = DateTime.UtcNow.Ticks
-                            }
-                        });
-                }
-
-                var mtRequest = new MultipleTransferRequest
-                {
-                    Asset = store.AssetId,
-                    Destination = store.DestinationAddress,
-                    Sources = new List<ToOneAddress>(from sl in sourceList
-                                                     where sl.Amount.HasValue && sl.Amount > 0
-                                                     select sl)
-
-                };
-
-                var r = await _bitcointApiClient.ApiEnqueueTransactionMultipletransferPostWithHttpMessagesAsync(mtRequest);
-                var resData = r?.Body as TransactionIdResponse;
-                if (resData?.TransactionId == null)
-                {
-                    return Json(
-                        new TransferErrorReturn
-                        {
-                            TransferResponse = new TransferErrorResponse
-                            {
-                                TransferError = TransferError.TRANSACTION_NOT_CONFIRMED,
-                                TimeStamp = DateTime.UtcNow.Ticks
-                            }
-                        });
-                }
-                store.TransactionId = resData.TransactionId.Value.ToString();
-                store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
-                await _storeRequestClient.ApiStorePostWithHttpMessagesAsync(store);
-                result.TransferResponse.TransactionId = store.TransactionId;
-            }
-            catch (Exception e)
-            {
-                return Json(
-                    new TransferErrorReturn
-                    {
-                        TransferResponse = new TransferErrorResponse
-                        {
-                            TransferError = TransferError.INTERNAL_ERROR,
-                            TimeStamp = DateTime.UtcNow.Ticks
-                        }
-                    });
-            }
-
-
-            return Json(result);
         }
 
 

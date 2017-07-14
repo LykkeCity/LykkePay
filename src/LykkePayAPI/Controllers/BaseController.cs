@@ -22,6 +22,7 @@ namespace LykkePay.API.Controllers
         {
             PayApiSettings = payApiSettings;
             HttpClient = client;
+
         }
 
         protected string MerchantId => HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "";
@@ -71,5 +72,7 @@ namespace LykkePay.API.Controllers
             }
             return Ok();
         }
+
+        
     }
 }

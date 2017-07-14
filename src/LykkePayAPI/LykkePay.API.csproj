@@ -13,12 +13,13 @@
     <None Remove="wwwroot\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.Common.Entities" Version="1.0.24" />
+    <PackageReference Include="Bitcoint.Api.Client" Version="1.0.3" />
+    <PackageReference Include="Lykke.Common.Entities" Version="1.0.26" />
     <PackageReference Include="Lykke.Core" Version="1.0.67" />
     <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.9" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.9" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.38" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
@@ -33,7 +34,6 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\clients\Bitcoint.Api.Client\Bitcoint.Api.Client.csproj" />
     <ProjectReference Include="..\Lykke.Pay.Common\Lykke.Pay.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
