@@ -67,7 +67,7 @@ namespace Lykke.Pay.Service.Rates.Controllers
                                              {
                                                  AssetPair = rates.AssetPair,
                                                  Bid = rates.Bid,
-                                                 Ask = rates.Bid,
+                                                 Ask = rates.Ask,
                                                  Accuracy = dic.Accuracy
                                              }
                         );

@@ -34,6 +34,19 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
+            if (request.PaidAmount <= 0)
+            {
+                return Json(
+                    new TransferErrorReturn
+                    {
+                        TransferResponse = new TransferErrorResponse
+                        {
+                            TransferError = TransferError.INVALID_AMOUNT,
+                            TimeStamp = DateTime.UtcNow.Ticks
+                        }
+                    });
+            }
+
             var rates = JsonConvert.DeserializeObject<List<AssertPairRate>>(
                 await (await HttpClient.GetAsync(PayApiSettings.Services.PayServiceService)).Content
                     .ReadAsStringAsync());
@@ -52,12 +65,23 @@ namespace LykkePay.API.Controllers
                     });
             }
 
+            var store = request.GetRequest();
+            decimal amountToCharge = 0;
+            if (rate.AssetPair.StartsWith(request.BaseAsset))
+            {
+                amountToCharge = request.PaidAmount * (decimal)rate.Bid;
+            }
+            else
+            {
+                amountToCharge = request.PaidAmount / (decimal)rate.Ask;
+            }
+
             return Json(rate);
 
-            var store = request.GetRequest();
-            store.MerchantId = MerchantId;
-            var json = JsonConvert.SerializeObject(store);
-            await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(store);
+            //var store = request.GetRequest();
+            //store.MerchantId = MerchantId;
+            //var json = JsonConvert.SerializeObject(store);
+            //await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(store);
 
             return Content(store.RequestId);
         }
