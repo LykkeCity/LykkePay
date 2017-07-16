@@ -105,7 +105,7 @@ namespace LykkePay.API.Controllers
                     }
                     else
                     {
-                        amountToPay -= amout;
+                        amountToPay -= src.Amount.Value;
                     }
 
                 }
@@ -125,7 +125,7 @@ namespace LykkePay.API.Controllers
 
                 var mtRequest = new MultipleTransferRequest
                 {
-                    Asset = store.AssetId,
+                    Asset = assertId,
                     Destination = store.DestinationAddress,
                     FeeRate = 0,
                     Sources = new List<ToOneAddress>(from sl in sourceList

@@ -66,24 +66,27 @@ namespace LykkePay.API.Controllers
             }
 
             var store = request.GetRequest();
-            decimal amountToCharge = 0;
+            double amountToCharge = 0;
             if (rate.AssetPair.StartsWith(request.BaseAsset))
             {
-                amountToCharge = request.PaidAmount * (decimal)rate.Bid;
+                amountToCharge = (double)request.PaidAmount * rate.Bid;
             }
             else
             {
-                amountToCharge = request.PaidAmount / (decimal)rate.Ask;
+                amountToCharge = (double)request.PaidAmount / rate.Ask;
             }
 
-            return Json(rate);
 
-            //var store = request.GetRequest();
-            //store.MerchantId = MerchantId;
-            //var json = JsonConvert.SerializeObject(store);
-            //await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(store);
+            double fee = amountToCharge * (request.Markup.Percent / 100f);
+            fee += Math.Pow(10, -1 * rate.Accuracy) * request.Markup.Pips;
+            fee += request.Markup.FixedFee;
 
-            return Content(store.RequestId);
+            amountToCharge = Math.Round(amountToCharge - fee, rate.Accuracy*2);
+
+            store.Amount = amountToCharge;
+
+            return await PostTransfer(request.AssetPair.Replace(request.BaseAsset, string.Empty), store);
+           
         }
     }
 }
