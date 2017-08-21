@@ -21,6 +21,8 @@ namespace LykkePay.API.Controllers
         protected readonly ILykkePayServiceStoreRequestMicroService StoreRequestClient;
         protected readonly IBitcoinApi BitcointApiClient;
 
+        
+
         public BaseTransactionController(PayApiSettings payApiSettings, HttpClient client,
             ILykkePayServiceGenerateAddressMicroService gnerateAddressClient,
             ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient) : base(payApiSettings, client)
@@ -29,8 +31,17 @@ namespace LykkePay.API.Controllers
             StoreRequestClient = storeRequestClient;
             BitcointApiClient = bitcointApiClient;
         }
+
+        protected async Task<JsonResult> JsonAndStoreError(PayRequest payRequest, TransferErrorReturn errorResponse)
+        {
+            payRequest.MerchantPayRequestNotification = MerchantPayRequestNotification.Error.ToString();
+            await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(payRequest);
+            return Json(errorResponse);
+        }
+
         protected async Task<IActionResult> PostTransfer(string assertId, PayRequest payRequest)
         {
+            var store = payRequest;
             var result = new TransferInProgressReturn
             {
                 TransferResponse = new TransferInProgressResponse
@@ -42,7 +53,7 @@ namespace LykkePay.API.Controllers
             };
             try
             {
-                var store = payRequest;
+               
                 store.MerchantId = MerchantId;
                 store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
 
@@ -51,7 +62,7 @@ namespace LykkePay.API.Controllers
                     list.FirstOrDefault(l => store.SourceAddress
                         .Equals(l.Address)) == null)
                 {
-                    return Json(
+                    return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
                             TransferResponse = new TransferErrorResponse
@@ -76,7 +87,7 @@ namespace LykkePay.API.Controllers
 
                 if (!store.Amount.HasValue || store.Amount.Value <= 0)
                 {
-                    return Json(
+                    return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
                             TransferResponse = new TransferErrorResponse
@@ -112,7 +123,7 @@ namespace LykkePay.API.Controllers
 
                 if (amountToPay > 0)
                 {
-                    return Json(
+                    return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
                             TransferResponse = new TransferErrorResponse
@@ -138,7 +149,7 @@ namespace LykkePay.API.Controllers
                 var resData = r?.Body as TransactionIdAndHashResponse;
                 if (resData?.Hash == null)
                 {
-                    return Json(
+                    return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
                             TransferResponse = new TransferErrorResponse
@@ -155,7 +166,7 @@ namespace LykkePay.API.Controllers
             }
             catch (Exception)
             {
-                return Json(
+                return await JsonAndStoreError(store,
                     new TransferErrorReturn
                     {
                         TransferResponse = new TransferErrorResponse
@@ -170,7 +181,7 @@ namespace LykkePay.API.Controllers
             return Json(result);
         }
 
-        private async Task<List<ToOneAddress>> GetListOfSources(string assertId)
+        public async Task<List<ToOneAddress>> GetListOfSources(string assertId)
         {
             if (string.IsNullOrEmpty(assertId))
             {

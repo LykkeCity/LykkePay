@@ -1,12 +1,12 @@
 ﻿{
     "PayServiceRates": {
         "Services": {
-            "MarketProfileService": "http://13.93.116.252:5030/api/MarketProfile",
-            "MarginTradingAssetService": "http://dictionary-dev.lykkex.net/api/MarginTradingAsset"
+            "MarketProfileService": "http://104.46.35.124:1050/api/MarketProfile/",
+            "MarginTradingAssetService": "http://52.166.113.149:1050/api/MarginTradingAsset"
         },
         "Db": {
-            "AssertHistoryConnString": "UseDevelopmentStorage=true"
+            "AssertHistoryConnString": "DefaultEndpointsProtocol=https;AccountName=kubepartnerssettings;AccountKey=NerdyjCCo1CRGHpiExv6nME5sNRnp8SG9rM+56vL5Fu6mqQ2ZoXMVzBirtbB8TWghqjEL7u4ViKL3m5OAW0Cag==;EndpointSuffix=core.windows.net"
         },
-        "CacheTimeout": 5
+        "CacheTimeout": "5"
     }
 }

@@ -1,10 +1,10 @@
 ﻿{
     "PayApi": {
         "Services": {
-            "MerchantAuthService": "https://merchantauth-dev.lykkex.net/api/auth",
-            "PayServiceService": "https://payrates-dev.lykkex.net/api/rate",
-            "GenerateAddressService": "https://paygenaddr-dev.lykkex.net/",
-            "StoreRequestService": "https://storerequest-dev.lykkex.net/",
+            "MerchantAuthService": "http://104.46.35.124:1010/api/auth",
+            "PayServiceService": "http://104.46.35.124:1040/api/rate",
+            "GenerateAddressService": "http://104.46.35.124:1020/",
+            "StoreRequestService": "http://104.46.35.124:1030/",
             "BitcoinApi": "http://52.164.252.39/"
 
         }
