@@ -43,7 +43,8 @@ namespace Lykke.Pay.Service.Rates
         {
             var connectionString = Configuration.GetValue<string>("ConnectionString");
 #if DEBUG
-            _settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
+            _settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
+            //_settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
 #else
             _settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
 #endif

@@ -5,8 +5,8 @@
             "PayServiceService": "http://104.46.35.124:1040/api/rate",
             "GenerateAddressService": "http://104.46.35.124:1020/",
             "StoreRequestService": "http://104.46.35.124:1030/",
-            "BitcoinApi": "http://52.164.252.39/"
-
-        }
+            "BitcoinApi": "http://13.93.41.3:2020/"
+        },
+        "HotWalletAddress": "mu9tuFFnE8ySrpjNxfzjDjgfsXLcw2Stn7"
     }
 }

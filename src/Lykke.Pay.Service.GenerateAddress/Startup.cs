@@ -61,9 +61,10 @@ namespace Lykke.Pay.Service.GenerateAddress
         private void BuildConfiguration(IServiceCollection services)
         {
             var connectionString = Configuration.GetValue<string>("ConnectionString");
-           
+
 #if DEBUG
-            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
+            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
+            //var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
 #else
             var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
 #endif
