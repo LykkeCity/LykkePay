@@ -149,6 +149,18 @@ namespace LykkePay.API.Controllers
                 var resData = r?.Body as TransactionIdAndHashResponse;
                 if (resData?.Hash == null)
                 {
+                    if (resData == null && "3".Equals((r?.Body as ApiException)?.Error.Code))
+                    {
+                        return await JsonAndStoreError(store,
+                            new TransferErrorReturn
+                            {
+                                TransferResponse = new TransferErrorResponse
+                                {
+                                    TransferError = TransferError.INVALID_AMOUNT,
+                                    TimeStamp = DateTime.UtcNow.Ticks
+                                }
+                            });
+                    }
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
