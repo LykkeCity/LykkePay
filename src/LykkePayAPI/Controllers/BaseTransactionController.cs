@@ -21,7 +21,7 @@ namespace LykkePay.API.Controllers
         protected readonly ILykkePayServiceStoreRequestMicroService StoreRequestClient;
         protected readonly IBitcoinApi BitcointApiClient;
 
-        
+
 
         public BaseTransactionController(PayApiSettings payApiSettings, HttpClient client,
             ILykkePayServiceGenerateAddressMicroService gnerateAddressClient,
@@ -39,7 +39,7 @@ namespace LykkePay.API.Controllers
             return Json(errorResponse);
         }
 
-        protected async Task<IActionResult> PostTransfer(string assertId, PayRequest payRequest)
+        protected async Task<dynamic> PostTransferRaw(string assertId, PayRequest payRequest)
         {
             var store = payRequest;
             var result = new TransferInProgressReturn
@@ -53,12 +53,14 @@ namespace LykkePay.API.Controllers
             };
             try
             {
-               
+
                 store.MerchantId = MerchantId;
                 store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
 
-                var list = await GetListOfSources(assertId);
-                if (list == null || list.Count == 0 || !string.IsNullOrEmpty(store.SourceAddress) &&
+                var list = await GetListOfSources(assertId) ?? new List<ToOneAddress>();
+                if (store.SourceAddress == PayApiSettings.HotWalletAddress)
+                    list.Add(new ToOneAddress(PayApiSettings.HotWalletAddress, (decimal)store.Amount * 2));
+                if (!string.IsNullOrEmpty(store.SourceAddress) &&
                     list.FirstOrDefault(l => store.SourceAddress
                         .Equals(l.Address)) == null)
                 {
@@ -140,8 +142,8 @@ namespace LykkePay.API.Controllers
                     Destination = store.DestinationAddress,
                     FeeRate = 0,
                     Sources = new List<ToOneAddress>(from sl in sourceList
-                        where sl.Amount.HasValue && sl.Amount > 0
-                        select sl)
+                                                     where sl.Amount.HasValue && sl.Amount > 0
+                                                     select sl)
 
                 };
 
@@ -189,8 +191,17 @@ namespace LykkePay.API.Controllers
                     });
             }
 
-
-            return Json(result);
+            return result;
+        }
+        protected async Task<IActionResult> PostTransfer(string assertId, PayRequest payRequest)
+        {
+            var post = await PostTransferRaw(assertId, payRequest);
+            var result = post as IActionResult;
+            if (result != null)
+            {
+                return result;
+            }
+            return Json(post);
         }
 
         public async Task<List<ToOneAddress>> GetListOfSources(string assertId)
@@ -202,12 +213,12 @@ namespace LykkePay.API.Controllers
 
             var walletResult = await GnerateAddressClient.ApiWalletByMerchantIdGetWithHttpMessagesAsync(MerchantId);
             var res = (from w in walletResult.Body
-                where assertId.Equals(w.Assert, StringComparison.CurrentCultureIgnoreCase)
-                select new ToOneAddress
-                {
-                    Address = w.WalletAddress,
-                    Amount = (decimal?)w.Amount
-                }).ToList();
+                       where assertId.Equals(w.Assert, StringComparison.CurrentCultureIgnoreCase)
+                       select new ToOneAddress
+                       {
+                           Address = w.WalletAddress,
+                           Amount = (decimal?)w.Amount
+                       }).ToList();
             //var ww = res.Where(www => www.Address == "mqiPrLxjrPd8ihF67Fo5zqVCD4kvSoG16P").FirstOrDefault();
             return res;
         }

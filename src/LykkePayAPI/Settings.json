@@ -1,12 +1,17 @@
 ﻿{
     "PayApi": {
         "Services": {
-            "MerchantAuthService": "http://104.46.35.124:1010/api/auth",
+            "MerchantAuthService": "http://13.93.41.3:2030/api/auth",
+            "MerchantClientService": "http://13.93.41.3:2030/api/merchant/clientId/",
             "PayServiceService": "http://104.46.35.124:1040/api/rate",
             "GenerateAddressService": "http://104.46.35.124:1020/",
             "StoreRequestService": "http://104.46.35.124:1030/",
-            "BitcoinApi": "http://13.93.41.3:2020/"
+            "BitcoinApi": "http://13.93.41.3:2020/",
+            "MarketProfileService": "http://104.46.35.124:1050/api/MarketProfile/",
+            "ExchangeOperationsService": "http://13.93.41.3:1100/"
         },
-        "HotWalletAddress": "mu9tuFFnE8ySrpjNxfzjDjgfsXLcw2Stn7"
+        "HotWalletAddress": "mvKpGw1nbAmsW4LDFpTR7vAXvtG29SpsSC",
+        "LykkePayId": "863ee808-e5f7-46dc-9017-9bfdbd8b0668",
+        "SpredK": 1.4
     }
 }
