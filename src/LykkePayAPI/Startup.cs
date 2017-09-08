@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
+using Lykke.AzureRepositories;
 using Lykke.Core.Log;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
@@ -63,7 +64,7 @@ namespace LykkePay.API
             var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(connectionString);
             //var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
 #endif
-
+            services.RegisterRepositories(generalSettings.PayApi.Db.BitcoinAppRepository, (ILog)null);
             services.AddSingleton(generalSettings.PayApi);
             services.AddSingleton<ILykkePayServiceStoreRequestMicroService>(new LykkePayServiceStoreRequestMicroService(new Uri(generalSettings.PayApi.Services.StoreRequestService)));
             services.AddSingleton<ILykkePayServiceGenerateAddressMicroService>(new LykkePayServiceGenerateAddressMicroService(new Uri(generalSettings.PayApi.Services.GenerateAddressService)));

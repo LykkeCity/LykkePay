@@ -10,8 +10,13 @@
             "MarketProfileService": "http://104.46.35.124:1050/api/MarketProfile/",
             "ExchangeOperationsService": "http://13.93.41.3:1100/"
         },
+        "Db": {
+            "BitcoinAppRepository": "DefaultEndpointsProtocol=https;AccountName=lkedevmerchant;AccountKey=P8KnE1uRj9jDsacNCMAJ2krit+cpMtMjQHh+f19PIfe9ygfSBuvMqFb894oB9gSf8wf5pRGoS2j1pnmSAdKxKQ==;EndpointSuffix=core.windows.net"
+        },
         "HotWalletAddress": "mvKpGw1nbAmsW4LDFpTR7vAXvtG29SpsSC",
         "LykkePayId": "863ee808-e5f7-46dc-9017-9bfdbd8b0668",
-        "SpredK": 1.4
+        "SpredK": 1.4,
+        "LykkePayBaseUrl": "http://lykke-dev-pay.azurewebsites.net/api/",
+        "TransactionConfirmation": 3
     }
 }

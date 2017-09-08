@@ -12,24 +12,35 @@ using Lykke.Pay.Service.StoreRequest.Client;
 using Lykke.Pay.Service.StoreRequest.Client.Models;
 using LykkePay.API.Code;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace LykkePay.API.Controllers
 {
     public class BaseTransactionController : BaseController
     {
+
+        protected enum UrlType
+        {
+            Success,
+            InProgress,
+            Error
+        }
+
         protected readonly ILykkePayServiceGenerateAddressMicroService GnerateAddressClient;
         protected readonly ILykkePayServiceStoreRequestMicroService StoreRequestClient;
         protected readonly IBitcoinApi BitcointApiClient;
+        protected readonly IBitcoinAggRepository BitcoinAddRepository;
 
 
 
         public BaseTransactionController(PayApiSettings payApiSettings, HttpClient client,
             ILykkePayServiceGenerateAddressMicroService gnerateAddressClient,
-            ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient) : base(payApiSettings, client)
+            ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient, IBitcoinAggRepository bitcoinAddRepository) : base(payApiSettings, client)
         {
             GnerateAddressClient = gnerateAddressClient;
             StoreRequestClient = storeRequestClient;
             BitcointApiClient = bitcointApiClient;
+            BitcoinAddRepository = bitcoinAddRepository;
         }
 
         protected async Task<JsonResult> JsonAndStoreError(PayRequest payRequest, TransferErrorReturn errorResponse)
@@ -221,6 +232,135 @@ namespace LykkePay.API.Controllers
                        }).ToList();
             //var ww = res.Where(www => www.Address == "mqiPrLxjrPd8ihF67Fo5zqVCD4kvSoG16P").FirstOrDefault();
             return res;
+        }
+
+
+        private async Task<PayRequest> GetStoreRequest(string id)
+        {
+            var result = new List<PayRequest>();
+            var storeResponse = await StoreRequestClient.ApiStoreGetWithHttpMessagesAsync();
+            var content = storeResponse.Response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(content.Result))
+            {
+                return null;
+            }
+
+            result.AddRange(from pr in JsonConvert.DeserializeObject<List<PayRequest>>(content.Result)
+                            where !string.IsNullOrEmpty(pr.TransactionId) && pr.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
+                               !string.IsNullOrEmpty(pr.SourceAddress) && pr.SourceAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
+                               !string.IsNullOrEmpty(pr.DestinationAddress) && pr.DestinationAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase)
+                            select pr);
+            return result.FirstOrDefault();
+
+        }
+
+        protected async Task<bool> UpdateUrl(string id, string url, UrlType urlType)
+        {
+            var payRequest = await GetStoreRequest(id);
+            if (payRequest == null)
+            {
+                return false;
+            }
+            switch (urlType)
+            {
+                case UrlType.Success:
+                    payRequest.SuccessUrl = url;
+                    break;
+                case UrlType.Error:
+                    payRequest.ErrorUrl = url;
+                    break;
+                case UrlType.InProgress:
+                    payRequest.ProgressUrl = url;
+                    break;
+            }
+            await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(payRequest);
+            return true;
+        }
+
+        private async Task<int> GetNumberOfConfirmation(string address, string transactionId)
+        {
+            var height = await BitcoinAddRepository.GetNextBlockId();
+            var transaction = await BitcoinAddRepository.GetWalletTransactionAsync(address, transactionId);
+            if (transaction == null)
+            {
+                return 0;
+            }
+
+            return height - transaction.BlockNumber + PayApiSettings.TransactionConfirmation;
+        }
+
+        public async Task<IActionResult> GetTransactionStatus(string id)
+        {
+            var payRequest = await GetStoreRequest(id);
+            if (payRequest == null)
+            {
+                return Json(new TransferErrorReturn
+                {
+                    TransferResponse = new TransferErrorResponse
+                    {
+                        TransferError = TransferError.INTERNAL_ERROR,
+                        TimeStamp = DateTime.UtcNow.Ticks
+                    },
+                    TransferStatus = TransferStatus.TRANSFER_ERROR
+                });
+            }
+
+            if (payRequest.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.Completed.ToString()))
+            {
+                return Json(new TransferSuccessReturn
+                {
+                    TransferResponse = new TransferSuccessResponse
+                    {
+                        TransactionId = payRequest.TransactionId,
+                        Currency = payRequest.AssetId,
+                        NumberOfConfirmation = await GetNumberOfConfirmation(payRequest.DestinationAddress, payRequest.TransactionId),
+                        TimeStamp = DateTime.UtcNow.Ticks,
+                        Url = $"{PayApiSettings.LykkePayBaseUrl}transaction/{payRequest.TransactionId}"
+                    },
+                    TransferStatus = TransferStatus.TRANSFER_CONFIRMED
+                }
+
+
+
+                );
+            }
+            if (payRequest.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.InProgress.ToString()))
+            {
+                return Json(new TransferInProgressReturn
+                {
+                    TransferResponse = new TransferInProgressResponse
+                    {
+                        Settlement = Settlement.TRANSACTION_DETECTED,
+                        TimeStamp = DateTime.UtcNow.Ticks,
+                        Currency = string.IsNullOrEmpty(payRequest.AssetId) ? payRequest.AssetPair : payRequest.AssetId,
+                        TransactionId = payRequest.TransactionId
+                    },
+                    TransferStatus = TransferStatus.TRANSFER_INPROGRESS
+                });
+            }
+            if (payRequest.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.Failed.ToString()))
+            {
+                return Json(new TransferErrorReturn
+                {
+                    TransferResponse = new TransferErrorResponse
+                    {
+                        TransferError = Enum.Parse<TransferError>(payRequest.MerchantPayRequestNotification),
+                        TimeStamp = DateTime.UtcNow.Ticks
+                    },
+                    TransferStatus = TransferStatus.TRANSFER_ERROR
+                });
+            }
+
+            return Json(new TransferErrorReturn
+            {
+                TransferResponse = new TransferErrorResponse
+                {
+                    TransferError = TransferError.INTERNAL_ERROR,
+                    TimeStamp = DateTime.UtcNow.Ticks
+                },
+                TransferStatus = TransferStatus.TRANSFER_ERROR
+
+            });
         }
     }
 }

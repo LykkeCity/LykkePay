@@ -1,4 +1,5 @@
-﻿namespace LykkePay.API.Code
+﻿
+namespace LykkePay.API.Code
 {
     public class Settings
     {
@@ -11,8 +12,15 @@
         public string HotWalletAddress { get; set; }
         public string LykkePayId { get; set; }
         public double SpredK { get; set; }
+        public string LykkePayBaseUrl { get; set; }
+        public int TransactionConfirmation { get; set; }
+        public DbSettings Db { get; set; }
     }
 
+    public class DbSettings
+    {
+        public string BitcoinAppRepository { get; set; }
+    }
 
     public class ServicesSettings
     {
