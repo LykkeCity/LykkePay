@@ -16,13 +16,13 @@
   <ItemGroup>
     <PackageReference Include="Bitcoint.Api.Client" Version="1.0.3" />
     <PackageReference Include="Lykke.AzureRepositories" Version="1.0.82" />
-    <PackageReference Include="Lykke.Common" Version="1.1.99" />
+    <PackageReference Include="Lykke.Common" Version="3.0.0" />
     <PackageReference Include="Lykke.Common.Entities" Version="1.0.26" />
     <PackageReference Include="Lykke.Core" Version="1.0.82" />
-    <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.12" />
-    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.11" />
+    <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.14" />
+    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.13" />
     <PackageReference Include="Lykke.Service.ExchangeOperations.Client" Version="1.0.10-beta" />
-    <PackageReference Include="Lykke.SettingsReader" Version="1.0.41" />
+    <PackageReference Include="Lykke.SettingsReader" Version="1.0.42" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />

@@ -1,22 +1,22 @@
 ﻿{
     "PayApi": {
         "Services": {
-            "MerchantAuthService": "http://13.93.6.20:2030/api/auth",
-            "MerchantClientService": "http://13.93.6.20:2030/api/merchant/clientId/",
-            "PayServiceService": "http://13.93.6.20:2050/api/rate",
+            "MerchantAuthService": "http://pay-merchant-auth.lykke-pay.svc.cluster.local/api/auth",
+            "MerchantClientService": "http://pay-merchant-auth.lykke-pay.svc.cluster.local/api/merchant/clientId/",
+            "PayServiceService": "http://pay-rates.lykke-pay.svc.cluster.local/api/rate",
             "GenerateAddressService": "http://pay-service-generate-address.lykke-service.svc.cluster.local/",
             "StoreRequestService": "http://pay-service-store-request.lykke-service.svc.cluster.local/",
-            "BitcoinApi": "http://13.93.6.20:2020/",
+            "BitcoinApi": "http://bitcoin-api.lykke-service.svc.cluster.local/",
             "MarketProfileService": "http://market-profile.lykke-service.svc.cluster.local/api/MarketProfile/",
-            "ExchangeOperationsService": "http://13.93.6.20:1100/"
+            "ExchangeOperationsService": "http://exchange-operations.lykke-service.svc.cluster.local"
         },
         "Db": {
-            "BitcoinAppRepository": "DefaultEndpointsProtocol=https;AccountName=lkedevmerchant;AccountKey=P8KnE1uRj9jDsacNCMAJ2krit+cpMtMjQHh+f19PIfe9ygfSBuvMqFb894oB9gSf8wf5pRGoS2j1pnmSAdKxKQ==;EndpointSuffix=core.windows.net"
+            "BitcoinAppRepository": "DefaultEndpointsProtocol=https;AccountName=kubetestmerchant;AccountKey=JyRnjWnTduXE84Nx1kKSPIReIog7GVLkecYc+lROkBmoNBYmJ8C9jQuu/5gY7UH+G0qalG3XjhSVz7EuAEn7mQ=="
         },
         "HotWalletAddress": "mvKpGw1nbAmsW4LDFpTR7vAXvtG29SpsSC",
         "LykkePayId": "863ee808-e5f7-46dc-9017-9bfdbd8b0668",
-        "SpredK": 1.4,
-        "LykkePayBaseUrl": "http://lykke-dev-pay.azurewebsites.net/api/",
-        "TransactionConfirmation": 3
+        "SpredK": "1.4",
+        "LykkePayBaseUrl": "http://payapi-test.lykkex.net/api/",
+        "TransactionConfirmation": "3"
     }
 }

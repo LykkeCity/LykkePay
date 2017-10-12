@@ -59,7 +59,7 @@ namespace LykkePay.API
         {
             var connectionString = Configuration.GetValue<string>("ConnectionString");
 #if DEBUG
-            var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(connectionString);
+            var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
 #else
             var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(connectionString);
             //var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
