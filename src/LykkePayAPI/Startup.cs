@@ -61,8 +61,8 @@ namespace LykkePay.API
 #if DEBUG
             var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
 #else
-            var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(connectionString);
-            //var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
+            //var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(connectionString);
+            var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
 #endif
             services.RegisterRepositories(generalSettings.PayApi.Db.BitcoinAppRepository, (ILog)null);
             services.AddSingleton(generalSettings.PayApi);
