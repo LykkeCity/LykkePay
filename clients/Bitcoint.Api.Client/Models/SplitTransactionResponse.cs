@@ -9,25 +9,26 @@ namespace Bitcoint.Api.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class OffchainBalanceInfo
+    public partial class SplitTransactionResponse
     {
         /// <summary>
-        /// Initializes a new instance of the OffchainBalanceInfo class.
+        /// Initializes a new instance of the SplitTransactionResponse class.
         /// </summary>
-        public OffchainBalanceInfo()
+        public SplitTransactionResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the OffchainBalanceInfo class.
+        /// Initializes a new instance of the SplitTransactionResponse class.
         /// </summary>
-        public OffchainBalanceInfo(decimal? clientAmount = default(decimal?), decimal? hubAmount = default(decimal?), string transactionHash = default(string), bool? actual = default(bool?))
+        public SplitTransactionResponse(string transaction = default(string), string outputs = default(string), decimal? clientAmount = default(decimal?), decimal? hubAmount = default(decimal?), decimal? clientFeeAmount = default(decimal?))
         {
+            Transaction = transaction;
+            Outputs = outputs;
             ClientAmount = clientAmount;
             HubAmount = hubAmount;
-            TransactionHash = transactionHash;
-            Actual = actual;
+            ClientFeeAmount = clientFeeAmount;
             CustomInit();
         }
 
@@ -35,6 +36,16 @@ namespace Bitcoint.Api.Client.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "transaction")]
+        public string Transaction { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "outputs")]
+        public string Outputs { get; set; }
 
         /// <summary>
         /// </summary>
@@ -48,13 +59,8 @@ namespace Bitcoint.Api.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "transactionHash")]
-        public string TransactionHash { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "actual")]
-        public bool? Actual { get; set; }
+        [JsonProperty(PropertyName = "clientFeeAmount")]
+        public decimal? ClientFeeAmount { get; set; }
 
     }
 }

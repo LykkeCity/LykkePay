@@ -1,4 +1,4 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -9,21 +9,22 @@
   },
   "profiles": {
     "IIS Express": {
-        "commandName": "IISExpress",
-        "launchBrowser": true,
-        "launchUrl": "api/assetPairRates",
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development"
-        }
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "api/assetPairRates",
+      "environmentVariables": {
+        "ConnectionString": "https://settings-test-k8s.lykkex.net/317de226c5646c48443cd7114b0932f_PayAPI",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     },
     "LykkePay.API": {
-        "commandName": "Project",
-        "launchBrowser": true,
-        "launchUrl": "api/assetPairRates",
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development"
-        },
-        "applicationUrl": "http://localhost:4500"
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/assetPairRates",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:4500"
     }
   }
 }

@@ -7,25 +7,28 @@
 namespace Bitcoint.Api.Client.Models
 {
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class ToOneAddress
+    public partial class CommitmentBroadcastResponse
     {
         /// <summary>
-        /// Initializes a new instance of the ToOneAddress class.
+        /// Initializes a new instance of the CommitmentBroadcastResponse
+        /// class.
         /// </summary>
-        public ToOneAddress()
+        public CommitmentBroadcastResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ToOneAddress class.
+        /// Initializes a new instance of the CommitmentBroadcastResponse
+        /// class.
         /// </summary>
-        public ToOneAddress(string address = default(string), decimal? amount = default(decimal?))
+        public CommitmentBroadcastResponse(IList<CommitmentBroadcastInfo> commitmentBroadcasts = default(IList<CommitmentBroadcastInfo>))
         {
-            Address = address;
-            Amount = amount;
+            CommitmentBroadcasts = commitmentBroadcasts;
             CustomInit();
         }
 
@@ -36,13 +39,8 @@ namespace Bitcoint.Api.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "address")]
-        public string Address { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "amount")]
-        public decimal? Amount { get; set; }
+        [JsonProperty(PropertyName = "commitmentBroadcasts")]
+        public IList<CommitmentBroadcastInfo> CommitmentBroadcasts { get; set; }
 
     }
 }

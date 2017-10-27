@@ -9,23 +9,23 @@ namespace Bitcoint.Api.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class GetWalletResult
+    public partial class PrivateBccTransferResponse
     {
         /// <summary>
-        /// Initializes a new instance of the GetWalletResult class.
+        /// Initializes a new instance of the PrivateBccTransferResponse class.
         /// </summary>
-        public GetWalletResult()
+        public PrivateBccTransferResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the GetWalletResult class.
+        /// Initializes a new instance of the PrivateBccTransferResponse class.
         /// </summary>
-        public GetWalletResult(string multiSigAddress = default(string), string coloredMultiSigAddress = default(string))
+        public PrivateBccTransferResponse(string transaction = default(string), string outputs = default(string))
         {
-            MultiSigAddress = multiSigAddress;
-            ColoredMultiSigAddress = coloredMultiSigAddress;
+            Transaction = transaction;
+            Outputs = outputs;
             CustomInit();
         }
 
@@ -36,13 +36,13 @@ namespace Bitcoint.Api.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "multiSigAddress")]
-        public string MultiSigAddress { get; set; }
+        [JsonProperty(PropertyName = "transaction")]
+        public string Transaction { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "coloredMultiSigAddress")]
-        public string ColoredMultiSigAddress { get; set; }
+        [JsonProperty(PropertyName = "outputs")]
+        public string Outputs { get; set; }
 
     }
 }

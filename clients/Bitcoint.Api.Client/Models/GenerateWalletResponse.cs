@@ -9,23 +9,24 @@ namespace Bitcoint.Api.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class ToOneAddress
+    public partial class GenerateWalletResponse
     {
         /// <summary>
-        /// Initializes a new instance of the ToOneAddress class.
+        /// Initializes a new instance of the GenerateWalletResponse class.
         /// </summary>
-        public ToOneAddress()
+        public GenerateWalletResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ToOneAddress class.
+        /// Initializes a new instance of the GenerateWalletResponse class.
         /// </summary>
-        public ToOneAddress(string address = default(string), decimal? amount = default(decimal?))
+        public GenerateWalletResponse(string address = default(string), string pubKey = default(string), string tag = default(string))
         {
             Address = address;
-            Amount = amount;
+            PubKey = pubKey;
+            Tag = tag;
             CustomInit();
         }
 
@@ -41,8 +42,13 @@ namespace Bitcoint.Api.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "amount")]
-        public decimal? Amount { get; set; }
+        [JsonProperty(PropertyName = "pubKey")]
+        public string PubKey { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "tag")]
+        public string Tag { get; set; }
 
     }
 }

@@ -9,23 +9,25 @@ namespace Bitcoint.Api.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class GetWalletResult
+    public partial class TransactionIdAndHashResponse
     {
         /// <summary>
-        /// Initializes a new instance of the GetWalletResult class.
+        /// Initializes a new instance of the TransactionIdAndHashResponse
+        /// class.
         /// </summary>
-        public GetWalletResult()
+        public TransactionIdAndHashResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the GetWalletResult class.
+        /// Initializes a new instance of the TransactionIdAndHashResponse
+        /// class.
         /// </summary>
-        public GetWalletResult(string multiSigAddress = default(string), string coloredMultiSigAddress = default(string))
+        public TransactionIdAndHashResponse(string hash = default(string), System.Guid? transactionId = default(System.Guid?))
         {
-            MultiSigAddress = multiSigAddress;
-            ColoredMultiSigAddress = coloredMultiSigAddress;
+            Hash = hash;
+            TransactionId = transactionId;
             CustomInit();
         }
 
@@ -36,13 +38,13 @@ namespace Bitcoint.Api.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "multiSigAddress")]
-        public string MultiSigAddress { get; set; }
+        [JsonProperty(PropertyName = "hash")]
+        public string Hash { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "coloredMultiSigAddress")]
-        public string ColoredMultiSigAddress { get; set; }
+        [JsonProperty(PropertyName = "transactionId")]
+        public System.Guid? TransactionId { get; set; }
 
     }
 }

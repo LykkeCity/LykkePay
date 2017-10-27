@@ -9,23 +9,22 @@ namespace Bitcoint.Api.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class ToOneAddress
+    public partial class BccBroadcastModel
     {
         /// <summary>
-        /// Initializes a new instance of the ToOneAddress class.
+        /// Initializes a new instance of the BccBroadcastModel class.
         /// </summary>
-        public ToOneAddress()
+        public BccBroadcastModel()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ToOneAddress class.
+        /// Initializes a new instance of the BccBroadcastModel class.
         /// </summary>
-        public ToOneAddress(string address = default(string), decimal? amount = default(decimal?))
+        public BccBroadcastModel(string transaction = default(string))
         {
-            Address = address;
-            Amount = amount;
+            Transaction = transaction;
             CustomInit();
         }
 
@@ -36,13 +35,8 @@ namespace Bitcoint.Api.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "address")]
-        public string Address { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "amount")]
-        public decimal? Amount { get; set; }
+        [JsonProperty(PropertyName = "transaction")]
+        public string Transaction { get; set; }
 
     }
 }
