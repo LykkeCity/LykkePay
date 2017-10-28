@@ -1,16 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Bitcoint.Api.Client;
+using Bitcoint.Api.Client.Models;
 using Lykke.AzureRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Lykke.Common.Entities.Pay;
-using Lykke.Common.Entities.Security;
 using Lykke.Core;
 using Lykke.Pay.Service.GenerateAddress.Code;
 using Lykke.Pay.Service.GenerateAddress.Models;
-using Lykke.Signing.Client;
 using Newtonsoft.Json;
 
 namespace Lykke.Pay.Service.GenerateAddress.Controllers
@@ -20,12 +16,12 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
     public class GenerateController : BaseController
     {
         private readonly IMerchantWalletRepository _merchantWalletRepository;
-        private readonly ILykkeSigningAPI _lykkeSigningApi;
+        private readonly IBitcoinApi _bitcoinApi;
 
-        public GenerateController(PayServiceGenAddressSettings settings, IMerchantWalletRepository merchantWalletRepository, ILykkeSigningAPI lykkeSigningApi) : base(settings)
+        public GenerateController(PayServiceGenAddressSettings settings, IMerchantWalletRepository merchantWalletRepository, IBitcoinApi bitcoinApi) : base(settings)
         {
             _merchantWalletRepository = merchantWalletRepository;
-            _lykkeSigningApi = lykkeSigningApi;
+            _bitcoinApi = bitcoinApi;
 
         }
 
@@ -39,8 +35,8 @@ namespace Lykke.Pay.Service.GenerateAddress.Controllers
             }
 
 
-            var keyInfo = await _lykkeSigningApi.ApiBitcoinKeyGetWithHttpMessagesAsync();
-            var publicKey = keyInfo.Body;
+            var keyInfo = await _bitcoinApi.ApiWalletLykkepayGeneratePostWithHttpMessagesAsync();
+            var publicKey = (GenerateWalletResponse)keyInfo.Body;
 
             var dateToStore = new AssertPrivKeyPair
             {

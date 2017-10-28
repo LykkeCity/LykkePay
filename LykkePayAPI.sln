@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5FB515FE-D508-4755-B409-5919DAF0602C}"
 EndProject
@@ -22,8 +22,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Job.ProcessRequests", "jobs\Lykke.Pay.Job.ProcessRequests\Lykke.Pay.Job.ProcessRequests.csproj", "{9C515EA5-710B-47E2-9EF3-E81149B600C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Service.GenerateAddress.Client", "clients\Lykke.Pay.Service.GenerateAddress.Client\Lykke.Pay.Service.GenerateAddress.Client.csproj", "{BBF98951-1155-4F1D-AAA0-1767994D7697}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bitcoint.Api.Client", "clients\Bitcoint.Api.Client\Bitcoint.Api.Client.csproj", "{B1FB5E28-219F-4DD0-BD9F-8363272CF0D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Common", "src\Lykke.Pay.Common\Lykke.Pay.Common.csproj", "{FA009631-49E3-4A2A-B44A-65B446B08446}"
 EndProject
@@ -63,10 +61,6 @@ Global
 		{BBF98951-1155-4F1D-AAA0-1767994D7697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBF98951-1155-4F1D-AAA0-1767994D7697}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBF98951-1155-4F1D-AAA0-1767994D7697}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1FB5E28-219F-4DD0-BD9F-8363272CF0D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1FB5E28-219F-4DD0-BD9F-8363272CF0D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1FB5E28-219F-4DD0-BD9F-8363272CF0D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1FB5E28-219F-4DD0-BD9F-8363272CF0D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA009631-49E3-4A2A-B44A-65B446B08446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA009631-49E3-4A2A-B44A-65B446B08446}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA009631-49E3-4A2A-B44A-65B446B08446}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,8 +81,10 @@ Global
 		{D1494CD3-7A0B-41B5-B54B-81DA7A75EF66} = {F78291F1-AB70-4C41-8913-99C0C2C4B63B}
 		{9C515EA5-710B-47E2-9EF3-E81149B600C0} = {888BD6D6-ADBC-41F5-A3B8-149F310C1527}
 		{BBF98951-1155-4F1D-AAA0-1767994D7697} = {F78291F1-AB70-4C41-8913-99C0C2C4B63B}
-		{B1FB5E28-219F-4DD0-BD9F-8363272CF0D0} = {F78291F1-AB70-4C41-8913-99C0C2C4B63B}
 		{FA009631-49E3-4A2A-B44A-65B446B08446} = {5FB515FE-D508-4755-B409-5919DAF0602C}
 		{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F} = {888BD6D6-ADBC-41F5-A3B8-149F310C1527}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9CB88B14-E946-4DCF-AF1B-AEA1D318640C}
 	EndGlobalSection
 EndGlobal

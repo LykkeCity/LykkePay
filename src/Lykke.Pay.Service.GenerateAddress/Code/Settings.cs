@@ -15,7 +15,7 @@
 
     public class Services
     {
-        public string  SignServiceUrl { get; set; }
+        public string  BitcoinApiUrl { get; set; }
     }
 
 

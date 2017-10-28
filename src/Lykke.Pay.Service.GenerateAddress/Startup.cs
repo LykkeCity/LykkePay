@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Bitcoint.Api.Client;
 using Common.Log;
 using Lykke.AzureRepositories;
 using Lykke.Pay.Service.GenerateAddress.Code;
@@ -74,7 +75,7 @@ namespace Lykke.Pay.Service.GenerateAddress
 
             services.AddSingleton(settings.PayServiceGenAddress);
             services.RegisterRepositories(settings.PayServiceGenAddress.Db.PrivateKeysConnString, (ILog)null);
-            services.AddSingleton<ILykkeSigningAPI>(new LykkeSigningAPI(new Uri(settings.PayServiceGenAddress.Services.SignServiceUrl)));
+            services.AddSingleton<IBitcoinApi>(new BitcoinApi(new Uri(settings.PayServiceGenAddress.Services.BitcoinApiUrl)));
 
         }
 

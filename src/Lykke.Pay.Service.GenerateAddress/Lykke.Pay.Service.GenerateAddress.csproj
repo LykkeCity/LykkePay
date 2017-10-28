@@ -14,9 +14,10 @@
     <DocumentationFile>bin\Release\netcoreapp1.1\Lykke.Pay.Service.GenerateAddress.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.82" />
-    <PackageReference Include="Lykke.Common.Entities" Version="1.0.26" />
-    <PackageReference Include="Lykke.Core" Version="1.0.82" />
+    <PackageReference Include="Bitcoint.Api.Client" Version="1.0.5" />
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.83" />
+    <PackageReference Include="Lykke.Common.Entities" Version="1.0.28" />
+    <PackageReference Include="Lykke.Core" Version="1.0.83" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.42" />
     <PackageReference Include="Lykke.Signing.Client" Version="1.0.2" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />

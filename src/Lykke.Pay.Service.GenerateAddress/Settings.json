@@ -1,13 +1,12 @@
 ﻿{
     "PayServiceGenAddress": {
         "Db": {
-            //"PrivateKeysConnString": "UseDevelopmentStorage=true"
-            "PrivateKeysConnString": "DefaultEndpointsProtocol=https;AccountName=lkedevmerchant;AccountKey=P8KnE1uRj9jDsacNCMAJ2krit+cpMtMjQHh+f19PIfe9ygfSBuvMqFb894oB9gSf8wf5pRGoS2j1pnmSAdKxKQ==;EndpointSuffix=core.windows.net"
+            "PrivateKeysConnString": ""
         },
-        "DataEncriptionPassword": "Test",
+        "DataEncriptionPassword": "",
         "GenerateKeySize": 1024,
         "Services": {
-            "SignServiceUrl": "http://13.93.116.252:5566"
+            "BitcoinApiUrl": ""
         } 
     }
 }
