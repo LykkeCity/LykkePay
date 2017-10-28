@@ -19,9 +19,9 @@
 
   <ItemGroup>
     <PackageReference Include="BlockchainAPI" Version="4.0.0" />
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.82" />
-    <PackageReference Include="Lykke.Common.Entities" Version="1.0.26" />
-    <PackageReference Include="Lykke.Core" Version="1.0.82" />
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.83" />
+    <PackageReference Include="Lykke.Common.Entities" Version="1.0.28" />
+    <PackageReference Include="Lykke.Core" Version="1.0.83" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.42" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.0" />
