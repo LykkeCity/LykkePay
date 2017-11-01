@@ -36,12 +36,17 @@ namespace Lykke.Pay.Service.Rates.Controllers
 
         // GET api/rate
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(string sessionId, int? cacheTimeout)
         {
             List<AssertPairRate> cacheEntry;
 
+            Guid sId;
+            if (!Guid.TryParse(sessionId, out sId))
+            {
+                sId = Guid.NewGuid();
+            }
 
-            if (!_cache.TryGetValue(CacheKeys.Rates, out cacheEntry))
+            if (!_cache.TryGetValue(sId, out cacheEntry))
             {
                 var respAssertPairList = await _client.GetAsync(new Uri(_settings.Services.MarketProfileService));
                 var sAssertPairList = await respAssertPairList.Content.ReadAsStringAsync();
@@ -79,12 +84,12 @@ namespace Lykke.Pay.Service.Rates.Controllers
 
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(_settings.CacheTimeout));
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(cacheTimeout ?? _settings.CacheTimeout));
 
                 _cache.Set(CacheKeys.Rates, cacheEntry, cacheEntryOptions);
             }
 
-            return Json(cacheEntry);
+            return Json(new {SessionId = sId, Asserts = cacheEntry});
         }
 
         private async Task StoreAsserts(IEnumerable<AssertPairRate> assertPairRates)
