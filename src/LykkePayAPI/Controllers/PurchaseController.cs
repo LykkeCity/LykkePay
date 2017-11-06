@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -45,9 +46,19 @@ namespace LykkePay.API.Controllers
             AssertPairRate rate;
             try
             {
-                var rates = JsonConvert.DeserializeObject<List<AssertPairRate>>(
-                    await (await HttpClient.GetAsync(PayApiSettings.Services.PayServiceService)).Content
+                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
+
+                var response = JsonConvert.DeserializeObject<dynamic>(
+                    await (await HttpClient.GetAsync(rateServiceUrl)).Content
                         .ReadAsStringAsync());
+
+                var newSessionId = response.SessionId.ToString();
+                var rates = new List<AssertPairRate>(response.Asserts);
+
+                if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
+                {
+                    throw new InvalidDataException("Session expired");
+                }
 
                 rate = rates.First(r => r.AssetPair.Equals(request.AssetPair, StringComparison.CurrentCultureIgnoreCase));
                 if (rate == null)

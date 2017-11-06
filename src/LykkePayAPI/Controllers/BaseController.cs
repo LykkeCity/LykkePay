@@ -2,7 +2,9 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Lykke.AzureRepositories;
 using Lykke.Common.Entities.Security;
+using Lykke.Core;
 using LykkePay.API.Code;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
@@ -26,6 +28,18 @@ namespace LykkePay.API.Controllers
         }
 
         protected string MerchantId => HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "";
+        protected string MerchantSessionId => HttpContext.Request.Headers["Lykke-Merchant-Session-Id"].ToString() ?? "";
+        protected IMerchantEntity Merchant => GetCurrentMerchant();
+
+        private IMerchantEntity _merchant;
+        private IMerchantEntity GetCurrentMerchant()
+        {
+            _merchant = _merchant ?? (_merchant = JsonConvert.DeserializeObject<MerchantEntity>(
+                       HttpClient.GetAsync($"{PayApiSettings.Services.MerchantClientService}{MerchantId}").Result
+                       .Content.ReadAsStringAsync().Result));
+
+            return _merchant;
+        }
 
         protected async Task<IActionResult> ValidateRequest()
         {
