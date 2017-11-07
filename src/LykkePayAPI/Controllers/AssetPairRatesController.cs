@@ -82,6 +82,8 @@ namespace LykkePay.API.Controllers
                     throw new InvalidDataException("Session expired");
                 }
 
+                StoreNewSessionId(newSessionId);
+
                 if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError);
@@ -96,6 +98,7 @@ namespace LykkePay.API.Controllers
             rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, request, true);
             rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, request, false);
 
+            
             return new JsonResult(rate);
         }
 

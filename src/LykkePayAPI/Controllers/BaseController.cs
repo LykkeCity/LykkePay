@@ -41,6 +41,11 @@ namespace LykkePay.API.Controllers
             return _merchant;
         }
 
+        protected void StoreNewSessionId(string sessionId)
+        {
+            HttpContext.Response.Headers.Add("Lykke-Merchant-Session-Id", sessionId);
+        }
+
         protected async Task<IActionResult> ValidateRequest()
         {
             string strToSign;

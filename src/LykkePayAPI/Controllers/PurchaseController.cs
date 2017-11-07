@@ -59,7 +59,7 @@ namespace LykkePay.API.Controllers
                 {
                     throw new InvalidDataException("Session expired");
                 }
-
+                StoreNewSessionId(newSessionId);
                 rate = rates.First(r => r.AssetPair.Equals(request.AssetPair, StringComparison.CurrentCultureIgnoreCase));
                 if (rate == null)
                 {
