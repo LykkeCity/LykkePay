@@ -48,12 +48,12 @@ namespace LykkePay.API.Controllers
             {
                 var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
 
-                var response = JsonConvert.DeserializeObject<dynamic>(
+                var response = JsonConvert.DeserializeObject<AssertListWithSession>(
                     await (await HttpClient.GetAsync(rateServiceUrl)).Content
                         .ReadAsStringAsync());
 
-                var newSessionId = response.SessionId.ToString();
-                var rates = new List<AssertPairRate>(response.Asserts);
+                var newSessionId = response.SessionId;
+                var rates = response.Asserts;
 
                 if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
                 {

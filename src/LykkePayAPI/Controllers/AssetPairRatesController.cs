@@ -5,8 +5,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Lykke.Common.Entities.Pay;
-using Lykke.Common.Entities.Security;
 using LykkePay.API.Code;
+using LykkePay.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -36,10 +36,16 @@ namespace LykkePay.API.Controllers
 
             try
             {
-                rates = JsonConvert.DeserializeObject<List<AssertPairRate>>(
-                    await (await HttpClient.GetAsync(PayApiSettings.Services.PayServiceService)).Content
+                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
+
+                var response = JsonConvert.DeserializeObject<AssertListWithSession>(
+                    await (await HttpClient.GetAsync(rateServiceUrl)).Content
                         .ReadAsStringAsync());
 
+               // var newSessionId = response.SessionId;
+                rates = response.Asserts;
+
+             
                 if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError);
@@ -70,12 +76,12 @@ namespace LykkePay.API.Controllers
             {
                 var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
                 
-                var response = JsonConvert.DeserializeObject<dynamic>(
+                var response = JsonConvert.DeserializeObject<AssertListWithSession>(
                     await (await HttpClient.GetAsync(rateServiceUrl)).Content
                         .ReadAsStringAsync());
 
-                var newSessionId = response.SessionId.ToString();
-                rates = new List<AssertPairRate>(response.Asserts);
+                var newSessionId = response.SessionId;
+                rates = response.Asserts;
 
                 if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
                 {
