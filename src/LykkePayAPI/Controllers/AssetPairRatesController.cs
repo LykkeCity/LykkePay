@@ -71,7 +71,7 @@ namespace LykkePay.API.Controllers
             }
 
             List<AssertPairRate> rates;
-
+            string newSessionId;
             try
             {
                 var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
@@ -80,7 +80,7 @@ namespace LykkePay.API.Controllers
                     await (await HttpClient.GetAsync(rateServiceUrl)).Content
                         .ReadAsStringAsync());
 
-                var newSessionId = response.SessionId;
+                newSessionId = response.SessionId;
                 rates = response.Asserts;
 
                 if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
@@ -105,7 +105,7 @@ namespace LykkePay.API.Controllers
             rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, request, false);
 
             
-            return new JsonResult(rate);
+            return new JsonResult(new AssertPairRateWithSession(rate, newSessionId));
         }
 
         private float CalculateValue(float value, int accuracy, AssertPairRateRequest request, bool isPluse)

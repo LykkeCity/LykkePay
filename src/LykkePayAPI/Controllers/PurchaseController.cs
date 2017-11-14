@@ -24,8 +24,8 @@ namespace LykkePay.API.Controllers
     [Route("api/Purchase")]
     public class PurchaseController : BaseTransactionController
     {
-        private IExchangeOperationsServiceClient _exchangeOperationClient;
-        private const string BitcoinAssert = "BTC";
+        private readonly IExchangeOperationsServiceClient _exchangeOperationClient;
+        
 
         public PurchaseController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient,
             ILykkePayServiceGenerateAddressMicroService generateAddressClient, IExchangeOperationsServiceClient exchangeOperationClient, IBitcoinAggRepository bitcoinAddRepository)

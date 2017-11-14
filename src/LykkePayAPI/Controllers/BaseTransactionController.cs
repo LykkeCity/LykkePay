@@ -18,7 +18,7 @@ namespace LykkePay.API.Controllers
 {
     public class BaseTransactionController : BaseController
     {
-
+        protected const string BitcoinAssert = "BTC";
         protected enum UrlType
         {
             Success,
