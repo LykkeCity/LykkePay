@@ -110,6 +110,11 @@ namespace LykkePay.API.Controllers
 
         private float CalculateValue(float value, int accuracy, AssertPairRateRequest request, bool isPluse)
         {
+            if (request == null)
+            {
+                return value;
+            }
+
             float fee = value * (request.Percent / 100f);
             fee += (float)Math.Pow(10, -1 * accuracy) * request.Pips;
             if (isPluse)
