@@ -15,6 +15,13 @@ namespace LykkePay.API.Code
         public string LykkePayBaseUrl { get; set; }
         public int TransactionConfirmation { get; set; }
         public DbSettings Db { get; set; }
+        public LpMarkupSettings LpMarkup { get; set; }
+    }
+
+    public class LpMarkupSettings
+    {
+        public float Percent { get; set; }
+        public float Pips { get; set; }
     }
 
     public class DbSettings

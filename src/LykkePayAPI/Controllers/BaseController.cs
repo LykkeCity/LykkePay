@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -6,6 +7,7 @@ using Lykke.AzureRepositories;
 using Lykke.Common.Entities.Security;
 using Lykke.Core;
 using LykkePay.API.Code;
+using LykkePay.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -92,6 +94,28 @@ namespace LykkePay.API.Controllers
             return Ok();
         }
 
-        
+        protected float CalculateValue(float value, int accuracy, AprRequest request, bool isPluse)
+        {
+            var spread = value * (float)Merchant.DeltaSpread;
+            float lpFee = value * (PayApiSettings.LpMarkup.Percent / 100f);
+            float lpPips = (float)Math.Pow(10, -1 * accuracy) * PayApiSettings.LpMarkup.Pips;
+
+            var delta = spread + lpFee + lpPips;
+
+            if (request != null)
+            {
+                var fee = value * (request.Percent / 100f);
+                var pips = (float) Math.Pow(10, -1 * accuracy) * request.Pips;
+
+                delta += fee + pips;
+            }
+
+            var result = value + (isPluse ? delta : -delta);
+
+            var powRound = Math.Pow(10, -1 * accuracy) * 0.5;
+
+            return (float)Math.Round(result + (isPluse ? powRound : -powRound), accuracy);
+
+        }
     }
 }

@@ -108,21 +108,7 @@ namespace LykkePay.API.Controllers
             return new JsonResult(new AssertPairRateWithSession(rate, newSessionId));
         }
 
-        private float CalculateValue(float value, int accuracy, AprRequest request, bool isPluse)
-        {
-            if (request == null)
-            {
-                return value;
-            }
-
-            float fee = value * (request.Percent / 100f);
-            fee += (float)Math.Pow(10, -1 * accuracy) * request.Pips;
-            if (isPluse)
-            {
-                return value + fee;
-            }
-            return value - fee;
-        }
+        
 
 
 
