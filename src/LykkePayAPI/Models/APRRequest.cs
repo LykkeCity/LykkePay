@@ -1,4 +1,5 @@
-﻿using Lykke.Common.Entities.Pay;
+﻿using System.Globalization;
+using Lykke.Common.Entities.Pay;
 
 namespace LykkePay.API.Models
 {
@@ -37,8 +38,10 @@ namespace LykkePay.API.Models
             float pr =  0;
             int p = 0;
             request = null;
-            var result = (Percent == null || float.TryParse(Percent, out pr)) &&
-                   (Pips == null || int.TryParse(Pips, out p));
+            var result = (Percent == null || float.TryParse(Percent, NumberStyles.Float | NumberStyles.AllowThousands,
+                              CultureInfo.InvariantCulture, out pr)) &&
+                   (Pips == null || int.TryParse(Pips, NumberStyles.Float | NumberStyles.AllowThousands,
+                        CultureInfo.InvariantCulture, out p));
             if (result)
             {
                 request = new AprRequest
