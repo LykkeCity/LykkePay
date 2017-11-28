@@ -62,8 +62,13 @@ namespace LykkePay.API.Controllers
 
         // POST api/assetPairRates/assertId
         [HttpPost("{assertId}")]
-        public async Task<IActionResult> Post([FromBody]AprRequest request, string assertId)
+        public async Task<IActionResult> Post([FromBody]AprSafeRequest safeRequest, string assertId)
         {
+            AprRequest request;
+            if (!safeRequest.AprRequest(out request))
+            {
+                return BadRequest();
+            }
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
             {
@@ -101,8 +106,8 @@ namespace LykkePay.API.Controllers
             }
 
             var rate = rates.First(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase));
-            rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, request, true);
-            rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, request, false);
+            rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, request, false);
+            rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, request, true);
 
             
             return new JsonResult(new AssertPairRateWithSession(rate, newSessionId));

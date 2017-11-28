@@ -97,8 +97,8 @@ namespace LykkePay.API.Controllers
         protected float CalculateValue(float value, int accuracy, AprRequest request, bool isPluse)
         {
             var spread = value * (float)Merchant.DeltaSpread;
-            float lpFee = value * (PayApiSettings.LpMarkup.Percent / 100f);
-            float lpPips = (float)Math.Pow(10, -1 * accuracy) * PayApiSettings.LpMarkup.Pips;
+            float lpFee = value * (Merchant.LpMarkupPercent < 0 ? PayApiSettings.LpMarkup.Percent : (float)Merchant.LpMarkupPercent / 100f);
+            float lpPips = (float)Math.Pow(10, -1 * accuracy) * Merchant.LpMarkupPips < 0 ? PayApiSettings.LpMarkup.Pips : (float)Merchant.LpMarkupPips;
 
             var delta = spread + lpFee + lpPips;
 
@@ -114,7 +114,13 @@ namespace LykkePay.API.Controllers
 
             var powRound = Math.Pow(10, -1 * accuracy) * 0.5;
 
-            return (float)Math.Round(result + (isPluse ? powRound : -powRound), accuracy);
+            var res =  (float)Math.Round(result + (!isPluse ? powRound : -powRound), accuracy);
+            if (res < 0)
+            {
+                res = 0;
+            }
+
+            return res;
 
         }
     }

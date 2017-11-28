@@ -15,24 +15,24 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Bitcoint.Api.Client" Version="1.0.5" />
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.86" />
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.92" />
     <PackageReference Include="Lykke.Common" Version="3.0.2" />
-    <PackageReference Include="Lykke.Common.Entities" Version="1.0.31" />
-    <PackageReference Include="Lykke.Core" Version="1.0.86" />
-    <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.15" />
-    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.13" />
-    <PackageReference Include="Lykke.Service.ExchangeOperations.Client" Version="1.0.10-beta" />
-    <PackageReference Include="Lykke.SettingsReader" Version="1.0.42" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
+    <PackageReference Include="Lykke.Common.Entities" Version="1.0.34" />
+    <PackageReference Include="Lykke.Core" Version="1.0.92" />
+    <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.16" />
+    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.14" />
+    <PackageReference Include="Lykke.Service.ExchangeOperations.Client" Version="1.0.26" />
+    <PackageReference Include="Lykke.SettingsReader" Version="1.0.43" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.2.0-beta1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
