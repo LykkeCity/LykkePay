@@ -65,10 +65,11 @@ namespace LykkePay.API.Controllers
         public async Task<IActionResult> Post([FromBody]AprSafeRequest safeRequest, string assertId)
         {
             AprRequest request;
-            if (safeRequest == null || !safeRequest.AprRequest(out request))
+            if (safeRequest == null || !safeRequest.AprRequest(out request) || request.Percent < 0 || request.Pips < 0)
             {
                 return BadRequest();
             }
+            
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
             {
@@ -97,7 +98,7 @@ namespace LykkePay.API.Controllers
 
                 if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError);
+                    return NotFound();
                 }
             }
             catch
