@@ -96,7 +96,7 @@ namespace LykkePay.API.Controllers
 
         protected float CalculateValue(float value, int accuracy, AprRequest request, bool isPluse)
         {
-            var spread = value * (float)Merchant.DeltaSpread;
+            var spread = value * (float)(Merchant.DeltaSpread/100);
             float lpFee = value * (Merchant.LpMarkupPercent < 0 ? PayApiSettings.LpMarkup.Percent : (float)Merchant.LpMarkupPercent / 100f);
             float lpPips = (float)Math.Pow(10, -1 * accuracy) * Merchant.LpMarkupPips < 0 ? PayApiSettings.LpMarkup.Pips : (float)Merchant.LpMarkupPips;
 

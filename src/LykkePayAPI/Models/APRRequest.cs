@@ -16,22 +16,21 @@ namespace LykkePay.API.Models
         public AssertPairRateRequest Markup { get; set; }
     }
 
-    public class AprSafeRequest
+
+    public class AssertPairRateSafeRequest
     {
         public string Percent { get; set; }
 
         public string Pips { get; set; }
+    }
 
-        public bool IsValid
-        {
-            get
-            {
-                float pr;
-                int p;
-                return (Percent == null || float.TryParse(Percent, out pr)) &&
-                       (Pips == null || int.TryParse(Pips, out p));
-            }
-        }
+    public class AprSafeRequest
+    {
+        public string Percent => Markup.Percent;
+
+        public string Pips => Markup.Pips;
+
+        public AssertPairRateSafeRequest Markup { get; set; }
 
         public bool AprRequest(out AprRequest request)
         {

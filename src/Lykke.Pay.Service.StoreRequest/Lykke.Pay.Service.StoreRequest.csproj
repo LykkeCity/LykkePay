@@ -14,12 +14,12 @@
     <DocumentationFile>bin\Release\netcoreapp1.1\Lykke.Pay.Service.StoreRequest.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.86" />
-    <PackageReference Include="Lykke.Core" Version="1.0.86" />
-    <PackageReference Include="Lykke.SettingsReader" Version="1.0.42" />
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.93" />
+    <PackageReference Include="Lykke.Core" Version="1.0.93" />
+    <PackageReference Include="Lykke.SettingsReader" Version="1.0.43" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
 	<PackageReference Include="Swashbuckle.SwaggerGen" Version="6.0.0-beta902" />
     <PackageReference Include="Swashbuckle.SwaggerUi" Version="6.0.0-beta902" />
