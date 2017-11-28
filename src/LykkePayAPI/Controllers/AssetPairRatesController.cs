@@ -65,7 +65,7 @@ namespace LykkePay.API.Controllers
         public async Task<IActionResult> Post([FromBody]AprSafeRequest safeRequest, string assertId)
         {
             AprRequest request;
-            if (!safeRequest.AprRequest(out request))
+            if (safeRequest == null || !safeRequest.AprRequest(out request))
             {
                 return BadRequest();
             }
