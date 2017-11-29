@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lykke.Pay.Common\Lykke.Pay.Common.csproj" />
+    <ProjectReference Include="..\Lykke.Pay.Service.StoreRequest\Lykke.Pay.Service.StoreRequest.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Dockerfile">
