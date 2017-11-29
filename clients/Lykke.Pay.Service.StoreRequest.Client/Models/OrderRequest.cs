@@ -9,43 +9,43 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class PayRequest
+    public partial class OrderRequest
     {
         /// <summary>
-        /// Initializes a new instance of the PayRequest class.
+        /// Initializes a new instance of the OrderRequest class.
         /// </summary>
-        public PayRequest()
+        public OrderRequest()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the PayRequest class.
+        /// Initializes a new instance of the OrderRequest class.
         /// </summary>
         /// <param name="merchantPayRequestStatus">Possible values include:
         /// 'New', 'InProgress', 'Failed', 'Completed'</param>
-        /// <param name="merchantPayRequestType">Possible values include:
-        /// 'Purchase', 'Transfer', 'ExchangeTransfer'</param>
         /// <param name="merchantPayRequestNotification">Possible values
         /// include: 'Nothing', 'InProgress', 'Success', 'Error'</param>
-        public PayRequest(string merchantId = default(string), string requestId = default(string), string transactionId = default(string), PayFee markup = default(PayFee), string merchantPayRequestStatus = default(string), string merchantPayRequestType = default(string), string merchantPayRequestNotification = default(string), string sourceAddress = default(string), string destinationAddress = default(string), string assetPair = default(string), double? amount = default(double?), string assetId = default(string), string successUrl = default(string), string errorUrl = default(string), string progressUrl = default(string), string orderId = default(string))
+        public OrderRequest(string merchantId = default(string), string requestId = default(string), string transactionId = default(string), PayFee markup = default(PayFee), string merchantPayRequestStatus = default(string), string merchantPayRequestNotification = default(string), string sourceAddress = default(string), string assetPair = default(string), string exchangeAssetId = default(string), double? amount = default(double?), double? exchangeRate = default(double?), string assetId = default(string), string successUrl = default(string), string errorUrl = default(string), string progressUrl = default(string), string orderId = default(string), string transactionDetectionTime = default(string), string transactionWaitingTime = default(string))
         {
             MerchantId = merchantId;
             RequestId = requestId;
             TransactionId = transactionId;
             Markup = markup;
             MerchantPayRequestStatus = merchantPayRequestStatus;
-            MerchantPayRequestType = merchantPayRequestType;
             MerchantPayRequestNotification = merchantPayRequestNotification;
             SourceAddress = sourceAddress;
-            DestinationAddress = destinationAddress;
             AssetPair = assetPair;
+            ExchangeAssetId = exchangeAssetId;
             Amount = amount;
+            ExchangeRate = exchangeRate;
             AssetId = assetId;
             SuccessUrl = successUrl;
             ErrorUrl = errorUrl;
             ProgressUrl = progressUrl;
             OrderId = orderId;
+            TransactionDetectionTime = transactionDetectionTime;
+            TransactionWaitingTime = transactionWaitingTime;
             CustomInit();
         }
 
@@ -82,13 +82,6 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         public string MerchantPayRequestStatus { get; set; }
 
         /// <summary>
-        /// Gets or sets possible values include: 'Purchase', 'Transfer',
-        /// 'ExchangeTransfer'
-        /// </summary>
-        [JsonProperty(PropertyName = "merchantPayRequestType")]
-        public string MerchantPayRequestType { get; set; }
-
-        /// <summary>
         /// Gets or sets possible values include: 'Nothing', 'InProgress',
         /// 'Success', 'Error'
         /// </summary>
@@ -102,18 +95,23 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "destinationAddress")]
-        public string DestinationAddress { get; set; }
-
-        /// <summary>
-        /// </summary>
         [JsonProperty(PropertyName = "assetPair")]
         public string AssetPair { get; set; }
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "exchangeAssetId")]
+        public string ExchangeAssetId { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "amount")]
         public double? Amount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "exchangeRate")]
+        public double? ExchangeRate { get; set; }
 
         /// <summary>
         /// </summary>
@@ -139,6 +137,16 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "orderId")]
         public string OrderId { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "transactionDetectionTime")]
+        public string TransactionDetectionTime { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "transactionWaitingTime")]
+        public string TransactionWaitingTime { get; set; }
 
     }
 }
