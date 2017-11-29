@@ -1,3 +1,5 @@
+using Lykke.Pay.Service.StoreRequest.Client.Models;
+
 namespace LykkePay.API.Models
 {
     public class OrderRequest
@@ -10,5 +12,10 @@ namespace LykkePay.API.Models
         public string ProgressUrl { get; set; }
         public string OrderId { get; set; }
         public Markup Markup { get; set; }
+
+        public Lykke.Pay.Service.StoreRequest.Models.OrderRequest GetRequest()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
