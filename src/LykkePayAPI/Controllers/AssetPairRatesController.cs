@@ -31,6 +31,10 @@ namespace LykkePay.API.Controllers
         [HttpGet("{assertId}")]
         public async Task<IActionResult> Get(string assertId)
         {
+            if (string.IsNullOrEmpty(assertId))
+            {
+                return BadRequest();
+            }
 
             List<AssertPairRate> rates;
 
@@ -48,7 +52,7 @@ namespace LykkePay.API.Controllers
              
                 if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError);
+                    return NotFound();
                 }
             }
             catch
