@@ -80,7 +80,7 @@ namespace LykkePay.API.Controllers
 
             //rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
             rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
-
+            store.Amount = store.Amount / rate.Ask;
             await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(store);
 
             
