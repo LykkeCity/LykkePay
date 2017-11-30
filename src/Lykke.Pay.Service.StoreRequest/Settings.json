@@ -1,7 +1,7 @@
 ﻿{
     "PayServiceStoreRequest": {
         "Db": {
-            "RequestStoreConnString": "UseDevelopmentStorage=true"
+            "RequestStoreConnString": "DefaultEndpointsProtocol=https;AccountName=kubetestmerchant;AccountKey=JyRnjWnTduXE84Nx1kKSPIReIog7GVLkecYc+lROkBmoNBYmJ8C9jQuu/5gY7UH+G0qalG3XjhSVz7EuAEn7mQ=="
         }
     }
 }

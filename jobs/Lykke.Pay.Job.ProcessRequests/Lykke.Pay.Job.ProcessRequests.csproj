@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <PackageReference Include="Bitcoint.Api.Client" Version="1.0.5" />
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.94" />
-    <PackageReference Include="Lykke.Core" Version="1.0.94" />
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.95" />
+    <PackageReference Include="Lykke.Core" Version="1.0.95" />
     <PackageReference Include="Lykke.MatchingEngineConnector" Version="1.0.22" />
     <PackageReference Include="Lykke.MatchingEngineConnector.Abstractions" Version="1.0.22" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.17" />
