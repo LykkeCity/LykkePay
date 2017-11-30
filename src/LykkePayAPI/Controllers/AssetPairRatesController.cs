@@ -80,42 +80,21 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
-            List<AssertPairRate> rates;
-            string newSessionId;
-            try
-            {
-                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
-                
-                var response = JsonConvert.DeserializeObject<AssertListWithSession>(
-                    await (await HttpClient.GetAsync(rateServiceUrl)).Content
-                        .ReadAsStringAsync());
-
-                newSessionId = response.SessionId;
-                rates = response.Asserts;
-
-                if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
-                {
-                    throw new InvalidDataException("Session expired");
-                }
-
-                StoreNewSessionId(newSessionId);
-
-                if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    return NotFound();
-                }
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-
-            var rate = rates.First(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase));
-            rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, request, false);
-            rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, request, true);
-
             
-            return new JsonResult(new AssertPairRateWithSession(rate, newSessionId));
+            var result = await GetRate(assertId);
+
+            var post = result as StatusCodeResult;
+            if (post != null)
+            {
+                return post;
+            }
+
+            var rate = (AssertPairRateWithSession) result;
+
+            rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, request, false);
+            rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, request, true);
+
+            return new JsonResult(rate);
         }
 
         

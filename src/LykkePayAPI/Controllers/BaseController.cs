@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Lykke.AzureRepositories;
+using Lykke.Common.Entities.Pay;
 using Lykke.Common.Entities.Security;
 using Lykke.Core;
 using LykkePay.API.Code;
@@ -94,28 +97,73 @@ namespace LykkePay.API.Controllers
             return Ok();
         }
 
-        protected float CalculateValue(float value, int accuracy, AprRequest request, bool isPluse)
+
+
+        protected async Task<object> GetRate(string assertId)
         {
-            var spread = value * (float)(Merchant.DeltaSpread/100);
+            List<AssertPairRate> rates;
+            var newSessionId = string.Empty;
+            try
+            {
+                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
+
+                var response = JsonConvert.DeserializeObject<AssertListWithSession>(
+                    await(await HttpClient.GetAsync(rateServiceUrl)).Content
+                        .ReadAsStringAsync());
+
+                newSessionId = response.SessionId;
+                rates = response.Asserts;
+
+                if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
+                {
+                    throw new InvalidDataException("Session expired");
+                }
+
+                StoreNewSessionId(newSessionId);
+
+                if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    return NotFound();
+                }
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            var rate = rates.First(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase));
+            return new AssertPairRateWithSession(rate, newSessionId);
+        }
+
+        protected double CalculateValue(double value, int accuracy, AprRequest request, bool isPluse)
+        {
+            var origValue = value;
+            var spread = value * (Merchant.DeltaSpread/100);
             value = isPluse ? (value + spread) : (value - spread);
-            float lpFee = value * (Merchant.LpMarkupPercent < 0 ? PayApiSettings.LpMarkup.Percent/100 : (float)Merchant.LpMarkupPercent / 100f);
-            float lpPips = (float)Math.Pow(10, -1 * accuracy) * Merchant.LpMarkupPips < 0 ? PayApiSettings.LpMarkup.Pips : Merchant.LpMarkupPips;
+            double lpFee = value * (Merchant.LpMarkupPercent < 0 ? PayApiSettings.LpMarkup.Percent/100 : Merchant.LpMarkupPercent / 100f);
+            double lpPips = Math.Pow(10, -1 * accuracy) * Merchant.LpMarkupPips < 0 ? PayApiSettings.LpMarkup.Pips : Merchant.LpMarkupPips;
 
             var delta = spread + lpFee + lpPips;
 
             if (request != null)
             {
                 var fee = value * (request.Percent / 100f);
-                var pips = (float) Math.Pow(10, -1 * accuracy) * request.Pips;
+                var pips =  Math.Pow(10, -1 * accuracy) * request.Pips;
 
                 delta += fee + pips;
             }
 
-            var result = value + (isPluse ? delta : -delta);
+            var result = origValue + (isPluse ? delta : -delta);
 
             var powRound = Math.Pow(10, -1 * accuracy) * 0.5;
 
-            var res =  (float)Math.Round(result + (!isPluse ? powRound : -powRound), accuracy);
+            result += !isPluse ? powRound : -powRound;
+            var res =  Math.Round(result, accuracy);
+            int mult = (int)Math.Pow(10, accuracy);
+
+
+            res = Math.Ceiling(res * mult) / mult;
+
             if (res < 0)
             {
                 res = 0;

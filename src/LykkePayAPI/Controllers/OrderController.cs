@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,14 +23,15 @@ namespace LykkePay.API.Controllers
     public class OrderController : BaseTransactionController
     {
         private readonly ILykkePayServiceGenerateAddressMicroService _gaService;
-        private IExchangeOperationsServiceClient _exchangeOperationClient;
+        private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
+
         public OrderController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient,
             ILykkePayServiceGenerateAddressMicroService generateAddressClient, IExchangeOperationsServiceClient exchangeOperationClient, IBitcoinAggRepository bitcoinAddRepository)
             : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository)
         {
 
             _gaService = generateAddressClient;
-            _exchangeOperationClient = exchangeOperationClient;
+            _storeRequestClient = storeRequestClient;
         }
 
 
@@ -43,7 +43,7 @@ namespace LykkePay.API.Controllers
             {
                 return isValid;
             }
-            var store = request?.GetRequest();
+            var store = request?.GetRequest(MerchantId);
             if (store == null)
             {
                 return BadRequest();
@@ -58,11 +58,35 @@ namespace LykkePay.API.Controllers
 
             store.SourceAddress = resp.Body.Address;
 
-            return Ok();
+            var result = await GetRate(store.AssetPair);
+
+            var post = result as StatusCodeResult;
+            if (post != null)
+            {
+                return post;
+            }
+
+            var rate = (AssertPairRateWithSession)result;
+
+            var arpRequest = new AprRequest
+            {
+                Markup = new AssertPairRateRequest
+                {
+                    Percent = (float) (store.Markup.Percent ?? 0),
+                    Pips = store.Markup.Pips ?? 0
+                }
+                
+            };
+
+            //rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
+            rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
+
+            await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(store);
+
+            
+
+            return Json(new OrderRequestResponse(store, rate.Ask));
          
-
-           
-
 
 
         }
