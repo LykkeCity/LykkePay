@@ -67,7 +67,7 @@ namespace LykkePay.API.Controllers
             }
             else
             {
-                strToSign = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+                strToSign = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path.ToString().TrimEnd('/')}{HttpContext.Request.QueryString}";
             }
 
             var strToSend = JsonConvert.SerializeObject(new MerchantAuthRequest

@@ -1,3 +1,7 @@
+
+#define TEST_ASSERT_ENABLE
+
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,15 +21,15 @@ namespace LykkePay.API.Controllers
     [Route("api/assetPairRates")]
     public class AssetPairRatesController : BaseController
     {
-       
 
-        public AssetPairRatesController(PayApiSettings payApiSettings, HttpClient client) 
+
+        public AssetPairRatesController(PayApiSettings payApiSettings, HttpClient client)
             : base(payApiSettings, client)
         {
-           
+
         }
 
-       
+
 
 
         [HttpGet("{assertId}")]
@@ -35,9 +39,20 @@ namespace LykkePay.API.Controllers
             {
                 return BadRequest();
             }
+#if TEST_ASSERT_ENABLE
+            if (assertId.Equals("BTCTEST", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Json(new AssertPairRate
+                {
+                    Accuracy = 3,
+                    Ask = 6500.555f,
+                    Bid = 6400.444f,
+                    AssetPair = "BTCTEST"
+                });
+            }
 
+#endif
             List<AssertPairRate> rates;
-
             try
             {
                 var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
@@ -46,10 +61,10 @@ namespace LykkePay.API.Controllers
                     await (await HttpClient.GetAsync(rateServiceUrl)).Content
                         .ReadAsStringAsync());
 
-               // var newSessionId = response.SessionId;
+                // var newSessionId = response.SessionId;
                 rates = response.Asserts;
 
-             
+
                 if (!rates.Any(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return NotFound();
@@ -73,23 +88,47 @@ namespace LykkePay.API.Controllers
             {
                 return BadRequest();
             }
-            
+
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
             {
                 return isValid;
             }
 
-            
+
             var result = await GetRate(assertId);
 
-            var post = result as StatusCodeResult;
-            if (post != null)
+
+#if TEST_ASSERT_ENABLE
+            if (assertId.Equals("BTCTEST", StringComparison.InvariantCultureIgnoreCase))
+            {
+                result = new AssertPairRateWithSession(new AssertPairRate
+                {
+                    Accuracy = 3,
+                    Ask = 6500.555f,
+                    Bid = 6400.444f,
+                    AssetPair = "BTCTEST"
+                }, "testSession");
+            }
+            else
+            {
+                var post = result as StatusCodeResult;
+                if (post != null)
+                {
+                    return post;
+                }
+            }
+
+#else
+             var post = result as StatusCodeResult;
+             if (post != null)
             {
                 return post;
             }
+#endif
 
-            var rate = (AssertPairRateWithSession) result;
+
+            var rate = (AssertPairRateWithSession)result;
 
             rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, request, false);
             rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, request, true);
@@ -97,7 +136,7 @@ namespace LykkePay.API.Controllers
             return new JsonResult(rate);
         }
 
-        
+
 
 
 
