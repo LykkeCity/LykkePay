@@ -40,7 +40,8 @@ namespace LykkePay.API.Controllers
                 MerchantId = MerchantId,
                 AssertId = assertId
             });
-            
+
+            return Json(response);
 
             var publicKey = response.Body.Address;
 
