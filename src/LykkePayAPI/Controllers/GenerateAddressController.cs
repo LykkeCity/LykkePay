@@ -35,7 +35,6 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
-            return Json(isValid);
 
             var response = await _gaService.ApiGeneratePostWithHttpMessagesAsync(new GenerateAddressRequest
             {
