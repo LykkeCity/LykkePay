@@ -35,13 +35,15 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
+            return Json(isValid);
+
             var response = await _gaService.ApiGeneratePostWithHttpMessagesAsync(new GenerateAddressRequest
             {
                 MerchantId = MerchantId,
                 AssertId = assertId
             });
 
-            return Json(response);
+            
 
             var publicKey = response.Body.Address;
 
