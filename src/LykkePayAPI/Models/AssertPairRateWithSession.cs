@@ -14,10 +14,10 @@ namespace LykkePay.API.Models
         public string DAssetPair => AssetPair;
 
         [DataMember(Name = "bid")]
-        public float DBid => Bid;
+        public double DBid;
 
         [DataMember(Name = "ask")]
-        public float DAsk => Ask;
+        public double DAsk;
 
         [DataMember(Name = "accuracy")]
         public int DAccuracy => Accuracy;

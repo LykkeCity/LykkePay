@@ -157,7 +157,7 @@ namespace LykkePay.API.Controllers
 
             var result = origValue + (isPluse ? delta : -delta);
 
-            var powRound = Math.Pow(10, -1 * accuracy) * 0.5;
+            var powRound = Math.Pow(10, -1 * accuracy) * (!isPluse ? 0.5 :0.49);
 
             result += !isPluse ? powRound : -powRound;
             var res =  Math.Round(result, accuracy);

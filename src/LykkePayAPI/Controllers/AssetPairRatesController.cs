@@ -130,8 +130,8 @@ namespace LykkePay.API.Controllers
 
             var rate = (AssertPairRateWithSession)result;
 
-            rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, request, false);
-            rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, request, true);
+            rate.DBid = CalculateValue(rate.Bid, rate.Accuracy, request, false);
+            rate.DAsk = CalculateValue(rate.Ask, rate.Accuracy, request, true);
 
             return new JsonResult(rate);
         }
