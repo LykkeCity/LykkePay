@@ -7,6 +7,7 @@ using Bitcoint.Api.Client;
 using Lykke.AzureRepositories;
 using Lykke.Core.Log;
 using Lykke.Pay.Service.GenerateAddress.Client;
+using Lykke.Pay.Service.Invoces.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
 using Lykke.Service.ExchangeOperations.Client;
 using Lykke.SettingsReader;
@@ -68,6 +69,7 @@ namespace LykkePay.API
             services.AddSingleton(generalSettings.PayApi);
             services.AddSingleton<ILykkePayServiceStoreRequestMicroService>(new LykkePayServiceStoreRequestMicroService(new Uri(generalSettings.PayApi.Services.StoreRequestService)));
             services.AddSingleton<ILykkePayServiceGenerateAddressMicroService>(new LykkePayServiceGenerateAddressMicroService(new Uri(generalSettings.PayApi.Services.GenerateAddressService)));
+            services.AddSingleton<IInvoicesservice>(new Invoicesservice(new Uri(generalSettings.PayApi.Services.InvoicesService)));
             services.AddSingleton<IExchangeOperationsServiceClient>(new ExchangeOperationsServiceClient(generalSettings.PayApi.Services.ExchangeOperationsService));
             services.AddSingleton<IBitcoinApi>(new BitcoinApi(new Uri(generalSettings.PayApi.Services.BitcoinApi)));
             services.AddSingleton(new HttpClient());

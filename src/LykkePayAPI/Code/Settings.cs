@@ -16,6 +16,7 @@ namespace LykkePay.API.Code
         public int TransactionConfirmation { get; set; }
         public DbSettings Db { get; set; }
         public LpMarkupSettings LpMarkup { get; set; }
+        public string LykkeInvoiceTemplate { get; set; }
     }
 
     public class LpMarkupSettings
@@ -44,5 +45,6 @@ namespace LykkePay.API.Code
         public string MarketProfileService { get; set; }
         public string ExchangeOperationsService { get; internal set; }
         public string MerchantClientService { get; set; }
+        public string InvoicesService { get; set; }
     }
 }
