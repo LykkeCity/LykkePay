@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lykke.AzureRepositories;
-using Lykke.Common.Entities.Pay;
+using Lykke.Contracts.Pay;
 using Lykke.Core;
 using Lykke.Pay.Service.GenerateAddress.Code;
 using Lykke.Pay.Service.GenerateAddress.Models;

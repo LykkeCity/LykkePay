@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.Serialization;
-using Lykke.Common.Entities.Pay;
+using Lykke.Contracts.Pay;
 
 namespace LykkePay.API.Models
 {

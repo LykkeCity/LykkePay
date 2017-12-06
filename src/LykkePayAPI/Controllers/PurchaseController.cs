@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
-using Lykke.Common.Entities.Pay;
+using Lykke.Contracts.Pay;
 using Lykke.Core;
 using Lykke.Pay.Common;
 using Lykke.Pay.Service.GenerateAddress.Client;

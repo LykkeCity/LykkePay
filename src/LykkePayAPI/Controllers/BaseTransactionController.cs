@@ -277,7 +277,7 @@ namespace LykkePay.API.Controllers
             return true;
         }
 
-        private async Task<int> GetNumberOfConfirmation(string address, string transactionId)
+        protected async Task<int> GetNumberOfConfirmation(string address, string transactionId)
         {
             var height = await BitcoinAddRepository.GetNextBlockId();
             var transaction = await BitcoinAddRepository.GetWalletTransactionAsync(address, transactionId);

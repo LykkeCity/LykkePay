@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
 using Lykke.Common.Entities.Pay;
 using Lykke.Core;
+using Lykke.Pay.Common;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
 using Lykke.Service.ExchangeOperations.Client;
@@ -13,7 +14,6 @@ using LykkePay.API.Code;
 using LykkePay.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using GenerateAddressRequest = Lykke.Pay.Service.GenerateAddress.Client.Models.GenerateAddressRequest;
 
 namespace LykkePay.API.Controllers
@@ -94,13 +94,15 @@ namespace LykkePay.API.Controllers
         [HttpGet("{id}/status")]
         public async Task<IActionResult> GetStatus(string id)
         {
-            return await GetTransactionStatus(id);
+            return await GetOrderStatus(id);
         }
+
+       
 
         [HttpPost("{id}/successUrl")]
         public async Task<IActionResult> UpdateSucecessUrl(string id, [FromBody] UrlRequest url)
         {
-            var result = await UpdateUrl(id, url.Url, UrlType.Success);
+            var result = await UpdateOrderUrl(id, url.Url, UrlType.Success);
             if (result)
             {
                 return Ok();
@@ -111,7 +113,7 @@ namespace LykkePay.API.Controllers
         [HttpPost("{id}/progressUrl")]
         public async Task<IActionResult> UpdateProgressUrl(string id, [FromBody] UrlRequest url)
         {
-            var result = await UpdateUrl(id, url.Url, UrlType.InProgress);
+            var result = await UpdateOrderUrl(id, url.Url, UrlType.InProgress);
             if (result)
             {
                 return Ok();
@@ -122,12 +124,128 @@ namespace LykkePay.API.Controllers
         [HttpPost("{id}/errorUrl")]
         public async Task<IActionResult> UpdateErrorUrl(string id, [FromBody] UrlRequest url)
         {
-            var result = await UpdateUrl(id, url.Url, UrlType.Error);
+            var result = await UpdateOrderUrl(id, url.Url, UrlType.Error);
             if (result)
             {
                 return Ok();
             }
             return StatusCode(500);
+        }
+
+        private async Task<bool> UpdateOrderUrl(string id, string url, UrlType urlType)
+        {
+            var order = await GetOrder(id);
+            if (order == null)
+            {
+                return false;
+            }
+            switch (urlType)
+            {
+                case UrlType.Success:
+                    order.SuccessUrl = url;
+                    break;
+                case UrlType.Error:
+                    order.ErrorUrl = url;
+                    break;
+                case UrlType.InProgress:
+                    order.ProgressUrl = url;
+                    break;
+            }
+            await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(order);
+            return true;
+        }
+
+        private async Task<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest> GetOrder(string id)
+        {
+            IEnumerable<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest> result;
+            var storeResponse = await _storeRequestClient.ApiStoreOrderGetWithHttpMessagesAsync();
+            var content = storeResponse.Response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(content.Result))
+            {
+                return null;
+            }
+
+            result = (from order in JsonConvert.DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content.Result)
+                where
+                      order.OrderId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
+                      !string.IsNullOrEmpty(order.TransactionId) && order.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
+                      !string.IsNullOrEmpty(order.SourceAddress) && order.SourceAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase)
+                select order);
+            return result.FirstOrDefault();
+        }
+
+        private async Task<IActionResult> GetOrderStatus(string id)
+        {
+            var order = await GetOrder(id);
+            if (order == null)
+            {
+                return Json(new TransferErrorReturn
+                {
+                    TransferResponse = new TransferErrorResponse
+                    {
+                        TransferError = TransferError.INTERNAL_ERROR,
+                        TimeStamp = DateTime.UtcNow.Ticks
+                    },
+                    TransferStatus = TransferStatus.TRANSFER_ERROR
+                });
+            }
+
+            if (order.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.Completed.ToString()))
+            {
+                return Json(new TransferSuccessReturn
+                    {
+                        TransferResponse = new TransferSuccessResponse
+                        {
+                            TransactionId = order.TransactionId,
+                            Currency = order.AssetId,
+                            NumberOfConfirmation = await GetNumberOfConfirmation(order.SourceAddress, order.TransactionId),
+                            TimeStamp = DateTime.UtcNow.Ticks,
+                            Url = $"{PayApiSettings.LykkePayBaseUrl}transaction/{order.TransactionId}"
+                        },
+                        TransferStatus = TransferStatus.TRANSFER_CONFIRMED
+                    }
+
+
+
+                );
+            }
+            if (order.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.InProgress.ToString()))
+            {
+                return Json(new TransferInProgressReturn
+                {
+                    TransferResponse = new TransferInProgressResponse
+                    {
+                        Settlement = Settlement.TRANSACTION_DETECTED,
+                        TimeStamp = DateTime.UtcNow.Ticks,
+                        Currency = string.IsNullOrEmpty(order.AssetId) ? order.AssetPair : order.AssetId,
+                        TransactionId = order.TransactionId
+                    },
+                    TransferStatus = TransferStatus.TRANSFER_INPROGRESS
+                });
+            }
+            if (order.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.Failed.ToString()))
+            {
+                return Json(new TransferErrorReturn
+                {
+                    TransferResponse = new TransferErrorResponse
+                    {
+                        TransferError = Enum.Parse<TransferError>(order.MerchantPayRequestNotification),
+                        TimeStamp = DateTime.UtcNow.Ticks
+                    },
+                    TransferStatus = TransferStatus.TRANSFER_ERROR
+                });
+            }
+
+            return Json(new TransferErrorReturn
+            {
+                TransferResponse = new TransferErrorResponse
+                {
+                    TransferError = TransferError.INTERNAL_ERROR,
+                    TimeStamp = DateTime.UtcNow.Ticks
+                },
+                TransferStatus = TransferStatus.TRANSFER_ERROR
+
+            });
         }
     }
 }

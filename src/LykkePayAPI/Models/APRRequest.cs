@@ -10,7 +10,7 @@ namespace LykkePay.API.Models
             Markup = new AssertPairRateRequest();
         }
 
-        public float Percent => Markup.Percent;
+        public double Percent => Markup.Percent;
 
         public int Pips => Markup.Pips;
 

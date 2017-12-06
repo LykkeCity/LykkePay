@@ -8,14 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Lykke.AzureRepositories;
 using Lykke.AzureRepositories.Azure.Tables;
-using Lykke.Common.Entities.Pay;
+using Lykke.Contracts.Pay;
 using Microsoft.Extensions.Configuration;
 using NBitcoin;
 using NBitcoin.RPC;
-using NBitcoin.SPV;
 using Lykke.Core;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Lykke.Pay.Job.BitcointBlocksHandle
 {

@@ -3,7 +3,7 @@ using Bitcoint.Api.Client;
 using Bitcoint.Api.Client.Models;
 using Lykke.AzureRepositories;
 using Microsoft.AspNetCore.Mvc;
-using Lykke.Common.Entities.Pay;
+using Lykke.Contracts.Pay;
 using Lykke.Core;
 using Lykke.Pay.Service.GenerateAddress.Code;
 using Lykke.Pay.Service.GenerateAddress.Models;

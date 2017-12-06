@@ -6,8 +6,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Lykke.AzureRepositories;
-using Lykke.Common.Entities.Pay;
-using Lykke.Common.Entities.Security;
+using Lykke.Contracts.Pay;
+using Lykke.Contracts.Security;
 using Lykke.Core;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
@@ -142,14 +142,14 @@ namespace LykkePay.API.Controllers
             var origValue = value;
             var spread = value * (Merchant.DeltaSpread/100);
             value = isPluse ? (value + spread) : (value - spread);
-            double lpFee = value * (Merchant.LpMarkupPercent < 0 ? PayApiSettings.LpMarkup.Percent/100 : Merchant.LpMarkupPercent / 100f);
+            double lpFee = value * (Merchant.LpMarkupPercent < 0 ? PayApiSettings.LpMarkup.Percent/100 : Merchant.LpMarkupPercent / 100);
             double lpPips = Math.Pow(10, -1 * accuracy) * Merchant.LpMarkupPips < 0 ? PayApiSettings.LpMarkup.Pips : Merchant.LpMarkupPips;
 
             var delta = spread + lpFee + lpPips;
 
             if (request != null)
             {
-                var fee = value * (request.Percent / 100f);
+                var fee = value * (request.Percent / 100);
                 var pips =  Math.Pow(10, -1 * accuracy) * request.Pips;
 
                 delta += fee + pips;
@@ -157,9 +157,9 @@ namespace LykkePay.API.Controllers
 
             var result = origValue + (isPluse ? delta : -delta);
 
-            var powRound = Math.Pow(10, -1 * accuracy) * (!isPluse ? 0.5 :0.49);
+            var powRound = Math.Pow(10, -1 * accuracy) * 0.49;
 
-            result += !isPluse ? powRound : -powRound;
+            result += isPluse ? powRound : -powRound;
             var res =  Math.Round(result, accuracy);
             int mult = (int)Math.Pow(10, accuracy);
 

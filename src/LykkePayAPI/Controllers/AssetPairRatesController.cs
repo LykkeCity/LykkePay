@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Lykke.Common.Entities.Pay;
+using Lykke.Contracts.Pay;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
 using Microsoft.AspNetCore.Http;
@@ -45,8 +45,8 @@ namespace LykkePay.API.Controllers
                 return Json(new AssertPairRate
                 {
                     Accuracy = 3,
-                    Ask = 6500.555f,
-                    Bid = 6400.444f,
+                    Ask = 6500.555,
+                    Bid = 6400.444,
                     AssetPair = "BTCTEST"
                 });
             }
@@ -105,8 +105,8 @@ namespace LykkePay.API.Controllers
                 result = new AssertPairRateWithSession(new AssertPairRate
                 {
                     Accuracy = 3,
-                    Ask = 6500.555f,
-                    Bid = 6400.444f,
+                    Ask = 6500.555,
+                    Bid = 6400.444,
                     AssetPair = "BTCTEST"
                 }, "testSession");
             }
