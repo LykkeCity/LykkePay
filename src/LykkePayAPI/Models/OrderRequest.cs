@@ -19,7 +19,17 @@ namespace LykkePay.API.Models
 
         public Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest GetRequest(string merchantId)
         {
-            try
+            if (string.IsNullOrEmpty(Currency) || string.IsNullOrEmpty(Amount))
+            {
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(ExchangeCurrency))
+            {
+                ExchangeCurrency = "BTC";
+            }
+
+                try
             {
                 var provider = CultureInfo.InvariantCulture;
                 return new Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest
@@ -30,7 +40,7 @@ namespace LykkePay.API.Models
                     AssetId = Currency,
                     ExchangeAssetId = ExchangeCurrency,
                     OrderId = OrderId,
-                    Markup = Markup == null ? null : new PayFee
+                    Markup = Markup == null ? new PayFee(0, 0, 0) : new PayFee
                     {
                         FixedFee = Markup.FixedFee,
                         Percent = Markup.Percent,

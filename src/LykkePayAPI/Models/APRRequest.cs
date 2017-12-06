@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using Lykke.Common.Entities.Pay;
+using Lykke.Contracts.Pay;
 
 namespace LykkePay.API.Models
 {
