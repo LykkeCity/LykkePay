@@ -49,6 +49,12 @@ namespace LykkePay.API.Controllers
                 return NotFound();
             }
 
+
+            order.MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString();
+            order.MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing.ToString();
+
+            await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(order);
+
             var request = new OrderRequest
             {
                 Amount = order.Amount.ToString(),
@@ -69,10 +75,14 @@ namespace LykkePay.API.Controllers
             };
 
             var store = request.GetRequest(MerchantId);
+
             if (store == null)
             {
                 return BadRequest();
             }
+
+            store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
+            store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
 
             return await GenerateOrder(store, order.SourceAddress);
 
@@ -87,12 +97,15 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
-
+            
             var store = request?.GetRequest(MerchantId);
             if (store == null)
             {
                 return BadRequest();
             }
+
+            store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
+            store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
 
             var resp = await _gaService.ApiGeneratePostWithHttpMessagesAsync(new GenerateAddressRequest
             {
