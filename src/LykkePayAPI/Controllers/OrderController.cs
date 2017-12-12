@@ -110,7 +110,7 @@ namespace LykkePay.API.Controllers
             var resp = await _gaService.ApiGeneratePostWithHttpMessagesAsync(new GenerateAddressRequest
             {
                 MerchantId = MerchantId,
-                AssertId = store.AssetId
+                AssertId = store.ExchangeAssetId
             });
 
             return await GenerateOrder(store, resp.Body.Address);

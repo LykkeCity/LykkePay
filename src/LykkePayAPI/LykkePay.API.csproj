@@ -21,7 +21,7 @@
     <PackageReference Include="Lykke.Core" Version="1.0.99" />
     <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.17" />
     <PackageReference Include="Lykke.Pay.Service.Invoces.Client" Version="1.0.5" />
-    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.19" />
+    <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.21" />
     <PackageReference Include="Lykke.Service.ExchangeOperations.Client" Version="1.0.28" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.43" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.2.0-beta1" />
