@@ -14,6 +14,7 @@ namespace Lykke.Pay.Service.StoreRequest.Models
         public string AssetPair { get; set; }
         public string ExchangeAssetId { get; set; }
         public double Amount { get; set; }
+        public double OriginAmount { get; set; }
         public double ExchangeRate { get; set; }
         public string AssetId { get; set; }
         public string SuccessUrl { get; set; }
