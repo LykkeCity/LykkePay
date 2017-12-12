@@ -228,7 +228,7 @@ namespace LykkePay.API.Controllers
 
             result = (from order in JsonConvert.DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content.Result)
                 where
-                       order.RequestId.Equals(id, StringComparison.CurrentCultureIgnoreCase) || order.OrderId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
+                id.Equals(order.RequestId, StringComparison.CurrentCultureIgnoreCase) || id.Equals(order.OrderId, StringComparison.CurrentCultureIgnoreCase) ||
                       !string.IsNullOrEmpty(order.TransactionId) && order.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
                       !string.IsNullOrEmpty(order.SourceAddress) && order.SourceAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase)
                 select order);
