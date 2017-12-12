@@ -223,6 +223,7 @@ namespace LykkePay.API.Controllers
             }
 
             var walletResult = await GnerateAddressClient.ApiWalletByMerchantIdGetWithHttpMessagesAsync(MerchantId);
+            var i = walletResult.Body.First(ii => ii.WalletAddress == "n2sh4wRbvvjxEK26ZtgaA8kCAb3nabUjZC");
             var res = (from w in walletResult.Body
                        where assertId.Equals(w.Assert, StringComparison.CurrentCultureIgnoreCase)
                        select new ToOneAddress
@@ -231,6 +232,7 @@ namespace LykkePay.API.Controllers
                            Amount = (decimal?)w.Amount
                        }).ToList();
             //var ww = res.Where(www => www.Address == "mqiPrLxjrPd8ihF67Fo5zqVCD4kvSoG16P").FirstOrDefault();
+            res.Add(new ToOneAddress(i.WalletAddress, (decimal?)i.Amount));
             return res;
         }
 

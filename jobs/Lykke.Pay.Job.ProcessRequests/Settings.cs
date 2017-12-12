@@ -18,7 +18,7 @@
     public class ServicessSettings
     {
         public string LykkePayServiceStoreRequestMicroService { get; set; }
-        public string BitcoinApi { get; set; }
+        public string BitcoinApiService { get; set; }
     }
 
     public class DbSettings

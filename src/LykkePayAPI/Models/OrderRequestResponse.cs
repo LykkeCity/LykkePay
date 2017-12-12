@@ -13,7 +13,7 @@ namespace LykkePay.API.Models
         public double RecommendedFee { get; set; }
         public double TotalAmount { get; set; }
         public double ExchangeRate { get; set; }
-
+        public string OrderRequestId { get; set; }
 
 
         public OrderRequestResponse(Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest request, double exchangeRate)
@@ -27,6 +27,9 @@ namespace LykkePay.API.Models
             RecommendedFee = 0;
             TotalAmount = Amount + RecommendedFee;
             ExchangeRate = exchangeRate;
+            OrderRequestId = request.RequestId;
         }
+
+        
     }
 }

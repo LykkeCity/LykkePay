@@ -65,7 +65,7 @@ namespace Lykke.Pay.Job.ProcessRequests.RequestFactory
                     new AzureTableStorage<MerchantPayRequest>(settings.Db.MerchantWalletConnectionString, "MerchantPayRequest", null));
 
             //"http://52.164.252.39/"
-            _bitcoinApi = new BitcoinApi(new Uri(settings.Services.BitcoinApi));
+            _bitcoinApi = new BitcoinApi(new Uri(settings.Services.BitcoinApiService));
         }
 
        
