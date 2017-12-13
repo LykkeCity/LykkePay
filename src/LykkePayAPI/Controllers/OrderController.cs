@@ -57,7 +57,7 @@ namespace LykkePay.API.Controllers
 
             var request = new OrderRequest
             {
-                Amount = order.Amount.ToString(),
+                Amount = order.OriginAmount.ToString(),
                 Currency = order.AssetId,
                 ExchangeCurrency = order.ExchangeAssetId,
                 ErrorUrl = order.ErrorUrl,
@@ -70,7 +70,7 @@ namespace LykkePay.API.Controllers
                     Pips = 0
                 },
                 OrderId = order.OrderId,
-
+                
 
             };
 
@@ -144,6 +144,7 @@ namespace LykkePay.API.Controllers
 
             //rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
             rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
+            store.OriginAmount = store.Amount;
             store.Amount = store.Amount / rate.Ask;
             await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(store);
 
