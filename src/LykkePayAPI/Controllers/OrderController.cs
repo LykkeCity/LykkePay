@@ -221,8 +221,8 @@ namespace LykkePay.API.Controllers
         {
             IEnumerable<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest> result;
             var storeResponse = await _storeRequestClient.ApiStoreOrderByMerchantIdGetWithHttpMessagesAsync(MerchantId);
-            var content = storeResponse.Response.Content.ReadAsStringAsync();
-            if (string.IsNullOrEmpty(content.Result))
+            var content = await storeResponse.Response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(content))
             {
                 return null;
             }
