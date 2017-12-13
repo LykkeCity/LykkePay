@@ -17,7 +17,7 @@ using TransferRequest = LykkePay.API.Models.TransferRequest;
 
 namespace LykkePay.API.Controllers
 {
-    [Route("api/Transfer")]
+    [Route("api/v1/Transfer")]
     public class TransferController : BaseTransactionController
     {
       

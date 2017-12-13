@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LykkePay.API.Controllers
 {
     [Produces("application/json")]
-    [Route("api/getBalance")]
+    [Route("api/v1/getBalance")]
     public class BalanceController : BaseTransactionController
     {
 

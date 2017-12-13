@@ -21,7 +21,7 @@ using Newtonsoft.Json.Linq;
 namespace LykkePay.API.Controllers
 {
     //[Produces("application/json")]
-    [Route("api/Purchase")]
+    [Route("api/v1/Purchase")]
     public class PurchaseController : BaseTransactionController
     {
         private readonly IExchangeOperationsServiceClient _exchangeOperationClient;

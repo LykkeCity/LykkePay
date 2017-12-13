@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/assetPairRates",
+      "launchUrl": "api/v1/assetPairRates",
       "environmentVariables": {
         "ConnectionString": "https://settings-test-k8s.lykkex.net/317de226c5646c48443cd7114b0932f_PayAPI",
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -20,7 +20,7 @@
     "LykkePay.API": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/assetPairRates",
+      "launchUrl": "api/v1/assetPairRates",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

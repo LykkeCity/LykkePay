@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 namespace LykkePay.API.Controllers
 {
-    [Route("api/ExchangeTransfer")]
+    [Route("api/v1/ExchangeTransfer")]
     public class ExchangeTransferController : BaseTransactionController
     {
 

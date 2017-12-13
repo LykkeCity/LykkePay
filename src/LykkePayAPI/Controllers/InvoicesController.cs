@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LykkePay.API.Controllers
 {
-    [Route("api/Invoices")]
+    [Route("api/v1/Invoices")]
     public class InvoicesController : BaseController
     {
         private readonly IInvoicesservice _invoiceService;

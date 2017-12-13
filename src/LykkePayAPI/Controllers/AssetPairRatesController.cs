@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 namespace LykkePay.API.Controllers
 {
     [Produces("application/json")]
-    [Route("api/assetPairRates")]
+    [Route("api/v1/assetPairRates")]
     public class AssetPairRatesController : BaseController
     {
 

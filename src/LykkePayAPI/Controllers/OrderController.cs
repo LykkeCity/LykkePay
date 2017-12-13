@@ -19,7 +19,7 @@ using GenerateAddressRequest = Lykke.Pay.Service.GenerateAddress.Client.Models.G
 namespace LykkePay.API.Controllers
 {
 
-    [Route("api/Order")]
+    [Route("api/v1/Order")]
     public class OrderController : BaseTransactionController
     {
         private readonly ILykkePayServiceGenerateAddressMicroService _gaService;
@@ -227,7 +227,7 @@ namespace LykkePay.API.Controllers
                 return null;
             }
 
-            result = (from order in JsonConvert.DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content.Result)
+            result = (from order in JsonConvert.DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content)
                 where
                 id.Equals(order.RequestId, StringComparison.CurrentCultureIgnoreCase) || id.Equals(order.OrderId, StringComparison.CurrentCultureIgnoreCase) ||
                       !string.IsNullOrEmpty(order.TransactionId) && order.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||

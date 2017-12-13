@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 namespace LykkePay.API.Controllers
 {
     [Produces("application/json")]
-    [Route("api/generateAddress")]
+    [Route("api/v1/generateAddress")]
     public class GenerateAddressController : BaseController
     {
         private readonly ILykkePayServiceGenerateAddressMicroService _gaService;
