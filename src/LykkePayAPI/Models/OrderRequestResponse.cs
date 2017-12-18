@@ -17,6 +17,10 @@ namespace LykkePay.API.Models
         public string TransactionWaitingTime { get; set; }
         public string MerchantPayRequestStatus { get; set; }
 
+        public OrderRequestResponse(Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest request) : this(request, request.ExchangeRate ?? 0)
+        {
+            
+        }
 
         public OrderRequestResponse(Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest request, double exchangeRate)
         {

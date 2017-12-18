@@ -53,7 +53,7 @@ namespace LykkePay.API.Models
                     MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing.ToString(),
                     MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
-                    TransactionWaitingTime = DateTime.Now.AddMinutes(10).RepoDateStr()
+                    TransactionWaitingTime = DateTime.Now.AddMinutes(11).RepoDateStr()
 
                 };
 
