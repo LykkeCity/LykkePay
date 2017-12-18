@@ -51,7 +51,7 @@ namespace LykkePay.API.Models
                     ErrorUrl = ErrorUrl,
                     ProgressUrl = ProgressUrl,
                     MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing.ToString(),
-                    MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString(),
+                    MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
                     TransactionWaitingTime = DateTime.Now.AddMinutes(11).RepoDateStr()
 

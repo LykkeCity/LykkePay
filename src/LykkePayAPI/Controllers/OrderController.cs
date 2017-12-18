@@ -46,7 +46,7 @@ namespace LykkePay.API.Controllers
             var order = await GetOrder(address);
             if (order != null)
             {
-                return Json(new OrderRequestResponse(order));
+                return Json(order);
             }
 
 
@@ -81,11 +81,17 @@ namespace LykkePay.API.Controllers
                 AssertId = store.ExchangeAssetId
             });
 
-            return await GenerateOrder(store, resp.Body.Address);
 
+            var result = await GenerateOrder(store, resp.Body.Address);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return Json(result);
         }
 
-        private async Task<IActionResult> GenerateOrder(Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest store, string address)
+        private async Task<OrderRequestResponse> GenerateOrder(Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest store, string address)
         {
 
             store.SourceAddress = address;
@@ -95,7 +101,7 @@ namespace LykkePay.API.Controllers
             var post = result as StatusCodeResult;
             if (post != null)
             {
-                return post;
+                return null;
             }
 
             var rate = (AssertPairRateWithSession)result;
@@ -118,7 +124,7 @@ namespace LykkePay.API.Controllers
 
 
 
-            return Json(new OrderRequestResponse(store, rate.Ask));
+            return new OrderRequestResponse(store, rate.Ask);
         }
 
         [HttpGet("{id}/status")]
@@ -164,7 +170,7 @@ namespace LykkePay.API.Controllers
 
         private async Task<bool> UpdateOrderUrl(string id, string url, UrlType urlType)
         {
-            var order = await GetOrder(id);
+            var order = await GetOrderById(id);
             if (order == null)
             {
                 return false;
@@ -185,7 +191,7 @@ namespace LykkePay.API.Controllers
             return true;
         }
 
-        private async Task<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest> GetOrder(string id)
+        private async Task<OrderRequestResponse> GetOrder(string id)
         {
             var storeResponse = await _storeRequestClient.ApiStoreOrderByMerchantIdGetWithHttpMessagesAsync(MerchantId);
             var content = await storeResponse.Response.Content.ReadAsStringAsync();
@@ -195,39 +201,39 @@ namespace LykkePay.API.Controllers
             }
 
             var result = (from o in JsonConvert.DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content)
-                          where
-                          (id.Equals(o.RequestId, StringComparison.CurrentCultureIgnoreCase) || id.Equals(o.OrderId, StringComparison.CurrentCultureIgnoreCase) ||
-                          !string.IsNullOrEmpty(o.TransactionId) && o.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
-                          !string.IsNullOrEmpty(o.SourceAddress) && o.SourceAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase))
-                          && !string.IsNullOrEmpty(o.TransactionWaitingTime)
-                          orderby o.TransactionWaitingTime.GetRepoDateTime()
-                          select o).ToList();
+                where
+                (id.Equals(o.RequestId, StringComparison.CurrentCultureIgnoreCase) || id.Equals(o.OrderId, StringComparison.CurrentCultureIgnoreCase) ||
+                 !string.IsNullOrEmpty(o.TransactionId) && o.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
+                 !string.IsNullOrEmpty(o.SourceAddress) && o.SourceAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase))
+                && !string.IsNullOrEmpty(o.TransactionWaitingTime)
+                orderby o.TransactionWaitingTime.GetRepoDateTime()
+                select o).ToList();
             if (result.Count == 0)
             {
                 return null;
             }
             if (result.Count == 1 && result[0].TransactionWaitingTime.GetRepoDateTime() > DateTime.Now && result[0].MerchantPayRequestStatus != ((int)MerchantPayRequestStatus.InProgress).ToString())
             {
-                return result[0];
+                return new OrderRequestResponse(result[0]);
             }
 
             var order = result.FirstOrDefault(
                 o => o.MerchantPayRequestStatus != ((int)MerchantPayRequestStatus.InProgress).ToString());
             if (order != null)
             {
-                return order;
+                return new OrderRequestResponse(order);
             }
 
 
             order = result.FirstOrDefault(o => o.TransactionWaitingTime.GetRepoDateTime() > DateTime.Now);
             if (order != null)
             {
-                return order;
+                return new OrderRequestResponse(order);
             }
 
-            var oRequest = result.Last();
+            var oRequest = result.First();
 
-           
+
 
             var request = new OrderRequest
             {
@@ -246,26 +252,41 @@ namespace LykkePay.API.Controllers
                 OrderId = oRequest.OrderId,
 
 
+
             };
 
             var store = request.GetRequest(MerchantId);
-
+            
             if (store == null)
             {
                 return null;
             }
 
-            store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
-            store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
+            store.OriginAmount = oRequest.OriginAmount;
+            return await GenerateOrder(store, result.First().SourceAddress);
+        }
 
-            await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(store);
+        private async Task<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest> GetOrderById(string id)
+        {
+            var storeResponse = await _storeRequestClient.ApiStoreOrderByMerchantIdGetWithHttpMessagesAsync(MerchantId);
+            var content = await storeResponse.Response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(content))
+            {
+                return null;
+            }
 
-            return store;
+            return (from o in JsonConvert.DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content)
+                          where
+                          (id.Equals(o.RequestId, StringComparison.CurrentCultureIgnoreCase) || id.Equals(o.OrderId, StringComparison.CurrentCultureIgnoreCase) ||
+                          !string.IsNullOrEmpty(o.TransactionId) && o.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
+                          !string.IsNullOrEmpty(o.SourceAddress) && o.SourceAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase))
+                          select o).FirstOrDefault();
+           
         }
 
         private async Task<IActionResult> GetOrderStatus(string id)
         {
-            var order = await GetOrder(id);
+            var order = await GetOrderById(id);
             if (order == null)
             {
                 return Json(new TransferErrorReturn
