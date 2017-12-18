@@ -14,6 +14,8 @@ namespace LykkePay.API.Models
         public double TotalAmount { get; set; }
         public double ExchangeRate { get; set; }
         public string OrderRequestId { get; set; }
+        public string TransactionWaitingTime { get; set; }
+        public string MerchantPayRequestStatus { get; set; }
 
 
         public OrderRequestResponse(Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest request, double exchangeRate)
@@ -28,6 +30,8 @@ namespace LykkePay.API.Models
             TotalAmount = Amount + RecommendedFee;
             ExchangeRate = exchangeRate;
             OrderRequestId = request.RequestId;
+            TransactionWaitingTime = request.TransactionWaitingTime.ToUnixFormat();
+            MerchantPayRequestStatus = request.MerchantPayRequestStatus;
         }
 
         

@@ -8,14 +8,35 @@ namespace LykkePay.API.Code
 {
     public static class StringExt
     {
-        private static readonly string StorageFormat = "yyyy-MM-dd HH:mm:ss.fff";
         private static readonly IFormatProvider Provider = CultureInfo.InvariantCulture;
+
+
+        public static DateTime GetRepoDateTime(this string strDate)
+        {
+            return DateTime.Parse(strDate, Provider).ToLocalTime();
+        }
+
+
+        public static DateTime FromUnixFormat(this string str)
+        {
+            try
+            {
+                int seconds = int.Parse(str);
+                return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(seconds).ToLocalTime();
+
+            }
+            catch
+            {
+                return DateTime.Now;
+            }
+
+        }
         public static string ToUnixFormat(this string str)
         {
             try
             {
-                var dateResult = DateTime.ParseExact(str, StorageFormat, Provider);
-                var seconds = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                var dateResult = DateTime.Parse(str, Provider);
+                var seconds = (int)(dateResult.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                 return seconds.ToString(Provider);
             }
             catch

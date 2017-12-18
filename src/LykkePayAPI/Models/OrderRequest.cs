@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using Lykke.AzureRepositories.Extentions;
 using Lykke.Core;
+using LykkePay.API.Code;
 using PayFee = Lykke.Pay.Service.StoreRequest.Client.Models.PayFee;
 
 namespace LykkePay.API.Models
@@ -52,8 +53,7 @@ namespace LykkePay.API.Models
                     MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing.ToString(),
                     MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
-                    TransactionDetectionTime = DateTime.Now.StorageString(),
-                    TransactionWaitingTime = DateTime.Now.AddMinutes(10).StorageString()
+                    TransactionWaitingTime = DateTime.Now.AddMinutes(10).RepoDateStr()
 
                 };
 

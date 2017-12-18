@@ -34,8 +34,8 @@ namespace LykkePay.API.Controllers
             _storeRequestClient = storeRequestClient;
         }
 
-        [HttpPost("ReCreate/{OrderId}")]
-        public async Task<IActionResult> ReCreate(string orderId)
+        [HttpPost("ReCreate/{address}")]
+        public async Task<IActionResult> ReCreate(string address)
         {
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
@@ -43,15 +43,14 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
 
-            var order = await GetOrder(orderId);
+            var order = await GetOrder(address);
             if (order == null)
             {
                 return NotFound();
             }
 
 
-            order.MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString();
-            order.MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing.ToString();
+            
 
             await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(order);
 
@@ -103,6 +102,8 @@ namespace LykkePay.API.Controllers
             {
                 return BadRequest();
             }
+
+
 
             store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
             store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
@@ -219,7 +220,6 @@ namespace LykkePay.API.Controllers
 
         private async Task<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest> GetOrder(string id)
         {
-            IEnumerable<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest> result;
             var storeResponse = await _storeRequestClient.ApiStoreOrderByMerchantIdGetWithHttpMessagesAsync(MerchantId);
             var content = await storeResponse.Response.Content.ReadAsStringAsync();
             if (string.IsNullOrEmpty(content))
@@ -227,13 +227,32 @@ namespace LykkePay.API.Controllers
                 return null;
             }
 
-            result = (from order in JsonConvert.DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content)
+            var result = (from o in JsonConvert.DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content)
                 where
-                id.Equals(order.RequestId, StringComparison.CurrentCultureIgnoreCase) || id.Equals(order.OrderId, StringComparison.CurrentCultureIgnoreCase) ||
-                      !string.IsNullOrEmpty(order.TransactionId) && order.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
-                      !string.IsNullOrEmpty(order.SourceAddress) && order.SourceAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase)
-                select order);
-            return result.FirstOrDefault();
+                (id.Equals(o.RequestId, StringComparison.CurrentCultureIgnoreCase) || id.Equals(o.OrderId, StringComparison.CurrentCultureIgnoreCase) ||
+                !string.IsNullOrEmpty(o.TransactionId) && o.TransactionId.Equals(id, StringComparison.CurrentCultureIgnoreCase) ||
+                !string.IsNullOrEmpty(o.SourceAddress) && o.SourceAddress.Equals(id, StringComparison.CurrentCultureIgnoreCase))
+                && !string.IsNullOrEmpty(o.TransactionWaitingTime)
+                orderby o.TransactionWaitingTime.GetRepoDateTime()
+                select o).ToList();
+            if (result.Count == 0)
+            {
+                return null;
+            }
+            if (result.Count == 1)
+            {
+                return result[0];
+            }
+
+            var order = result.FirstOrDefault(
+                o => !o.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.InProgress.ToString()));
+            if (order != null)
+            {
+                return order;
+            }
+
+            
+            return result.FirstOrDefault(o=>o.TransactionWaitingTime.GetRepoDateTime() > DateTime.Now);
         }
 
         private async Task<IActionResult> GetOrderStatus(string id)
