@@ -16,10 +16,10 @@ namespace Lykke.Pay.Common
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(Name = "PaymentStatus")]
+        [DataMember(Name = "paymentStatus")]
         public PaymentStatus PaymentStatus { get; set; }
 
-        [DataMember(Name = "PaymentResponse")]
+        [DataMember(Name = "paymentResponse")]
         public PaymentSuccessResponse PaymentResponse { get; set; }
 
     }
@@ -33,10 +33,10 @@ namespace Lykke.Pay.Common
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(Name = "PaymentStatus")]
+        [DataMember(Name = "paymentStatus")]
         public PaymentStatus PaymentStatus { get; set; }
 
-        [DataMember(Name = "PaymentResponse")]
+        [DataMember(Name = "paymentResponse")]
         public PaymentInProgressResponse PaymentResponse { get; set; }
 
     }
