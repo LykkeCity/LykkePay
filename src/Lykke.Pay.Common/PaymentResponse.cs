@@ -108,7 +108,7 @@ namespace Lykke.Pay.Common
 
         [DataMember(Name = "error")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public PaymentError PaymentError { get; set; }
+        public TransferError PaymentError { get; set; }
 
     }
 }
