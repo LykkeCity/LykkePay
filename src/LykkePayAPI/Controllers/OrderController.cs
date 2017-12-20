@@ -54,6 +54,56 @@ namespace LykkePay.API.Controllers
 
         }
 
+
+        [HttpPost("Status/{address}")]
+        public async Task<IActionResult> Status(string address)
+        {
+
+            var isValid = await ValidateRequest();
+            if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
+            {
+                return isValid;
+            }
+
+            if (string.IsNullOrEmpty(address))
+            {
+                return NotFound();
+            }
+
+            var storeResponse = await _storeRequestClient.ApiStoreOrderByMerchantIdGetWithHttpMessagesAsync(MerchantId);
+            var content = await storeResponse.Response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(content))
+            {
+                return NotFound();
+            }
+
+            var result = (from o in JsonConvert
+                    .DeserializeObject<List<Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest>>(content)
+                where
+                address.Equals(o.SourceAddress)
+                group o by o.MerchantPayRequestStatus
+                into go
+                select go.Key.ParseOrderStatus()).ToList();
+
+            if (result.Exists(st => st == MerchantPayRequestStatus.Failed))
+            {
+                return Content(MerchantPayRequestStatus.Failed.ToString());
+            }
+
+            if (result.Exists(st => st == MerchantPayRequestStatus.Completed))
+            {
+                return Content(MerchantPayRequestStatus.Completed.ToString());
+            }
+
+            if (result.Exists(st => st == MerchantPayRequestStatus.InProgress))
+            {
+                return Content(MerchantPayRequestStatus.InProgress.ToString());
+            }
+
+            return NotFound(); 
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OrderRequest request)
         {
