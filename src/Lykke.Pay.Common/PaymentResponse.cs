@@ -1,66 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Lykke.Pay.Common
 {
     [DataContract]
-    public class TransferSuccessReturn
+    public class PaymentSuccessReturn
     {
-        public TransferSuccessReturn()
+        public PaymentSuccessReturn()
         {
-            TransferStatus = TransferStatus.TRANSFER_CONFIRMED;
+            PaymentStatus = PaymentStatus.PAYMENT_CONFIRMED;
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(Name = "transferStatus")]
-        public TransferStatus TransferStatus { get; set; }
+        [DataMember(Name = "PaymentStatus")]
+        public PaymentStatus PaymentStatus { get; set; }
 
-        [DataMember(Name = "transferResponse")]
-        public TransferSuccessResponse TransferResponse { get; set; }
+        [DataMember(Name = "PaymentResponse")]
+        public PaymentSuccessResponse PaymentResponse { get; set; }
 
     }
 
     [DataContract]
-    public class TransferInProgressReturn
+    public class PaymentInProgressReturn
     {
-        public TransferInProgressReturn()
+        public PaymentInProgressReturn()
         {
-            TransferStatus = TransferStatus.TRANSFER_INPROGRESS;
+            PaymentStatus = PaymentStatus.PAYMENT_INPROGRESS;
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(Name = "transferStatus")]
-        public TransferStatus TransferStatus { get; set; }
+        [DataMember(Name = "PaymentStatus")]
+        public PaymentStatus PaymentStatus { get; set; }
 
-        [DataMember(Name = "transferResponse")]
-        public TransferInProgressResponse TransferResponse { get; set; }
+        [DataMember(Name = "PaymentResponse")]
+        public PaymentInProgressResponse PaymentResponse { get; set; }
 
     }
 
     [DataContract]
-    public class TransferErrorReturn
+    public class PaymentErrorReturn
     {
-        public TransferErrorReturn()
+        public PaymentErrorReturn()
         {
-            TransferStatus = TransferStatus.TRANSFER_ERROR;
+            PaymentStatus = PaymentStatus.PAYMENT_ERROR;
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(Name = "transferStatus")]
-        public TransferStatus TransferStatus { get; set; }
+        [DataMember(Name = "PaymentStatus")]
+        public PaymentStatus PaymentStatus { get; set; }
 
-        [DataMember(Name = "transferResponse")]
-        public TransferErrorResponse TransferResponse { get; set; }
+        [DataMember(Name = "PaymentResponse")]
+        public PaymentErrorResponse PaymentResponse { get; set; }
 
     }
 
     [DataContract]
-    public class TransferSuccessResponse
+    public class PaymentSuccessResponse
     {
         [DataMember(Name = "currency")]
         public string Currency { get; set; }
@@ -82,7 +81,7 @@ namespace Lykke.Pay.Common
     }
 
     [DataContract]
-    public class TransferInProgressResponse
+    public class PaymentInProgressResponse
     {
         [DataMember(Name = "currency")]
         public string Currency { get; set; }
@@ -101,7 +100,7 @@ namespace Lykke.Pay.Common
     }
 
     [DataContract]
-    public class TransferErrorResponse
+    public class PaymentErrorResponse
     {
 
         [DataMember(Name = "timestamp")]
@@ -109,8 +108,7 @@ namespace Lykke.Pay.Common
 
         [DataMember(Name = "error")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public TransferError TransferError { get; set; }
+        public PaymentError PaymentError { get; set; }
 
     }
-
 }

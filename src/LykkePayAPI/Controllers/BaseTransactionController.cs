@@ -50,7 +50,7 @@ namespace LykkePay.API.Controllers
             return Json(errorResponse);
         }
 
-        protected async Task<dynamic> PostTransferRaw(string assertId, PayRequest payRequest)
+        protected async Task<dynamic> PostTransferRaw(string assertId, PayRequest payRequest, int feeRate = 0)
         {
             var store = payRequest;
             var result = new TransferInProgressReturn
@@ -151,7 +151,7 @@ namespace LykkePay.API.Controllers
                 {
                     Asset = assertId,
                     Destination = store.DestinationAddress,
-                    FeeRate = 0,
+                    FeeRate = feeRate,
                     Sources = new List<ToOneAddress>(from sl in sourceList
                                                      where sl.Amount.HasValue && sl.Amount > 0
                                                      select sl)
@@ -189,7 +189,7 @@ namespace LykkePay.API.Controllers
                 await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(store);
                 result.TransferResponse.TransactionId = store.TransactionId;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
@@ -204,9 +204,9 @@ namespace LykkePay.API.Controllers
 
             return result;
         }
-        protected async Task<IActionResult> PostTransfer(string assertId, PayRequest payRequest)
+        protected async Task<IActionResult> PostTransfer(string assertId, PayRequest payRequest, int feeRate = 0)
         {
-            var post = await PostTransferRaw(assertId, payRequest);
+            var post = await PostTransferRaw(assertId, payRequest, feeRate);
             var result = post as IActionResult;
             if (result != null)
             {

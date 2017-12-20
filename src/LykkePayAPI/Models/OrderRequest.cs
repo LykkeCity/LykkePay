@@ -36,7 +36,7 @@ namespace LykkePay.API.Models
                 return new Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest
                 {
                     MerchantId = merchantId,
-                    Amount = double.Parse(Amount, provider),
+                    Amount = Math.Round(double.Parse(Amount, provider), 8),
                     AssetPair = $"{ExchangeCurrency}{Currency}",
                     AssetId = Currency,
                     ExchangeAssetId = ExchangeCurrency,

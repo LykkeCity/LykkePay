@@ -26,7 +26,7 @@ namespace LykkePay.API.Models
                 MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing.ToString(),
                 DestinationAddress = DestinationAddress,
                 SourceAddress = SourceAddress,
-                Amount = (double)Amount,
+                Amount = (double)Math.Round(Amount, 8),
                 AssetId = AssetId,
                 SuccessUrl = SuccessUrl,
                 ErrorUrl = ErrorUrl,
