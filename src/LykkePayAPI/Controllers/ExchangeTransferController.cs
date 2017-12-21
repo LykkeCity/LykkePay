@@ -66,39 +66,31 @@ namespace LykkePay.API.Controllers
 
             StoreNewSessionId(newSessionId);
 
-            var rate = rates.FirstOrDefault(r => r.AssetPair.Equals(request.AssetPair, StringComparison.CurrentCultureIgnoreCase));
-            if (rate == null)
-            {
-                return Json(
-                    new TransferErrorReturn
-                    {
-                        TransferResponse = new TransferErrorResponse
-                        {
-                            TransferError = TransferError.INTERNAL_ERROR,
-                            TimeStamp = DateTime.UtcNow.Ticks
-                        }
-                    });
-            }
-
+           
             var store = request.GetRequest();
-            double amountToCharge = 0;
-            if (rate.AssetPair.StartsWith(request.BaseAsset))
+            var result = await GetRate(store.AssetPair);
+
+            var post = result as StatusCodeResult;
+            if (post != null)
             {
-                amountToCharge = (double)request.PaidAmount * rate.Bid;
-            }
-            else
-            {
-                amountToCharge = (double)request.PaidAmount / rate.Ask;
+                return null;
             }
 
+            var rate = (AssertPairRateWithSession)result;
 
-            double fee = amountToCharge * (request.Markup.Percent / 100f);
-            fee += Math.Pow(10, -1 * rate.Accuracy) * request.Markup.Pips;
-            fee += request.Markup.FixedFee;
+            var arpRequest = new AprRequest
+            {
+                Markup = new Lykke.Contracts.Pay.AssertPairRateRequest
+                {
+                    Percent = store.Markup.Percent ?? 0,
+                    Pips = store.Markup.Pips ?? 0
+                }
 
-            amountToCharge = Math.Round(amountToCharge - fee, rate.Accuracy*2);
+            };
 
-            store.Amount = amountToCharge;
+            //rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
+            rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
+            store.Amount = store.Amount / rate.Ask;
 
             return await PostTransfer(request.AssetPair.Replace(request.BaseAsset, string.Empty), store);
            
