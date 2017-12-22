@@ -12,7 +12,8 @@ namespace Lykke.Pay.Common
         Removed,
         Underpaid,
         Overpaid,
-        LatePaid
+        LatePaid,
+        InProgress
 
     }
 }
