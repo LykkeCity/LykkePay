@@ -43,8 +43,8 @@ namespace Lykke.Pay.Common
             
         }
 
-        //MerchantPayRequestStatus<T>
-        public static T ParseEnum<T>(this string enumStr) where T : struct, IConvertible, IComparable, IFormattable
+
+        public static T ParsePayEnum<T>(this string enumStr) where T : struct, IConvertible, IComparable, IFormattable
         {
             int e;
             T result;
