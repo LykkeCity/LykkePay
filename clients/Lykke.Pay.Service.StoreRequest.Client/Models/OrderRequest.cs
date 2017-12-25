@@ -26,7 +26,7 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         /// 'New', 'InProgress', 'Failed', 'Completed'</param>
         /// <param name="merchantPayRequestNotification">Possible values
         /// include: 'Nothing', 'InProgress', 'Success', 'Error'</param>
-        public OrderRequest(string merchantId = default(string), string requestId = default(string), string transactionId = default(string), PayFee markup = default(PayFee), string merchantPayRequestStatus = default(string), string merchantPayRequestNotification = default(string), string sourceAddress = default(string), string assetPair = default(string), string exchangeAssetId = default(string), double? amount = default(double?), double? originAmount = default(double?), double? exchangeRate = default(double?), string assetId = default(string), string successUrl = default(string), string errorUrl = default(string), string progressUrl = default(string), string orderId = default(string), string transactionDetectionTime = default(string), string transactionWaitingTime = default(string))
+        public OrderRequest(string merchantId = default(string), string requestId = default(string), string transactionId = default(string), PayFee markup = default(PayFee), string merchantPayRequestStatus = default(string), string merchantPayRequestNotification = default(string), string sourceAddress = default(string), string assetPair = default(string), string exchangeAssetId = default(string), double? amount = default(double?), double? originAmount = default(double?), double? exchangeRate = default(double?), string assetId = default(string), string successUrl = default(string), string errorUrl = default(string), string progressUrl = default(string), string orderId = default(string), string transactionDetectionTime = default(string), string transactionWaitingTime = default(string), string transaction = default(string), string transactionStatus = default(string))
         {
             MerchantId = merchantId;
             RequestId = requestId;
@@ -47,6 +47,8 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
             OrderId = orderId;
             TransactionDetectionTime = transactionDetectionTime;
             TransactionWaitingTime = transactionWaitingTime;
+            Transaction = transaction;
+            TransactionStatus = transactionStatus;
             CustomInit();
         }
 
@@ -153,6 +155,16 @@ namespace Lykke.Pay.Service.StoreRequest.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "transactionWaitingTime")]
         public string TransactionWaitingTime { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "transaction")]
+        public string Transaction { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "transactionStatus")]
+        public string TransactionStatus { get; set; }
 
     }
 }

@@ -23,5 +23,7 @@ namespace Lykke.Pay.Service.StoreRequest.Models
         public string OrderId { get; set; }
         public string TransactionDetectionTime { get; set; }
         public string TransactionWaitingTime { get; set; }
+        public string Transaction { get; set; }
+        public string TransactionStatus { get; set; }
     }
 }
