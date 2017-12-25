@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using Lykke.AzureRepositories.Extentions;
 using Lykke.Core;
+using Lykke.Pay.Common;
 using LykkePay.API.Code;
 using PayFee = Lykke.Pay.Service.StoreRequest.Client.Models.PayFee;
 
