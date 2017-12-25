@@ -123,7 +123,7 @@ namespace LykkePay.API.Controllers
 
 
             store.MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString();
-            store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
+            //store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
 
             var resp = await _gaService.ApiGeneratePostWithHttpMessagesAsync(new GenerateAddressRequest
             {
