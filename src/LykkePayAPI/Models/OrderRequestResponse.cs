@@ -1,5 +1,4 @@
-using System;
-using LykkePay.API.Code;
+using Lykke.Pay.Common;
 
 namespace LykkePay.API.Models
 {
