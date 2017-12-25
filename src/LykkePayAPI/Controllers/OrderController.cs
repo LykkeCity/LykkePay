@@ -83,7 +83,7 @@ namespace LykkePay.API.Controllers
                 address.Equals(o.SourceAddress)
                 group o by o.MerchantPayRequestStatus
                 into go
-                select go.Key.ParseOrderStatus()).ToList();
+                select go.Key.ParsePayEnum<MerchantPayRequestStatus>()).ToList();
 
             if (result.Exists(st => st == MerchantPayRequestStatus.Failed))
             {
@@ -95,9 +95,9 @@ namespace LykkePay.API.Controllers
                 return Content(MerchantPayRequestStatus.Completed.ToString());
             }
 
-            if (result.Exists(st => st == MerchantPayRequestStatus.InProgress))
+            if (result.Exists(st => st == MerchantPayRequestStatus.New))
             {
-                return Content(MerchantPayRequestStatus.InProgress.ToString());
+                return Content(MerchantPayRequestStatus.New.ToString());
             }
 
             return NotFound(); 
@@ -122,7 +122,7 @@ namespace LykkePay.API.Controllers
 
 
 
-            store.MerchantPayRequestStatus = MerchantPayRequestStatus.InProgress.ToString();
+            store.MerchantPayRequestStatus = MerchantPayRequestStatus.New.ToString();
             store.MerchantPayRequestNotification = MerchantPayRequestNotification.InProgress.ToString();
 
             var resp = await _gaService.ApiGeneratePostWithHttpMessagesAsync(new GenerateAddressRequest
@@ -262,13 +262,13 @@ namespace LykkePay.API.Controllers
             {
                 return null;
             }
-            if (result.Count == 1 && result[0].TransactionWaitingTime.GetRepoDateTime() > DateTime.Now && result[0].MerchantPayRequestStatus != ((int)MerchantPayRequestStatus.InProgress).ToString())
+            if (result.Count == 1 && result[0].TransactionWaitingTime.GetRepoDateTime() > DateTime.Now && result[0].MerchantPayRequestStatus != ((int)MerchantPayRequestStatus.New).ToString())
             {
                 return new OrderRequestResponse(result[0]);
             }
 
             var order = result.FirstOrDefault(
-                o => o.MerchantPayRequestStatus != ((int)MerchantPayRequestStatus.InProgress).ToString());
+                o => o.MerchantPayRequestStatus != ((int)MerchantPayRequestStatus.New).ToString());
             if (order != null)
             {
                 return new OrderRequestResponse(order);
@@ -339,72 +339,98 @@ namespace LykkePay.API.Controllers
             var order = await GetOrderById(id);
             if (order == null)
             {
-                return Json(new TransferErrorReturn
+                return Json(new PaymentErrorReturn 
                 {
-                    TransferResponse = new TransferErrorResponse
+                    PaymentResponse = new PaymentErrorResponse
                     {
-                        TransferError = TransferError.INTERNAL_ERROR,
+                        PaymentError = PaymentError.TRANSACTION_NOT_DETECTED,
                         TimeStamp = DateTime.UtcNow.Ticks
                     },
-                    TransferStatus = TransferStatus.TRANSFER_ERROR
+                    PaymentStatus = PaymentStatus.PAYMENT_ERROR
                 });
             }
 
+
+
+
+
             if (order.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.Completed.ToString()))
             {
-                return Json(new TransferSuccessReturn
-                {
-                    TransferResponse = new TransferSuccessResponse
-                    {
-                        TransactionId = order.TransactionId,
-                        Currency = order.AssetId,
-                        NumberOfConfirmation = await GetNumberOfConfirmation(order.SourceAddress, order.TransactionId),
-                        TimeStamp = DateTime.UtcNow.Ticks,
-                        Url = $"{PayApiSettings.LykkePayBaseUrl}transaction/{order.TransactionId}"
-                    },
-                    TransferStatus = TransferStatus.TRANSFER_CONFIRMED
-                }
-
-
-
+                return Json(new PaymentSuccessReturn
+                        {
+                            PaymentResponse = new PaymentSuccessResponse
+                            {
+                                TransactionId = order.TransactionId,
+                                Currency = order.AssetId,
+                                NumberOfConfirmation = GetNumberOfConfirmation(order.SourceAddress, order.TransactionId),
+                                TimeStamp = DateTime.UtcNow.Ticks,
+                                Url = $"{PayApiSettings.LykkePayBaseUrl}transaction/{order.TransactionId}"
+                            }
+                        }
+                    
                 );
             }
             if (order.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.InProgress.ToString()))
             {
-                return Json(new TransferInProgressReturn
+                return Json(new PaymentInProgressReturn
                 {
-                    TransferResponse = new TransferInProgressResponse
+                    PaymentResponse = new PaymentInProgressResponse
                     {
                         Settlement = Settlement.TRANSACTION_DETECTED,
                         TimeStamp = DateTime.UtcNow.Ticks,
-                        Currency = string.IsNullOrEmpty(order.AssetId) ? order.AssetPair : order.AssetId,
+                        Currency = order.AssetId,
                         TransactionId = order.TransactionId
-                    },
-                    TransferStatus = TransferStatus.TRANSFER_INPROGRESS
+                    }
                 });
             }
             if (order.MerchantPayRequestStatus.Equals(MerchantPayRequestStatus.Failed.ToString()))
             {
-                return Json(new TransferErrorReturn
+                var transferStatus = string.IsNullOrEmpty(order.TransactionStatus)
+                    ? InvoiceStatus.Unpaid
+                    : order.TransactionStatus.ParsePayEnum<InvoiceStatus>();
+                PaymentError paymentError;
+                switch (transferStatus)
                 {
-                    TransferResponse = new TransferErrorResponse
+                    case InvoiceStatus.Draft:
+                    case InvoiceStatus.InProgress:
+                    case InvoiceStatus.Paid:
+                    case InvoiceStatus.Removed:
+                        paymentError = PaymentError.TRANSACTION_NOT_DETECTED;
+                        break;
+                    case InvoiceStatus.LatePaid:
+                    case InvoiceStatus.Unpaid:
+                        paymentError = PaymentError.PAYMENT_EXPIRED;
+                        break;
+                    case InvoiceStatus.Overpaid:
+                        paymentError = PaymentError.AMOUNT_ABOVE;
+                        break;
+                    case InvoiceStatus.Underpaid:
+                        paymentError = PaymentError.AMOUNT_BELOW;
+                        break;
+                    default:
+                        paymentError = PaymentError.TRANSACTION_NOT_DETECTED;
+                        break;
+
+                }
+
+                return Json(new PaymentErrorReturn
+                {
+                    PaymentResponse = new PaymentErrorResponse
                     {
-                        TransferError = Enum.Parse<TransferError>(order.MerchantPayRequestNotification),
+                        PaymentError = paymentError,
                         TimeStamp = DateTime.UtcNow.Ticks
-                    },
-                    TransferStatus = TransferStatus.TRANSFER_ERROR
+                    }
                 });
             }
 
-            return Json(new TransferErrorReturn
+            return Json(new PaymentErrorReturn
             {
-                TransferResponse = new TransferErrorResponse
+                PaymentResponse = new PaymentErrorResponse
                 {
-                    TransferError = TransferError.INTERNAL_ERROR,
+                    PaymentError = PaymentError.TRANSACTION_NOT_DETECTED,
                     TimeStamp = DateTime.UtcNow.Ticks
                 },
-                TransferStatus = TransferStatus.TRANSFER_ERROR
-
+                PaymentStatus = PaymentStatus.PAYMENT_ERROR
             });
         }
     }

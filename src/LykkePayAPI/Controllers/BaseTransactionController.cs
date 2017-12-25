@@ -277,16 +277,18 @@ namespace LykkePay.API.Controllers
             return true;
         }
 
-        protected async Task<int> GetNumberOfConfirmation(string address, string transactionId)
+        protected int GetNumberOfConfirmation(string address, string transactionId)
         {
-            var height = await BitcoinAddRepository.GetNextBlockId();
-            var transaction = await BitcoinAddRepository.GetWalletTransactionAsync(address, transactionId);
-            if (transaction == null)
-            {
-                return 0;
-            }
+            //var height = await BitcoinAddRepository.GetNextBlockId();
+            //var transaction = await BitcoinAddRepository.GetWalletTransactionAsync(address, transactionId);
+            //if (transaction == null)
+            //{
+            //    return 0;
+            //}
 
-            return height - transaction.BlockNumber + PayApiSettings.TransactionConfirmation;
+            //return height - transaction.BlockNumber + PayApiSettings.TransactionConfirmation;
+
+            return PayApiSettings.TransactionConfirmation;
         }
 
         public async Task<IActionResult> GetTransactionStatus(string id)
@@ -313,7 +315,7 @@ namespace LykkePay.API.Controllers
                     {
                         TransactionId = payRequest.TransactionId,
                         Currency = payRequest.AssetId,
-                        NumberOfConfirmation = await GetNumberOfConfirmation(payRequest.DestinationAddress, payRequest.TransactionId),
+                        NumberOfConfirmation = GetNumberOfConfirmation(payRequest.DestinationAddress, payRequest.TransactionId),
                         TimeStamp = DateTime.UtcNow.Ticks,
                         Url = $"{PayApiSettings.LykkePayBaseUrl}transaction/{payRequest.TransactionId}"
                     },
