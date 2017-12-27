@@ -4,6 +4,7 @@ namespace LykkePay.API.Code
     public class Settings
     {
         public PayApiSettings PayApi { get; set; }
+        public SlackNotificationsSettings SlackNotifications { get; set; }
 
     }
     public class PayApiSettings
@@ -28,6 +29,7 @@ namespace LykkePay.API.Code
     public class DbSettings
     {
         public string BitcoinAppRepository { get; set; }
+        public string LogsConnString { get; set; }
     }
 
     public class ServicesSettings
@@ -47,4 +49,20 @@ namespace LykkePay.API.Code
         public string MerchantClientService { get; set; }
         public string InvoicesService { get; set; }
     }
+
+    public class SlackNotificationsSettings
+    {
+        public AzureQueueSettings AzureQueue { get; set; }
+
+        public int ThrottlingLimitSeconds { get; set; }
+    }
+
+    public class AzureQueueSettings
+    {
+        public string ConnectionString { get; set; }
+
+        public string QueueName { get; set; }
+    }
 }
+
+

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Net.Http;
 using Bitcoint.Api.Client;
+using Common.Log;
 using Lykke.AzureRepositories;
+using Lykke.AzureRepositories.Azure.Tables;
 using Lykke.Common.ApiLibrary.Swagger;
-using Lykke.Core.Log;
+using Lykke.Logs;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.Invoces.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
 using Lykke.Service.ExchangeOperations.Client;
 using Lykke.SettingsReader;
+using Lykke.SlackNotification.AzureQueue;
 using LykkePay.API.Code;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +19,9 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ILog = Lykke.Core.Log.ILog;
+using LogEntity = Lykke.AzureRepositories.Log.LogEntity;
+using LogToConsole = Common.Log.LogToConsole;
 
 namespace LykkePay.API
 {
@@ -89,6 +95,9 @@ namespace LykkePay.API
             //var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(connectionString);
             var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
 #endif
+            var appSettings = new ReloadingManager(generalSettings);
+            var log = CreateLogWithSlack(services, appSettings);
+            services.AddSingleton(log);
             services.RegisterRepositories(generalSettings.PayApi.Db.BitcoinAppRepository, (ILog)null);
             services.AddSingleton(generalSettings.PayApi);
             services.AddSingleton<ILykkePayServiceStoreRequestMicroService>(new LykkePayServiceStoreRequestMicroService(new Uri(generalSettings.PayApi.Services.StoreRequestService)));
@@ -98,6 +107,82 @@ namespace LykkePay.API
             services.AddSingleton<IBitcoinApi>(new BitcoinApi(new Uri(generalSettings.PayApi.Services.BitcoinApi)));
             services.AddSingleton(new HttpClient());
             services.AddSingleton<IHealthService>(new HealthService(TimeSpan.FromSeconds(30)));
+        }
+
+        private static Common.Log.ILog CreateLogWithSlack(IServiceCollection services, IReloadingManager<Settings> appSettings)
+
+        {
+
+            var consoleLogger = new LogToConsole();
+
+            var aggregateLogger = new AggregateLogger();
+
+
+
+            aggregateLogger.AddLog(consoleLogger);
+
+
+
+            // Creating slack notification service, which logs own azure queue processing messages to aggregate log
+
+            var slackService = services.UseSlackNotificationsSenderViaAzureQueue(new Lykke.AzureQueueIntegration.AzureQueueSettings
+
+            {
+
+                ConnectionString = appSettings.CurrentValue.PayApi.Db.LogsConnString,
+
+                QueueName = appSettings.CurrentValue.SlackNotifications.AzureQueue.QueueName
+
+            }, aggregateLogger);
+
+
+
+            var dbLogConnectionStringManager = appSettings.Nested(x => x.PayApi.Db.LogsConnString);
+
+            var dbLogConnectionString = dbLogConnectionStringManager.CurrentValue;
+
+
+
+            // Creating azure storage logger, which logs own messages to concole log
+
+            if (!string.IsNullOrEmpty(dbLogConnectionString) && !(dbLogConnectionString.StartsWith("${") && dbLogConnectionString.EndsWith("}")))
+
+            {
+
+                var persistenceManager = new LykkeLogToAzureStoragePersistenceManager("LykkePayApi",
+
+                    AzureStorage.Tables.AzureTableStorage<Lykke.Logs.LogEntity>.Create(dbLogConnectionStringManager, "LykkePayApiLog", consoleLogger),
+
+                    consoleLogger);
+
+
+
+                var slackNotificationsManager = new LykkeLogToAzureSlackNotificationsManager(slackService, consoleLogger);
+
+
+
+                var azureStorageLogger = new LykkeLogToAzureStorage(
+
+                    persistenceManager,
+
+                    slackNotificationsManager,
+
+                    consoleLogger);
+
+
+
+                azureStorageLogger.Start();
+
+
+
+                aggregateLogger.AddLog(azureStorageLogger);
+
+            }
+
+
+
+            return aggregateLogger;
+
         }
     }
 }
