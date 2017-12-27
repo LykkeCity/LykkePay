@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
+using Common.Log;
 using Lykke.Common.Entities.Security;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.GenerateAddress.Client.Models;
@@ -21,13 +23,18 @@ namespace LykkePay.API.Controllers
     public class GenerateAddressController : BaseController
     {
         private readonly ILykkePayServiceGenerateAddressMicroService _gaService;
-        public GenerateAddressController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceGenerateAddressMicroService gaService) : base(payApiSettings, client)
+        private readonly ILog _log;
+
+        public GenerateAddressController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceGenerateAddressMicroService gaService,
+            ILog log) : base(payApiSettings, client)
         {
             _gaService = gaService;
+            _log = log;
         }
 
+        //todo: надо заменить на пост, нельзя по гету выполнять действия или менять состояние!!!
         [HttpGet("{assertId}")]
-        public async Task<IActionResult> Get(string assertId)
+        public async Task<IActionResult> GenerateAddress(string assertId)
         {
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
@@ -51,6 +58,10 @@ namespace LykkePay.API.Controllers
                 Currency = assertId,
                 Address = publicKey
             };
+
+            var context = new {MerchantId, AssertId = assertId, Address = publicKey };
+            await _log.WriteInfoAsync(nameof(GenerateAddressController), nameof(GenerateAddress), context.ToJson(), $"Generate address for mercahnt" );
+            
             return Json(result);
         }
         

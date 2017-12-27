@@ -28,6 +28,8 @@ namespace LykkePay.API.Controllers
             
         }
 
+
+        //todo: что это за метод? что он делает?
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ExchangeTransferRequest request)
         {
@@ -92,8 +94,9 @@ namespace LykkePay.API.Controllers
             rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
             store.Amount = store.Amount / rate.Ask;
 
-            return await PostTransfer(request.AssetPair.Replace(request.BaseAsset, string.Empty), store);
-           
+            var resultTransfer =  await PostTransfer(request.AssetPair.Replace(request.BaseAsset, string.Empty), store);
+            return resultTransfer;
+
         }
 
         [HttpGet("{id}/status")]

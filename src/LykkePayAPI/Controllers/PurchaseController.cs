@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
+using Common.Log;
 using Lykke.Contracts.Pay;
 using Lykke.Core;
 using Lykke.Pay.Common;
@@ -27,15 +28,22 @@ namespace LykkePay.API.Controllers
         private readonly IExchangeOperationsServiceClient _exchangeOperationClient;
         
 
-        public PurchaseController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient,
-            ILykkePayServiceGenerateAddressMicroService generateAddressClient, IExchangeOperationsServiceClient exchangeOperationClient, IBitcoinAggRepository bitcoinAddRepository)
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository)
+        public PurchaseController(
+            PayApiSettings payApiSettings, 
+            HttpClient client, 
+            ILykkePayServiceStoreRequestMicroService storeRequestClient, 
+            IBitcoinApi bitcointApiClient,
+            ILykkePayServiceGenerateAddressMicroService generateAddressClient, 
+            IExchangeOperationsServiceClient exchangeOperationClient, 
+            IBitcoinAggRepository bitcoinAddRepository,
+            ILog log)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
         {
             _exchangeOperationClient = exchangeOperationClient;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PurchaseRequest request)
+        public async Task<IActionResult> Purchase([FromBody] PurchaseRequest request)
         {
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
@@ -63,6 +71,7 @@ namespace LykkePay.API.Controllers
                 rate = rates.First(r => r.AssetPair.Equals(request.AssetPair, StringComparison.CurrentCultureIgnoreCase));
                 if (rate == null)
                 {
+                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found rate for {request.AssetPair}, return internal error");
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
@@ -74,8 +83,10 @@ namespace LykkePay.API.Controllers
                         });
                 }
             }
-            catch
+            catch(Exception exception)
             {
+                await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), "Exception on get rate process", exception);
+
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
                     {
@@ -96,6 +107,8 @@ namespace LykkePay.API.Controllers
                 pairReal = pairsList.First(r => request.AssetPair.Equals((string)r.AssetPair, StringComparison.CurrentCultureIgnoreCase));
                 if (pairReal == null)
                 {
+                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found asset pair {request.AssetPair}, return internal error");
+
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
@@ -107,8 +120,10 @@ namespace LykkePay.API.Controllers
                         });
                 }
             }
-            catch
+            catch(Exception exception)
             {
+                await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), "Exception on get pairReal process", exception);
+
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
                     {
@@ -135,6 +150,8 @@ namespace LykkePay.API.Controllers
             }
             if (string.IsNullOrEmpty(merchantClientId))
             {
+                await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found merchantClientId for {MerchantId}");
+
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
                     {
