@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Bitcoint.Api.Client;
 using Lykke.AzureRepositories;
+using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Core.Log;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.Invoces.Client;
@@ -14,7 +12,6 @@ using Lykke.SettingsReader;
 using LykkePay.API.Code;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +39,11 @@ namespace LykkePay.API
             BuildConfiguration(services);
             // Add framework services.
             services.AddMvc();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.DefaultLykkeConfiguration("v1", "Lykke Pay API");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +56,26 @@ namespace LykkePay.API
             app.UseDeveloperExceptionPage();
 
             app.UseMvc();
+
+            app.UseSwagger(c =>
+
+            {
+
+                c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
+
+            });
+
+            app.UseSwaggerUI(x =>
+
+            {
+
+                x.RoutePrefix = "swagger/ui";
+
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+
+            });
+
+            app.UseStaticFiles();
         }
 
         private void BuildConfiguration(IServiceCollection services)
@@ -73,6 +95,7 @@ namespace LykkePay.API
             services.AddSingleton<IExchangeOperationsServiceClient>(new ExchangeOperationsServiceClient(generalSettings.PayApi.Services.ExchangeOperationsService));
             services.AddSingleton<IBitcoinApi>(new BitcoinApi(new Uri(generalSettings.PayApi.Services.BitcoinApi)));
             services.AddSingleton(new HttpClient());
+            services.AddSingleton<IHealthService>(new HealthService(TimeSpan.FromSeconds(30)));
         }
     }
 }
