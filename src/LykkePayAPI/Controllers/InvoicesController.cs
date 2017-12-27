@@ -3,6 +3,8 @@ using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Common;
+using Common.Log;
 using Lykke.Core;
 using Lykke.Pay.Service.Invoces.Client;
 using Lykke.Pay.Service.Invoces.Client.Models;
@@ -17,11 +19,13 @@ namespace LykkePay.API.Controllers
     public class InvoicesController : BaseController
     {
         private readonly IInvoicesservice _invoiceService;
+        private readonly ILog _log;
         private readonly PayApiSettings _payApiSettings;
 
-        public InvoicesController(PayApiSettings payApiSettings, HttpClient client, IInvoicesservice invoiceService ) : base(payApiSettings, client)
+        public InvoicesController(PayApiSettings payApiSettings, HttpClient client, IInvoicesservice invoiceService, ILog log) : base(payApiSettings, client)
         {
             _invoiceService = invoiceService;
+            _log = log;
             _payApiSettings = payApiSettings;
         }
 
@@ -53,6 +57,23 @@ namespace LykkePay.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
+
+            var context = new
+            {
+                entity.Transaction,
+                entity.StartDate,
+                entity.WalletAddress,
+                entity.Status,
+                entity.DueDate,
+                entity.ClientUserId,
+                entity.ClientId,
+                entity.Currency,
+                entity.Amount,
+                entity.InvoiceNumber,
+                entity.InvoiceId,
+                MerchantId
+            };
+            await _log.WriteInfoAsync(nameof(InvoicesController), nameof(SaveInvoice), context.ToJson(), "Save new Invoce in system");
 
             return Json(new InvoiceResponse(entity.Create(), _payApiSettings.LykkeInvoiceTemplate));
 

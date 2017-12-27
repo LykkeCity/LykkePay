@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
+using Common;
+using Common.Log;
 using Lykke.Contracts.Pay;
 using Lykke.Core;
 using Lykke.Pay.Common;
@@ -23,14 +25,17 @@ namespace LykkePay.API.Controllers
     public class OrderController : BaseTransactionController
     {
         private readonly ILykkePayServiceGenerateAddressMicroService _gaService;
+        private readonly ILog _log;
         private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
 
         public OrderController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient,
-            ILykkePayServiceGenerateAddressMicroService generateAddressClient, IExchangeOperationsServiceClient exchangeOperationClient, IBitcoinAggRepository bitcoinAddRepository)
+            ILykkePayServiceGenerateAddressMicroService generateAddressClient, IExchangeOperationsServiceClient exchangeOperationClient, IBitcoinAggRepository bitcoinAddRepository,
+            ILog log)
             : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository)
         {
 
             _gaService = generateAddressClient;
+            _log = log;
             _storeRequestClient = storeRequestClient;
         }
 
@@ -46,15 +51,14 @@ namespace LykkePay.API.Controllers
             var order = await GetOrder(address);
             if (order != null)
             {
+                await _log.WriteInfoAsync(nameof(OrderController), nameof(CreateNewOrder), OrderContext(MerchantId, order), $"ReCreated order by address {address}");
                 return Json(order);
             }
 
-
             return NotFound();
-
         }
 
-
+        //todo: что это за метод!!, почему он не гет, почему он не json возвращает?
         [HttpPost("Status/{address}")]
         public async Task<IActionResult> Status(string address)
         {
@@ -105,7 +109,7 @@ namespace LykkePay.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] OrderRequest request)
+        public async Task<IActionResult> CreateNewOrder([FromBody] OrderRequest request)
         {
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
@@ -131,14 +135,36 @@ namespace LykkePay.API.Controllers
                 AssertId = store.ExchangeAssetId
             });
 
-
             var result = await GenerateOrder(store, resp.Body.Address);
             if (result == null)
             {
                 return BadRequest();
             }
 
+            await _log.WriteInfoAsync(nameof(OrderController), nameof(CreateNewOrder), OrderContext(MerchantId, result), "Created new order");
+
             return Json(result);
+        }
+
+        private string OrderContext(string merchantId, OrderRequestResponse order)
+        {
+            var obj = new
+            {
+                MerchantId = merchantId,
+                order.Timestamp,
+                order.Address,
+                order.OrderId,
+                order.Currency,
+                order.Amount,
+                order.RecommendedFee,
+                order.TotalAmount,
+                order.ExchangeRate,
+                order.OrderRequestId,
+                order.TransactionWaitingTime,
+                order.MerchantPayRequestStatus
+            };
+
+            return obj.ToJson();
         }
 
         private async Task<OrderRequestResponse> GenerateOrder(Lykke.Pay.Service.StoreRequest.Client.Models.OrderRequest store, string address)

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
 using Bitcoint.Api.Client.Models;
+using Common.Log;
 using Lykke.Core;
 using Lykke.Pay.Common;
 using Lykke.Pay.Service.GenerateAddress.Client;
@@ -22,9 +23,15 @@ namespace LykkePay.API.Controllers
     {
       
 
-        public TransferController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient,
-            IBitcoinApi bitcointApiClient, ILykkePayServiceGenerateAddressMicroService generateAddressClient, IBitcoinAggRepository bitcoinAddRepository) 
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository)
+        public TransferController(
+            PayApiSettings payApiSettings, 
+            HttpClient client, 
+            ILykkePayServiceStoreRequestMicroService storeRequestClient,
+            IBitcoinApi bitcointApiClient, 
+            ILykkePayServiceGenerateAddressMicroService generateAddressClient, 
+            IBitcoinAggRepository bitcoinAddRepository,
+            ILog log) 
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
         {
 
         }
@@ -33,7 +40,7 @@ namespace LykkePay.API.Controllers
 
         // POST api/values
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]TransferRequest request)
+        public async Task<IActionResult> Transfer([FromBody]TransferRequest request)
         {
             var isValid = await ValidateRequest();
             if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)

@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
 using Bitcoint.Api.Client.Models;
+using Common;
+using Common.Log;
 using Lykke.Core;
 using Lykke.Pay.Common;
 using Lykke.Pay.Service.GenerateAddress.Client;
@@ -30,17 +32,22 @@ namespace LykkePay.API.Controllers
         protected readonly ILykkePayServiceStoreRequestMicroService StoreRequestClient;
         protected readonly IBitcoinApi BitcointApiClient;
         protected readonly IBitcoinAggRepository BitcoinAddRepository;
-
+        protected readonly ILog _log;
 
 
         public BaseTransactionController(PayApiSettings payApiSettings, HttpClient client,
             ILykkePayServiceGenerateAddressMicroService gnerateAddressClient,
-            ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient, IBitcoinAggRepository bitcoinAddRepository) : base(payApiSettings, client)
+            ILykkePayServiceStoreRequestMicroService storeRequestClient, 
+            IBitcoinApi bitcointApiClient, 
+            IBitcoinAggRepository bitcoinAddRepository,
+            ILog log) 
+                : base(payApiSettings, client)
         {
             GnerateAddressClient = gnerateAddressClient;
             StoreRequestClient = storeRequestClient;
             BitcointApiClient = bitcointApiClient;
             BitcoinAddRepository = bitcoinAddRepository;
+            _log = log;
         }
 
         protected async Task<JsonResult> JsonAndStoreError(PayRequest payRequest, TransferErrorReturn errorResponse)
@@ -71,10 +78,13 @@ namespace LykkePay.API.Controllers
                 var list = await GetListOfSources(assertId) ?? new List<ToOneAddress>();
                 if (store.SourceAddress == PayApiSettings.HotWalletAddress)
                     list.Add(new ToOneAddress(PayApiSettings.HotWalletAddress, (decimal)store.Amount * 2));
+
                 if (!string.IsNullOrEmpty(store.SourceAddress) &&
                     list.FirstOrDefault(l => store.SourceAddress
                         .Equals(l.Address)) == null)
                 {
+                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid adresses");
+
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
@@ -100,6 +110,7 @@ namespace LykkePay.API.Controllers
 
                 if (!store.Amount.HasValue || store.Amount.Value <= 0)
                 {
+                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount");
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
@@ -136,6 +147,8 @@ namespace LykkePay.API.Controllers
 
                 if (amountToPay > 0)
                 {
+                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount, there is not enough money in the wallet for translation: {amountToPay}");
+
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
@@ -162,8 +175,12 @@ namespace LykkePay.API.Controllers
                 var resData = r?.Body as TransactionIdAndHashResponse;
                 if (resData?.Hash == null)
                 {
-                    if (resData == null && "3".Equals((r?.Body as ApiException)?.Error.Code))
+                    var errorCode = (r?.Body as ApiException)?.Error.Code;
+                    var errorMessage = (r?.Body as ApiException)?.Error.Message;
+                    if (resData == null && errorCode == "3")
                     {
+                        await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount. Error on TransactionMultipletransfer: {errorMessage} ({errorCode})");
+
                         return await JsonAndStoreError(store,
                             new TransferErrorReturn
                             {
@@ -174,6 +191,9 @@ namespace LykkePay.API.Controllers
                                 }
                             });
                     }
+
+                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), "Transaction not confirmed.");
+
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
@@ -189,8 +209,10 @@ namespace LykkePay.API.Controllers
                 await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(store);
                 result.TransferResponse.TransactionId = store.TransactionId;
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
+                await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), "Internal error. Exception on transfer.", exception);
+
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
                     {
@@ -274,7 +296,28 @@ namespace LykkePay.API.Controllers
                     break;
             }
             await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(payRequest);
+
+            await _log.WriteInfoAsync(this.GetType().Name, $"{nameof(UpdateUrl)} - {urlType.ToString()}", LogContextPayRequest(payRequest), $"Update callback url for request by {id}");
+
             return true;
+        }
+
+        protected string LogContextPayRequest(PayRequest request)
+        {
+            if (request == null)
+                return null;
+            
+            var obj = new
+            {
+                request.TransactionId,
+                request.MerchantId,
+                request.SourceAddress,
+                request.DestinationAddress,
+                request.OrderId,
+                request.RequestId
+            };
+
+            return obj.ToJson();
         }
 
         protected int GetNumberOfConfirmation(string address, string transactionId)
