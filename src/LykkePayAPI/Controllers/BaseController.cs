@@ -33,6 +33,7 @@ namespace LykkePay.API.Controllers
         }
 
         protected string MerchantId => HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "";
+        protected string TrasterSignIn => HttpContext.Request.Headers["Lykke-Merchant-Traster-SignIn"].ToString() ?? "";
         protected string MerchantSessionId => HttpContext.Request.Headers["Lykke-Merchant-Session-Id"].ToString() ?? "";
         protected IMerchantEntity Merchant => GetCurrentMerchant();
 
@@ -53,6 +54,11 @@ namespace LykkePay.API.Controllers
 
         protected async Task<IActionResult> ValidateRequest()
         {
+            if (!string.IsNullOrEmpty(MerchantId) && !string.IsNullOrEmpty(TrasterSignIn))
+            {
+                return Ok();
+            }
+
             string strToSign;
             Console.WriteLine($"Method {HttpContext.Request.Method}");
             if (HttpContext.Request.Method.Equals("POST"))

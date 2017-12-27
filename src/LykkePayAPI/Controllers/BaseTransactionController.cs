@@ -32,7 +32,7 @@ namespace LykkePay.API.Controllers
         protected readonly ILykkePayServiceStoreRequestMicroService StoreRequestClient;
         protected readonly IBitcoinApi BitcointApiClient;
         protected readonly IBitcoinAggRepository BitcoinAddRepository;
-        protected readonly ILog _log;
+        protected readonly ILog Log;
 
 
         public BaseTransactionController(PayApiSettings payApiSettings, HttpClient client,
@@ -47,7 +47,7 @@ namespace LykkePay.API.Controllers
             StoreRequestClient = storeRequestClient;
             BitcointApiClient = bitcointApiClient;
             BitcoinAddRepository = bitcoinAddRepository;
-            _log = log;
+            Log = log;
         }
 
         protected async Task<JsonResult> JsonAndStoreError(PayRequest payRequest, TransferErrorReturn errorResponse)
@@ -83,7 +83,7 @@ namespace LykkePay.API.Controllers
                     list.FirstOrDefault(l => store.SourceAddress
                         .Equals(l.Address)) == null)
                 {
-                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid adresses");
+                    await Log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid adresses");
 
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
@@ -110,7 +110,7 @@ namespace LykkePay.API.Controllers
 
                 if (!store.Amount.HasValue || store.Amount.Value <= 0)
                 {
-                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount");
+                    await Log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount");
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
@@ -147,7 +147,7 @@ namespace LykkePay.API.Controllers
 
                 if (amountToPay > 0)
                 {
-                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount, there is not enough money in the wallet for translation: {amountToPay}");
+                    await Log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount, there is not enough money in the wallet for translation: {amountToPay}");
 
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
@@ -179,7 +179,7 @@ namespace LykkePay.API.Controllers
                     var errorMessage = (r?.Body as ApiException)?.Error.Message;
                     if (resData == null && errorCode == "3")
                     {
-                        await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount. Error on TransactionMultipletransfer: {errorMessage} ({errorCode})");
+                        await Log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid amount. Error on TransactionMultipletransfer: {errorMessage} ({errorCode})");
 
                         return await JsonAndStoreError(store,
                             new TransferErrorReturn
@@ -192,7 +192,7 @@ namespace LykkePay.API.Controllers
                             });
                     }
 
-                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), "Transaction not confirmed.");
+                    await Log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), "Transaction not confirmed.");
 
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
@@ -211,7 +211,7 @@ namespace LykkePay.API.Controllers
             }
             catch (Exception exception)
             {
-                await _log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), "Internal error. Exception on transfer.", exception);
+                await Log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), "Internal error. Exception on transfer.", exception);
 
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
@@ -297,7 +297,7 @@ namespace LykkePay.API.Controllers
             }
             await StoreRequestClient.ApiStorePostWithHttpMessagesAsync(payRequest);
 
-            await _log.WriteInfoAsync(this.GetType().Name, $"{nameof(UpdateUrl)} - {urlType.ToString()}", LogContextPayRequest(payRequest), $"Update callback url for request by {id}");
+            await Log.WriteInfoAsync(this.GetType().Name, $"{nameof(UpdateUrl)} - {urlType.ToString()}", LogContextPayRequest(payRequest), $"Update callback url for request by {id}");
 
             return true;
         }

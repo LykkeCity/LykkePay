@@ -25,17 +25,15 @@ namespace LykkePay.API.Controllers
     public class OrderController : BaseTransactionController
     {
         private readonly ILykkePayServiceGenerateAddressMicroService _gaService;
-        private readonly ILog _log;
         private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
 
         public OrderController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient,
             ILykkePayServiceGenerateAddressMicroService generateAddressClient, IExchangeOperationsServiceClient exchangeOperationClient, IBitcoinAggRepository bitcoinAddRepository,
             ILog log)
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
         {
 
             _gaService = generateAddressClient;
-            _log = log;
             _storeRequestClient = storeRequestClient;
         }
 
@@ -51,7 +49,7 @@ namespace LykkePay.API.Controllers
             var order = await GetOrder(address);
             if (order != null)
             {
-                await _log.WriteInfoAsync(nameof(OrderController), nameof(CreateNewOrder), OrderContext(MerchantId, order), $"ReCreated order by address {address}");
+                await Log.WriteInfoAsync(nameof(OrderController), nameof(CreateNewOrder), OrderContext(MerchantId, order), $"ReCreated order by address {address}");
                 return Json(order);
             }
 
@@ -141,7 +139,7 @@ namespace LykkePay.API.Controllers
                 return BadRequest();
             }
 
-            await _log.WriteInfoAsync(nameof(OrderController), nameof(CreateNewOrder), OrderContext(MerchantId, result), "Created new order");
+            await Log.WriteInfoAsync(nameof(OrderController), nameof(CreateNewOrder), OrderContext(MerchantId, result), "Created new order");
 
             return Json(result);
         }

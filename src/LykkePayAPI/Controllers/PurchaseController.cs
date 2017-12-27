@@ -71,7 +71,7 @@ namespace LykkePay.API.Controllers
                 rate = rates.First(r => r.AssetPair.Equals(request.AssetPair, StringComparison.CurrentCultureIgnoreCase));
                 if (rate == null)
                 {
-                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found rate for {request.AssetPair}, return internal error");
+                    await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found rate for {request.AssetPair}, return internal error");
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
                         {
@@ -85,7 +85,7 @@ namespace LykkePay.API.Controllers
             }
             catch(Exception exception)
             {
-                await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), "Exception on get rate process", exception);
+                await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), "Exception on get rate process", exception);
 
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
@@ -107,7 +107,7 @@ namespace LykkePay.API.Controllers
                 pairReal = pairsList.First(r => request.AssetPair.Equals((string)r.AssetPair, StringComparison.CurrentCultureIgnoreCase));
                 if (pairReal == null)
                 {
-                    await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found asset pair {request.AssetPair}, return internal error");
+                    await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found asset pair {request.AssetPair}, return internal error");
 
                     return await JsonAndStoreError(store,
                         new TransferErrorReturn
@@ -122,7 +122,7 @@ namespace LykkePay.API.Controllers
             }
             catch(Exception exception)
             {
-                await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), "Exception on get pairReal process", exception);
+                await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), "Exception on get pairReal process", exception);
 
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
@@ -150,7 +150,7 @@ namespace LykkePay.API.Controllers
             }
             if (string.IsNullOrEmpty(merchantClientId))
             {
-                await _log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found merchantClientId for {MerchantId}");
+                await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found merchantClientId for {MerchantId}");
 
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn

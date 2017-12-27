@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
+using Common.Log;
 using Lykke.Core;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
 using LykkePay.API.Code;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LykkePay.API.Controllers
@@ -19,8 +17,8 @@ namespace LykkePay.API.Controllers
     {
 
         public BalanceController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceGenerateAddressMicroService gnerateAddressClient, ILykkePayServiceStoreRequestMicroService storeRequestClient,
-            IBitcoinApi bitcointApiClient, IBitcoinAggRepository bitcoinAddRepository) 
-            : base(payApiSettings, client, gnerateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository)
+            IBitcoinApi bitcointApiClient, IBitcoinAggRepository bitcoinAddRepository, ILog log) 
+            : base(payApiSettings, client, gnerateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
         {
         }
 

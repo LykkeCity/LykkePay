@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bitcoint.Api.Client;
+using Common.Log;
 using Lykke.Core;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
@@ -19,8 +20,8 @@ namespace LykkePay.API.Controllers
 
 
         public TransferTestController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient,
-            IBitcoinApi bitcointApiClient, ILykkePayServiceGenerateAddressMicroService generateAddressClient, IBitcoinAggRepository bitcoinAddRepository)
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository)
+            IBitcoinApi bitcointApiClient, ILykkePayServiceGenerateAddressMicroService generateAddressClient, IBitcoinAggRepository bitcoinAddRepository, ILog log)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
         {
 
         }
