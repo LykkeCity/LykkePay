@@ -215,7 +215,7 @@ namespace LykkePay.API.Controllers
             return Json(post);
         }
 
-        public async Task<List<ToOneAddress>> GetListOfSources(string assertId)
+        protected async Task<List<ToOneAddress>> GetListOfSources(string assertId)
         {
             if (string.IsNullOrEmpty(assertId))
             {
@@ -291,7 +291,7 @@ namespace LykkePay.API.Controllers
             return PayApiSettings.TransactionConfirmation;
         }
 
-        public async Task<IActionResult> GetTransactionStatus(string id)
+        protected async Task<IActionResult> GetTransactionStatus(string id)
         {
             var payRequest = await GetStoreRequest(id);
             if (payRequest == null)

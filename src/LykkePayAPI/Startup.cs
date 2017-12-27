@@ -40,9 +40,11 @@ namespace LykkePay.API
             // Add framework services.
             services.AddMvc();
 
+            
             services.AddSwaggerGen(options =>
             {
                 options.DefaultLykkeConfiguration("v1", "Lykke Pay API");
+                options.CustomSchemaIds(x => x.FullName);
             });
         }
 
