@@ -113,7 +113,7 @@ namespace LykkePay.API.Controllers
             var newSessionId = string.Empty;
             try
             {
-                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
+                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={(string.IsNullOrEmpty(MerchantSessionId) ? Guid.NewGuid().ToString() : MerchantSessionId)}&cacheTimeout={Merchant?.TimeCacheRates}";
 
                 var response = JsonConvert.DeserializeObject<AssertListWithSession>(
                     await(await HttpClient.GetAsync(rateServiceUrl)).Content

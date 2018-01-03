@@ -84,7 +84,7 @@ namespace Lykke.Pay.Service.Rates.Controllers
 
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(cacheTimeout ?? _settings.CacheTimeout));
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes((cacheTimeout ?? 0) == 0 ? _settings.CacheTimeout : cacheTimeout.Value));
 
                 _cache.Set(CacheKeys.Rates, cacheEntry, cacheEntryOptions);
             }

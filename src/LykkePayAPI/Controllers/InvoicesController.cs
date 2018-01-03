@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Common;
@@ -106,6 +107,24 @@ namespace LykkePay.API.Controllers
 
             return Json(result);
         }
+
+        //[HttpPost("/invoices/{invoiceId}/upload")]
+        //public async Task<ActionResult> UploadFile(string invoiceId)
+        //{
+        //    if (!Request.HttpContext.c Content.IsMimeMultipartContent())
+        //        throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+        //    var provider = new MultipartMemoryStreamProvider();
+        //    await Request.Content.ReadAsMultipartAsync(provider);
+        //    foreach (var file in provider.Contents)
+        //    {
+        //        var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
+        //        var buffer = await file.ReadAsByteArrayAsync();
+        //        //Do whatever you want with filename and its binaray data.
+        //    }
+
+        //    return Ok();
+        //}
 
     }
 }
