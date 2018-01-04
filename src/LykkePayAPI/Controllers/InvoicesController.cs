@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -108,23 +110,40 @@ namespace LykkePay.API.Controllers
             return Json(result);
         }
 
-        //[HttpPost("/invoices/{invoiceId}/upload")]
-        //public async Task<ActionResult> UploadFile(string invoiceId)
-        //{
-        //    if (!Request.HttpContext.c Content.IsMimeMultipartContent())
-        //        throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+        [HttpPost("{invoiceId}/upload")]
+        public async Task<IActionResult> UploadFile(IFormFile file, string invoiceId)
+        {
+            var isValid = await ValidateRequest();
+            if ((isValid as OkResult)?.StatusCode != Ok().StatusCode)
+            {
+                return isValid;
+            }
 
-        //    var provider = new MultipartMemoryStreamProvider();
-        //    await Request.Content.ReadAsMultipartAsync(provider);
-        //    foreach (var file in provider.Contents)
-        //    {
-        //        var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
-        //        var buffer = await file.ReadAsByteArrayAsync();
-        //        //Do whatever you want with filename and its binaray data.
-        //    }
+            if (string.IsNullOrEmpty(invoiceId))
+            {
+                return BadRequest();
+            }
 
-        //    return Ok();
-        //}
+            long size = file.Length;
+            
+            var fileInfo = new IFileEntity
+            {
+                FileId = Guid.NewGuid().ToString(),
+                FileName = file.FileName,
+                FileSize = (int)size,
+                InvoiceId = invoiceId
+            };
+
+            using (var ms = new MemoryStream())
+            {
+                await file.CopyToAsync(ms);
+                fileInfo.FileBody = ms.ToArray();
+            }
+
+            await _invoiceService.ApiInvoicesUploadFilePostWithHttpMessagesAsync(fileInfo);
+
+            return Ok();
+        }
 
     }
 }
