@@ -8,7 +8,8 @@ namespace LykkePay.API
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
-                .UseKestrel()
+                .UseKestrel(options =>
+                        options.Limits.MaxRequestBodySize = int.MaxValue)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .UseUrls("http://*:4500/")

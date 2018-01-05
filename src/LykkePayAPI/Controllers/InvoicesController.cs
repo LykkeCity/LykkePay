@@ -111,6 +111,7 @@ namespace LykkePay.API.Controllers
         }
 
         [HttpPost("{invoiceId}/upload")]
+        [DisableRequestSizeLimit]
         public async Task<IActionResult> UploadFile(IFormFile file, string invoiceId)
         {
             var isValid = await ValidateRequest();
@@ -125,6 +126,11 @@ namespace LykkePay.API.Controllers
             }
 
             long size = file.Length;
+
+            if (size > _payApiSettings.MaxUploadFileSize)
+            {
+                return BadRequest("Incorrect File Size");
+            }
             
             var fileInfo = new IFileEntity
             {

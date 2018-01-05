@@ -15,6 +15,7 @@ using Lykke.SlackNotification.AzureQueue;
 using LykkePay.API.Code;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +44,13 @@ namespace LykkePay.API
         public void ConfigureServices(IServiceCollection services)
         {
             BuildConfiguration(services);
+            services.Configure<FormOptions>(
+                options =>
+                {
+                    options.MultipartBodyLengthLimit = int.MaxValue;
+                    options.ValueLengthLimit = int.MaxValue;
+                    options.MultipartHeadersLengthLimit = int.MaxValue;
+                });
             // Add framework services.
             services.AddMvc();
 

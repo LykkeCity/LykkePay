@@ -18,6 +18,7 @@ namespace LykkePay.API.Code
         public DbSettings Db { get; set; }
         public LpMarkupSettings LpMarkup { get; set; }
         public string LykkeInvoiceTemplate { get; set; }
+        public int MaxUploadFileSize { get; set; }
     }
 
     public class LpMarkupSettings
