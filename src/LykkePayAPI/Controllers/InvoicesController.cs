@@ -49,7 +49,7 @@ namespace LykkePay.API.Controllers
 
             try
             {
-                var resp = await _invoiceService.ApiInvoicesPostWithHttpMessagesAsync(entity);
+                var resp = await _invoiceService.SaveInvoiceWithHttpMessagesAsync(entity);
                 var result = resp.Body ?? false;
                 if (!result)
                 {
@@ -99,7 +99,7 @@ namespace LykkePay.API.Controllers
             InvoiceDetailResponse result;
             try
             {
-                var resp = await _invoiceService.ApiInvoicesByInvoiceIdGetWithHttpMessagesAsync(invoiceId);
+                var resp = await _invoiceService.GetInvoiceByIdWithHttpMessagesAsync(invoiceId);
                 result = new InvoiceDetailResponse(resp.Body, _payApiSettings.LykkeInvoiceTemplate);
             }
             catch
@@ -137,7 +137,7 @@ namespace LykkePay.API.Controllers
             using (var ms = new MemoryStream())
             {
                 await file.CopyToAsync(ms);
-                fileInfo.FileBody = ms.ToArray();
+                fileInfo.FileBodyBase64 = Convert.ToBase64String(ms.ToArray());
             }
 
             await _invoiceService.ApiInvoicesUploadFilePostWithHttpMessagesAsync(fileInfo);

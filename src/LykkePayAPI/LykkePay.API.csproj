@@ -21,9 +21,9 @@
     <PackageReference Include="Lykke.Contracts" Version="1.0.40" />
     <PackageReference Include="Lykke.Core" Version="1.0.103" />
     <PackageReference Include="Lykke.Logs" Version="3.5.0" />
-    <PackageReference Include="Lykke.Pay.Common" Version="1.0.81" />
+    <PackageReference Include="Lykke.Pay.Common" Version="1.0.85" />
     <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.17" />
-    <PackageReference Include="Lykke.Pay.Service.Invoces.Client" Version="1.0.18" />
+    <PackageReference Include="Lykke.Pay.Service.Invoces.Client" Version="1.0.22" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.25" />
     <PackageReference Include="Lykke.Service.ExchangeOperations.Client" Version="1.1.2" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.45" />
