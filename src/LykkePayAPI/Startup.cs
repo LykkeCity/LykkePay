@@ -2,8 +2,6 @@
 using System.Net.Http;
 using Bitcoint.Api.Client;
 using Common.Log;
-using Lykke.AzureRepositories;
-using Lykke.AzureRepositories.Azure.Tables;
 using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Logs;
 using Lykke.Pay.Service.GenerateAddress.Client;
@@ -20,8 +18,6 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ILog = Lykke.Core.Log.ILog;
-using LogEntity = Lykke.AzureRepositories.Log.LogEntity;
 using LogToConsole = Common.Log.LogToConsole;
 
 namespace LykkePay.API
@@ -106,7 +102,6 @@ namespace LykkePay.API
             var appSettings = new ReloadingManager(generalSettings);
             var log = CreateLogWithSlack(services, appSettings);
             services.AddSingleton(log);
-            services.RegisterRepositories(generalSettings.PayApi.Db.BitcoinAppRepository, (ILog)null);
             services.AddSingleton(generalSettings.PayApi);
             services.AddSingleton<ILykkePayServiceStoreRequestMicroService>(new LykkePayServiceStoreRequestMicroService(new Uri(generalSettings.PayApi.Services.StoreRequestService)));
             services.AddSingleton<ILykkePayServiceGenerateAddressMicroService>(new LykkePayServiceGenerateAddressMicroService(new Uri(generalSettings.PayApi.Services.GenerateAddressService)));

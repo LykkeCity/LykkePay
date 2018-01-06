@@ -31,22 +31,19 @@ namespace LykkePay.API.Controllers
         protected readonly ILykkePayServiceGenerateAddressMicroService GnerateAddressClient;
         protected readonly ILykkePayServiceStoreRequestMicroService StoreRequestClient;
         protected readonly IBitcoinApi BitcointApiClient;
-        protected readonly IBitcoinAggRepository BitcoinAddRepository;
         protected readonly ILog Log;
 
 
         public BaseTransactionController(PayApiSettings payApiSettings, HttpClient client,
             ILykkePayServiceGenerateAddressMicroService gnerateAddressClient,
             ILykkePayServiceStoreRequestMicroService storeRequestClient, 
-            IBitcoinApi bitcointApiClient, 
-            IBitcoinAggRepository bitcoinAddRepository,
+            IBitcoinApi bitcointApiClient,
             ILog log) 
                 : base(payApiSettings, client)
         {
             GnerateAddressClient = gnerateAddressClient;
             StoreRequestClient = storeRequestClient;
             BitcointApiClient = bitcointApiClient;
-            BitcoinAddRepository = bitcoinAddRepository;
             Log = log;
         }
 
@@ -322,15 +319,7 @@ namespace LykkePay.API.Controllers
 
         protected int GetNumberOfConfirmation(string address, string transactionId)
         {
-            //var height = await BitcoinAddRepository.GetNextBlockId();
-            //var transaction = await BitcoinAddRepository.GetWalletTransactionAsync(address, transactionId);
-            //if (transaction == null)
-            //{
-            //    return 0;
-            //}
-
-            //return height - transaction.BlockNumber + PayApiSettings.TransactionConfirmation;
-
+          
             return PayApiSettings.TransactionConfirmation;
         }
 

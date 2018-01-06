@@ -28,9 +28,8 @@ namespace LykkePay.API.Controllers
         private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
 
         public OrderController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient,
-            ILykkePayServiceGenerateAddressMicroService generateAddressClient, IExchangeOperationsServiceClient exchangeOperationClient, IBitcoinAggRepository bitcoinAddRepository,
-            ILog log)
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
+            ILykkePayServiceGenerateAddressMicroService generateAddressClient, ILog log)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, log)
         {
 
             _gaService = generateAddressClient;

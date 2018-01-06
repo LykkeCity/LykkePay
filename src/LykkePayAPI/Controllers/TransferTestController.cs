@@ -20,8 +20,8 @@ namespace LykkePay.API.Controllers
 
 
         public TransferTestController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient,
-            IBitcoinApi bitcointApiClient, ILykkePayServiceGenerateAddressMicroService generateAddressClient, IBitcoinAggRepository bitcoinAddRepository, ILog log)
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
+            IBitcoinApi bitcointApiClient, ILykkePayServiceGenerateAddressMicroService generateAddressClient, ILog log)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, log)
         {
 
         }

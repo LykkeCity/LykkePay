@@ -29,7 +29,6 @@ namespace LykkePay.API.Code
 
     public class DbSettings
     {
-        public string BitcoinAppRepository { get; set; }
         public string LogsConnString { get; set; }
     }
 

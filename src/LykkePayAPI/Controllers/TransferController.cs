@@ -29,9 +29,8 @@ namespace LykkePay.API.Controllers
             ILykkePayServiceStoreRequestMicroService storeRequestClient,
             IBitcoinApi bitcointApiClient, 
             ILykkePayServiceGenerateAddressMicroService generateAddressClient, 
-            IBitcoinAggRepository bitcoinAddRepository,
             ILog log) 
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, log)
         {
 
         }

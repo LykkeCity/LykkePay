@@ -17,8 +17,8 @@ namespace LykkePay.API.Controllers
     {
 
         public BalanceController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceGenerateAddressMicroService gnerateAddressClient, ILykkePayServiceStoreRequestMicroService storeRequestClient,
-            IBitcoinApi bitcointApiClient, IBitcoinAggRepository bitcoinAddRepository, ILog log) 
-            : base(payApiSettings, client, gnerateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
+            IBitcoinApi bitcointApiClient, ILog log) 
+            : base(payApiSettings, client, gnerateAddressClient, storeRequestClient, bitcointApiClient, log)
         {
         }
 

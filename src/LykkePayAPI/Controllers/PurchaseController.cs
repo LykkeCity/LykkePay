@@ -35,9 +35,8 @@ namespace LykkePay.API.Controllers
             IBitcoinApi bitcointApiClient,
             ILykkePayServiceGenerateAddressMicroService generateAddressClient, 
             IExchangeOperationsServiceClient exchangeOperationClient, 
-            IBitcoinAggRepository bitcoinAddRepository,
             ILog log)
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, bitcoinAddRepository, log)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, log)
         {
             _exchangeOperationClient = exchangeOperationClient;
         }
