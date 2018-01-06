@@ -35,6 +35,7 @@ namespace LykkePay.API.Models
             OrderRequestId = request.RequestId;
             TransactionWaitingTime = request.TransactionWaitingTime.ToUnixFormat();
             MerchantPayRequestStatus = request.MerchantPayRequestStatus;
+            TransactionStatus = request.TransactionStatus;
         }
 
         
