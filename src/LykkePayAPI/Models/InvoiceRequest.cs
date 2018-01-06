@@ -48,7 +48,9 @@ namespace LykkePay.API.Models
                 InvoiceNumber = InvoiceNumber,
                 InvoiceId = Guid.NewGuid().ToString(),
                 DueDate = DueDate,
-                Label = Label
+                Label = Label,
+                ETag = "*",
+
             };
         }
     }

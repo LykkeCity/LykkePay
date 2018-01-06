@@ -46,7 +46,9 @@ namespace LykkePay.API.Controllers
             {
                 return BadRequest();
             }
-
+            entity.RowKey = entity.InvoiceId;
+            entity.PartitionKey = MerchantId;
+            entity.MerchantId = MerchantId;
             try
             {
                 var resp = await _invoiceService.SaveInvoiceWithHttpMessagesAsync(entity);
