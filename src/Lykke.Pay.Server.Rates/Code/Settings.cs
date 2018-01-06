@@ -3,11 +3,12 @@
     public class Settings
     {
         public PayServiceRatesSettings PayServiceRates { get; set; }
-        
+        public MarketProfileServiceClientSettings MarketProfileServiceClient { get; set; }
+        public AssetsServiceClientSettings AssetsServiceClient { get; set; }
+
     }
     public class PayServiceRatesSettings
     {
-        public ServicesSettings Services { get; set; }
         public DbSettings Db { get; set; }
         public int CacheTimeout { get; set; }
        
@@ -19,12 +20,14 @@
         public string AssertHistoryConnString { get; set; }
 
     }
-
-   
-    public class ServicesSettings
+    
+    public class AssetsServiceClientSettings
     {
-        public string MarketProfileService { get; set; }
-        public string MarginTradingAssetService { get; set; }
+        public string ServiceUrl { get; set; }
+    }
 
+    public class MarketProfileServiceClientSettings
+    {
+        public string ServiceUrl { get; set; }
     }
 }
