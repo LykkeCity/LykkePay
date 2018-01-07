@@ -8,8 +8,16 @@ using Newtonsoft.Json.Converters;
 
 namespace Lykke.Pay.Common
 {
+
     [DataContract]
-    public class TransferSuccessReturn
+    public class BaseTransferReturn
+    {
+        [DataMember(Name = "transferRequestId")]
+        public string TransferRequestId { get; set; }
+    }
+
+    [DataContract]
+    public class TransferSuccessReturn : BaseTransferReturn
     {
         public TransferSuccessReturn()
         {
@@ -23,10 +31,11 @@ namespace Lykke.Pay.Common
         [DataMember(Name = "transferResponse")]
         public TransferSuccessResponse TransferResponse { get; set; }
 
+
     }
 
     [DataContract]
-    public class TransferInProgressReturn
+    public class TransferInProgressReturn : BaseTransferReturn
     {
         public TransferInProgressReturn()
         {
@@ -43,7 +52,7 @@ namespace Lykke.Pay.Common
     }
 
     [DataContract]
-    public class TransferErrorReturn
+    public class TransferErrorReturn : BaseTransferReturn
     {
         public TransferErrorReturn()
         {
