@@ -11,6 +11,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Lykke.Common.Entities.Pay;
 using Lykke.Core;
+using Lykke.Service.Assets.Client;
+using Lykke.Service.MarketProfile.Client;
 
 
 namespace Lykke.Pay.Service.Rates.Controllers
@@ -21,16 +23,21 @@ namespace Lykke.Pay.Service.Rates.Controllers
         private readonly IMemoryCache _cache;
         private readonly PayServiceRatesSettings _settings;
         private readonly IAssertPairHistoryRepository _assertPairHistoryRepository;
-        private readonly HttpClient _client;
+        private readonly ILykkeMarketProfile _lykkeMarketProfile;
+        private readonly IAssetsServiceWithCache _assetsServiceWithCache;
 
 
-        public RateController(IMemoryCache cache, PayServiceRatesSettings settings, HttpClient client, IAssertPairHistoryRepository assertPairHistoryRepository)
+        public RateController(IMemoryCache cache, 
+            PayServiceRatesSettings settings,
+            IAssertPairHistoryRepository assertPairHistoryRepository,
+            ILykkeMarketProfile lykkeMarketProfile,
+            IAssetsServiceWithCache assetsServiceWithCache)
         {
             _cache = cache;
             _settings = settings;
-            _client = client;
             _assertPairHistoryRepository = assertPairHistoryRepository;
-
+            _lykkeMarketProfile = lykkeMarketProfile;
+            _assetsServiceWithCache = assetsServiceWithCache;
         }
 
 
@@ -48,15 +55,9 @@ namespace Lykke.Pay.Service.Rates.Controllers
 
             if (!_cache.TryGetValue(sId, out cacheEntry))
             {
-                var respAssertPairList = await _client.GetAsync(new Uri(_settings.Services.MarketProfileService));
-                var sAssertPairList = await respAssertPairList.Content.ReadAsStringAsync();
-                var pairsList = JsonConvert.DeserializeObject<List<dynamic>>(sAssertPairList);
+                var pairsList = await _lykkeMarketProfile.ApiMarketProfileGetAsync();
 
-                var dicAssertPairList = await _client.GetAsync(new Uri(_settings.Services.MarginTradingAssetService));
-                var sDicAssertPairList = await dicAssertPairList.Content.ReadAsStringAsync();
-                var dicPairsList = JsonConvert.DeserializeObject<List<MarginTradingAsset>>(sDicAssertPairList);
-
-
+                var dicPairsList = await _assetsServiceWithCache.GetAllAssetPairsAsync();
 
                 cacheEntry = 
                     new List<AssertPairRate>(from rates in (from apr in pairsList

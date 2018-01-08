@@ -3,6 +3,8 @@ using System.Net.Http;
 using Lykke.AzureRepositories;
 using Lykke.Core.Log;
 using Lykke.Pay.Service.Rates.Code;
+using Lykke.Service.Assets.Client;
+using Lykke.Service.MarketProfile.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +52,8 @@ namespace Lykke.Pay.Service.Rates
 #endif
 
 
+            services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(10)));
+            services.AddSingleton<ILykkeMarketProfile>(new LykkeMarketProfile(new Uri(_settings.MarketProfileServiceClient.ServiceUrl)));
           
             services.AddSingleton(_settings.PayServiceRates);
             services.AddSingleton(new HttpClient());
