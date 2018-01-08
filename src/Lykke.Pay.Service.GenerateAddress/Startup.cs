@@ -61,22 +61,14 @@ namespace Lykke.Pay.Service.GenerateAddress
 
         private void BuildConfiguration(IServiceCollection services)
         {
-            var connectionString = Configuration.GetValue<string>("ConnectionString");
+            var appSettings = Configuration.LoadSettings<Settings>();
 
-#if DEBUG
-            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
-            //var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
-#else
-            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
-#endif
-
-
-          
+            appSettings.Reload();
+            var settings = appSettings.CurrentValue;
 
             services.AddSingleton(settings.PayServiceGenAddress);
             services.RegisterRepositories(settings.PayServiceGenAddress.Db.PrivateKeysConnString, (ILog)null);
-            services.AddSingleton<IBitcoinApi>(new BitcoinApi(new Uri(settings.PayServiceGenAddress.Services.BitcoinApiUrl)));
-
+            services.AddSingleton<IBitcoinApi>(new BitcoinApi(new Uri(settings.BitcoinApiClient.ServiceUrl)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
