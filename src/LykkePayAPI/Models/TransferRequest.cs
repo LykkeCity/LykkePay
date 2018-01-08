@@ -18,6 +18,12 @@ namespace LykkePay.API.Models
 
         public Lykke.Pay.Service.StoreRequest.Client.Models.PayRequest GetRequest()
         {
+            double amount = (double) Math.Round(Amount, 8);
+            if (string.IsNullOrEmpty(DestinationAddress) || amount <= 0)
+            {
+                return null;
+            }
+
             return new Lykke.Pay.Service.StoreRequest.Client.Models.PayRequest
             {
                 
@@ -26,7 +32,7 @@ namespace LykkePay.API.Models
                 MerchantPayRequestNotification = MerchantPayRequestNotification.Nothing.ToString(),
                 DestinationAddress = DestinationAddress,
                 SourceAddress = SourceAddress,
-                Amount = (double)Math.Round(Amount, 8),
+                Amount = amount,
                 AssetId = AssetId,
                 SuccessUrl = SuccessUrl,
                 ErrorUrl = ErrorUrl,
