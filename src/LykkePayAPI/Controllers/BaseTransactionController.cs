@@ -64,7 +64,8 @@ namespace LykkePay.API.Controllers
                     Settlement = Settlement.TRANSACTION_DETECTED,
                     TimeStamp = DateTime.UtcNow.Ticks,
                     Currency = assertId
-                }
+                },
+                TransferRequestId = payRequest.RequestId
             };
             try
             {
@@ -89,7 +90,8 @@ namespace LykkePay.API.Controllers
                             {
                                 TransferError = TransferError.INVALID_ADDRESS,
                                 TimeStamp = DateTime.UtcNow.Ticks
-                            }
+                            },
+                            TransferRequestId = payRequest.RequestId
                         });
                 }
 
@@ -115,7 +117,8 @@ namespace LykkePay.API.Controllers
                             {
                                 TransferError = TransferError.INVALID_AMOUNT,
                                 TimeStamp = DateTime.UtcNow.Ticks
-                            }
+                            },
+                            TransferRequestId = payRequest.RequestId
                         });
                 }
 
@@ -153,7 +156,8 @@ namespace LykkePay.API.Controllers
                             {
                                 TransferError = TransferError.INVALID_AMOUNT,
                                 TimeStamp = DateTime.UtcNow.Ticks
-                            }
+                            },
+                            TransferRequestId = payRequest.RequestId
                         });
                 }
 
@@ -185,7 +189,8 @@ namespace LykkePay.API.Controllers
                                 {
                                     TransferError = TransferError.INVALID_AMOUNT,
                                     TimeStamp = DateTime.UtcNow.Ticks
-                                }
+                                },
+                                TransferRequestId = payRequest.RequestId
                             });
                     }
 
@@ -198,7 +203,8 @@ namespace LykkePay.API.Controllers
                             {
                                 TransferError = TransferError.TRANSACTION_NOT_CONFIRMED,
                                 TimeStamp = DateTime.UtcNow.Ticks
-                            }
+                            },
+                            TransferRequestId = payRequest.RequestId
                         });
                 }
                 store.TransactionId = resData.Hash;
@@ -217,7 +223,8 @@ namespace LykkePay.API.Controllers
                         {
                             TransferError = TransferError.INTERNAL_ERROR,
                             TimeStamp = DateTime.UtcNow.Ticks
-                        }
+                        },
+                        TransferRequestId = payRequest.RequestId
                     });
             }
 
@@ -225,6 +232,10 @@ namespace LykkePay.API.Controllers
         }
         protected async Task<IActionResult> PostTransfer(string assertId, PayRequest payRequest, int feeRate = 0)
         {
+            if (payRequest == null)
+            {
+                return BadRequest();
+            }
             var post = await PostTransferRaw(assertId, payRequest, feeRate);
             var result = post as IActionResult;
             if (result != null)
