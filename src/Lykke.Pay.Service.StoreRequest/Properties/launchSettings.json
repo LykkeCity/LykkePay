@@ -1,29 +1,30 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-        "applicationUrl": "http://localhost:3006/",
-        "sslPort": 0
+      "applicationUrl": "http://localhost:3006/",
+      "sslPort": 0
     }
   },
   "profiles": {
     "IIS Express": {
-        "commandName": "IISExpress",
-        "launchBrowser": true,
-        "launchUrl": "api/store",
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development"
-        }
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "api/store",
+      "environmentVariables": {
+        "SettingsUrl": "https://settings-test-k8s.lykkex.net/qdqferhiifgfhjkg_PayServiceStoreRequest",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     },
     "Lykke.Pay.Service.StoreRequest": {
-        "commandName": "Project",
-        "launchBrowser": true,
-        "launchUrl": "api/store",
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development"
-        },
-        "applicationUrl": "http://localhost:3006"
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/store",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:3006"
     }
   }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using Lykke.AzureRepositories;
 using Lykke.Core.Log;
 using Lykke.Pay.Service.StoreRequest.Code;
+using Lykke.SettingsReader;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,13 +28,10 @@ namespace Lykke.Pay.Service.StoreRequest
 
         private void BuildConfiguration(IServiceCollection services)
         {
-            var connectionString = Configuration.GetValue<string>("ConnectionString");
+            var generalSettings = Configuration.LoadSettings<Settings>();
 
-#if DEBUG
-            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
-#else
-            var settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
-#endif
+
+            var settings = generalSettings.CurrentValue;
 
 
 
