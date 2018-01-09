@@ -11,6 +11,7 @@ using Lykke.Core;
 using Lykke.Pay.Common;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
+using Lykke.Pay.Service.Wallets.Client;
 using Lykke.Service.ExchangeOperations.Client;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
@@ -28,8 +29,8 @@ namespace LykkePay.API.Controllers
         private readonly ILykkePayServiceStoreRequestMicroService _storeRequestClient;
 
         public OrderController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceStoreRequestMicroService storeRequestClient, IBitcoinApi bitcointApiClient,
-            ILykkePayServiceGenerateAddressMicroService generateAddressClient, ILog log)
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, log)
+            ILykkePayServiceGenerateAddressMicroService generateAddressClient, IPayWalletservice payWalletservice, ILog log)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, payWalletservice, log)
         {
 
             _gaService = generateAddressClient;
@@ -189,15 +190,15 @@ namespace LykkePay.API.Controllers
 
             };
 
-            //rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
-            rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
+            rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
+            //rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
             store.OriginAmount = store.Amount;
-            store.Amount = store.Amount / rate.Ask;
+            store.Amount = store.Amount / rate.Bid;
             await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(store);
 
 
 
-            return new OrderRequestResponse(store, rate.Ask);
+            return new OrderRequestResponse(store, rate.Bid);
         }
 
         [HttpGet("{id}/status")]

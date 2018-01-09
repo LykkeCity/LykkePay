@@ -15,6 +15,7 @@ using Lykke.Pay.Service.StoreRequest.Client.Models;
 using LykkePay.API.Code;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Lykke.Pay.Service.Wallets.Client;
 
 namespace LykkePay.API.Controllers
 {
@@ -32,12 +33,13 @@ namespace LykkePay.API.Controllers
         protected readonly ILykkePayServiceStoreRequestMicroService StoreRequestClient;
         protected readonly IBitcoinApi BitcointApiClient;
         protected readonly ILog Log;
+        private readonly IPayWalletservice _payWalletservice;
 
 
         public BaseTransactionController(PayApiSettings payApiSettings, HttpClient client,
             ILykkePayServiceGenerateAddressMicroService gnerateAddressClient,
             ILykkePayServiceStoreRequestMicroService storeRequestClient, 
-            IBitcoinApi bitcointApiClient,
+            IBitcoinApi bitcointApiClient, IPayWalletservice payWalletservice,
             ILog log) 
                 : base(payApiSettings, client)
         {
@@ -45,6 +47,7 @@ namespace LykkePay.API.Controllers
             StoreRequestClient = storeRequestClient;
             BitcointApiClient = bitcointApiClient;
             Log = log;
+            _payWalletservice = payWalletservice;
         }
 
         protected async Task<JsonResult> JsonAndStoreError(PayRequest payRequest, TransferErrorReturn errorResponse)
@@ -64,7 +67,8 @@ namespace LykkePay.API.Controllers
                     Settlement = Settlement.TRANSACTION_DETECTED,
                     TimeStamp = DateTime.UtcNow.Ticks,
                     Currency = assertId
-                }
+                },
+                TransferRequestId = payRequest.RequestId
             };
             try
             {
@@ -76,9 +80,13 @@ namespace LykkePay.API.Controllers
                 if (store.SourceAddress == PayApiSettings.HotWalletAddress)
                     list.Add(new ToOneAddress(PayApiSettings.HotWalletAddress, (decimal)store.Amount * 2));
 
-                if (!string.IsNullOrEmpty(store.SourceAddress) &&
+                var isDestinationAddressValid =
+                    await _payWalletservice.ApiWalletsByWalletAddressGetWithHttpMessagesAsync(store.DestinationAddress);
+                
+
+                if (!(bool)isDestinationAddressValid.Body || (!string.IsNullOrEmpty(store.SourceAddress) &&
                     list.FirstOrDefault(l => store.SourceAddress
-                        .Equals(l.Address)) == null)
+                        .Equals(l.Address)) == null))
                 {
                     await Log.WriteWarningAsync(nameof(PurchaseController), nameof(PostTransferRaw), LogContextPayRequest(store), $"Invalid adresses");
 
@@ -89,7 +97,8 @@ namespace LykkePay.API.Controllers
                             {
                                 TransferError = TransferError.INVALID_ADDRESS,
                                 TimeStamp = DateTime.UtcNow.Ticks
-                            }
+                            },
+                            TransferRequestId = payRequest.RequestId
                         });
                 }
 
@@ -115,7 +124,8 @@ namespace LykkePay.API.Controllers
                             {
                                 TransferError = TransferError.INVALID_AMOUNT,
                                 TimeStamp = DateTime.UtcNow.Ticks
-                            }
+                            },
+                            TransferRequestId = payRequest.RequestId
                         });
                 }
 
@@ -153,7 +163,8 @@ namespace LykkePay.API.Controllers
                             {
                                 TransferError = TransferError.INVALID_AMOUNT,
                                 TimeStamp = DateTime.UtcNow.Ticks
-                            }
+                            },
+                            TransferRequestId = payRequest.RequestId
                         });
                 }
 
@@ -185,7 +196,8 @@ namespace LykkePay.API.Controllers
                                 {
                                     TransferError = TransferError.INVALID_AMOUNT,
                                     TimeStamp = DateTime.UtcNow.Ticks
-                                }
+                                },
+                                TransferRequestId = payRequest.RequestId
                             });
                     }
 
@@ -198,7 +210,8 @@ namespace LykkePay.API.Controllers
                             {
                                 TransferError = TransferError.TRANSACTION_NOT_CONFIRMED,
                                 TimeStamp = DateTime.UtcNow.Ticks
-                            }
+                            },
+                            TransferRequestId = payRequest.RequestId
                         });
                 }
                 store.TransactionId = resData.Hash;
@@ -217,7 +230,8 @@ namespace LykkePay.API.Controllers
                         {
                             TransferError = TransferError.INTERNAL_ERROR,
                             TimeStamp = DateTime.UtcNow.Ticks
-                        }
+                        },
+                        TransferRequestId = payRequest.RequestId
                     });
             }
 
@@ -225,6 +239,10 @@ namespace LykkePay.API.Controllers
         }
         protected async Task<IActionResult> PostTransfer(string assertId, PayRequest payRequest, int feeRate = 0)
         {
+            if (payRequest == null)
+            {
+                return BadRequest();
+            }
             var post = await PostTransferRaw(assertId, payRequest, feeRate);
             var result = post as IActionResult;
             if (result != null)

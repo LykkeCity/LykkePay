@@ -7,6 +7,7 @@ using Lykke.Logs;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.Invoces.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
+using Lykke.Pay.Service.Wallets.Client;
 using Lykke.Service.ExchangeOperations.Client;
 using Lykke.SettingsReader;
 using Lykke.SlackNotification.AzureQueue;
@@ -107,6 +108,7 @@ namespace LykkePay.API
             services.AddSingleton<ILykkePayServiceGenerateAddressMicroService>(new LykkePayServiceGenerateAddressMicroService(new Uri(generalSettings.PayApi.Services.GenerateAddressService)));
             services.AddSingleton<IInvoicesservice>(new Invoicesservice(new Uri(generalSettings.PayApi.Services.InvoicesService)));
             services.AddSingleton<IExchangeOperationsServiceClient>(new ExchangeOperationsServiceClient(generalSettings.PayApi.Services.ExchangeOperationsService));
+            services.AddSingleton<IPayWalletservice>(new PayWalletservice(new Uri(generalSettings.PayApi.Services.PayWalletServiceUrl)));
             services.AddSingleton<IBitcoinApi>(new BitcoinApi(new Uri(generalSettings.PayApi.Services.BitcoinApi)));
             services.AddSingleton(new HttpClient());
             services.AddSingleton<IHealthService>(new HealthService(TimeSpan.FromSeconds(30)));

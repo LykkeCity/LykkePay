@@ -5,6 +5,7 @@ using Lykke.Core.Log;
 using Lykke.Pay.Service.Rates.Code;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.MarketProfile.Client;
+using Lykke.SettingsReader;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -43,14 +44,10 @@ namespace Lykke.Pay.Service.Rates
      
         private void BuildConfiguration(IServiceCollection services)
         {
-            var connectionString = Configuration.GetValue<string>("ConnectionString");
-#if DEBUG
-            _settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
-            //_settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(connectionString);
-#else
-            _settings = SettingsReader.SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
-#endif
+            var generalSettings = Configuration.LoadSettings<Settings>();
 
+            services.AddSingleton(generalSettings.CurrentValue);
+            _settings = generalSettings.CurrentValue;
 
             services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(10)));
             services.AddSingleton<ILykkeMarketProfile>(new LykkeMarketProfile(new Uri(_settings.MarketProfileServiceClient.ServiceUrl)));

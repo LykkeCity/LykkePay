@@ -13,17 +13,18 @@
       "launchBrowser": true,
       "launchUrl": "api/rate",
       "environmentVariables": {
+        "SettingsUrl": "https://settings-test-k8s.lykkex.net/ahuwqjkmlmfsgjsmfoirijha_PayServiceRates",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Lykke.Pay.Service.Rates": {
-        "commandName": "Project",
-        "launchBrowser": true,
-        "launchUrl": "api/rate",
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development"
-        },
-        "applicationUrl": "http://localhost:3001"
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/rate",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:3001"
     }
   }
 }

@@ -1,5 +1,5 @@
 
-#define TEST_ASSERT_ENABLE
+//#define TEST_ASSERT_ENABLE
 
 
 using System;
