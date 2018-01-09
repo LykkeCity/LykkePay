@@ -48,6 +48,7 @@ namespace LykkePay.API.Code
         public string ExchangeOperationsService { get; internal set; }
         public string MerchantClientService { get; set; }
         public string InvoicesService { get; set; }
+        public string PayWalletServiceUrl { get; set; }
     }
 
     public class SlackNotificationsSettings

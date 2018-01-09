@@ -10,6 +10,7 @@ using Lykke.Core;
 using Lykke.Pay.Common;
 using Lykke.Pay.Service.GenerateAddress.Client;
 using Lykke.Pay.Service.StoreRequest.Client;
+using Lykke.Pay.Service.Wallets.Client;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +29,10 @@ namespace LykkePay.API.Controllers
             HttpClient client, 
             ILykkePayServiceStoreRequestMicroService storeRequestClient,
             IBitcoinApi bitcointApiClient, 
-            ILykkePayServiceGenerateAddressMicroService generateAddressClient, 
+            ILykkePayServiceGenerateAddressMicroService generateAddressClient,
+            IPayWalletservice payWalletservice,
             ILog log) 
-            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, log)
+            : base(payApiSettings, client, generateAddressClient, storeRequestClient, bitcointApiClient, payWalletservice, log)
         {
 
         }
