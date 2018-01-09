@@ -149,7 +149,7 @@ namespace LykkePay.API.Controllers
             var spread = value * (Merchant.DeltaSpread/100);
             value = isPluse ? (value + spread) : (value - spread);
             double lpFee = value * (Merchant.LpMarkupPercent < 0 ? PayApiSettings.LpMarkup.Percent/100 : Merchant.LpMarkupPercent / 100);
-            double lpPips = Math.Pow(10, -1 * accuracy) * Merchant.LpMarkupPips < 0 ? PayApiSettings.LpMarkup.Pips : Merchant.LpMarkupPips;
+            double lpPips = Math.Pow(10, -1 * accuracy) * (Merchant.LpMarkupPips < 0 ? PayApiSettings.LpMarkup.Pips : Merchant.LpMarkupPips);
 
             var delta = spread + lpFee + lpPips;
 

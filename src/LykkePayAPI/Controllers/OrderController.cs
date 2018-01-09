@@ -190,15 +190,15 @@ namespace LykkePay.API.Controllers
 
             };
 
-            //rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
-            rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
+            rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
+            //rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
             store.OriginAmount = store.Amount;
-            store.Amount = store.Amount / rate.Ask;
+            store.Amount = store.Amount / rate.Bid;
             await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(store);
 
 
 
-            return new OrderRequestResponse(store, rate.Ask);
+            return new OrderRequestResponse(store, rate.Bid);
         }
 
         [HttpGet("{id}/status")]
