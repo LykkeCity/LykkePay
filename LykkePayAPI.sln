@@ -17,15 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "clients", "clients", "{F782
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Service.StoreRequest.Client", "clients\Lykke.Pay.Service.StoreRequest.Client\Lykke.Pay.Service.StoreRequest.Client.csproj", "{D1494CD3-7A0B-41B5-B54B-81DA7A75EF66}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jobs", "jobs", "{888BD6D6-ADBC-41F5-A3B8-149F310C1527}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Job.ProcessRequests", "jobs\Lykke.Pay.Job.ProcessRequests\Lykke.Pay.Job.ProcessRequests.csproj", "{9C515EA5-710B-47E2-9EF3-E81149B600C0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Service.GenerateAddress.Client", "clients\Lykke.Pay.Service.GenerateAddress.Client\Lykke.Pay.Service.GenerateAddress.Client.csproj", "{BBF98951-1155-4F1D-AAA0-1767994D7697}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Common", "src\Lykke.Pay.Common\Lykke.Pay.Common.csproj", "{FA009631-49E3-4A2A-B44A-65B446B08446}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Pay.Job.BitcointBlocksHandle", "jobs\Lykke.Pay.Job.BitcointBlocksHandle\Lykke.Pay.Job.BitcointBlocksHandle.csproj", "{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +47,6 @@ Global
 		{D1494CD3-7A0B-41B5-B54B-81DA7A75EF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1494CD3-7A0B-41B5-B54B-81DA7A75EF66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1494CD3-7A0B-41B5-B54B-81DA7A75EF66}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9C515EA5-710B-47E2-9EF3-E81149B600C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C515EA5-710B-47E2-9EF3-E81149B600C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C515EA5-710B-47E2-9EF3-E81149B600C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C515EA5-710B-47E2-9EF3-E81149B600C0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BBF98951-1155-4F1D-AAA0-1767994D7697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BBF98951-1155-4F1D-AAA0-1767994D7697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBF98951-1155-4F1D-AAA0-1767994D7697}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,10 +55,6 @@ Global
 		{FA009631-49E3-4A2A-B44A-65B446B08446}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA009631-49E3-4A2A-B44A-65B446B08446}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA009631-49E3-4A2A-B44A-65B446B08446}.Release|Any CPU.Build.0 = Release|Any CPU
-		{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,10 +65,8 @@ Global
 		{8F8E39C4-00B6-4BBD-96A5-2A1F2FF6A9A5} = {5FB515FE-D508-4755-B409-5919DAF0602C}
 		{A668A3E4-6575-44B8-B8F9-E93C9D3C8546} = {5FB515FE-D508-4755-B409-5919DAF0602C}
 		{D1494CD3-7A0B-41B5-B54B-81DA7A75EF66} = {F78291F1-AB70-4C41-8913-99C0C2C4B63B}
-		{9C515EA5-710B-47E2-9EF3-E81149B600C0} = {888BD6D6-ADBC-41F5-A3B8-149F310C1527}
 		{BBF98951-1155-4F1D-AAA0-1767994D7697} = {F78291F1-AB70-4C41-8913-99C0C2C4B63B}
 		{FA009631-49E3-4A2A-B44A-65B446B08446} = {5FB515FE-D508-4755-B409-5919DAF0602C}
-		{014B4857-A1FA-47E8-AB6B-302C9FBF1E9F} = {888BD6D6-ADBC-41F5-A3B8-149F310C1527}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9CB88B14-E946-4DCF-AF1B-AEA1D318640C}
