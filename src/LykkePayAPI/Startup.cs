@@ -93,14 +93,8 @@ namespace LykkePay.API
 
         private void BuildConfiguration(IServiceCollection services)
         {
-            var connectionString = Configuration.GetValue<string>("ConnectionString");
-#if DEBUG
-            var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
-#else
-            //var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(connectionString);
-            var generalSettings = SettingsReader.ReadGeneralSettings<Settings>(new Uri(connectionString));
-#endif
-            var appSettings = new ReloadingManager(generalSettings);
+            var appSettings = Configuration.LoadSettings<Settings>();
+            var generalSettings = appSettings.CurrentValue;
             var log = CreateLogWithSlack(services, appSettings);
             services.AddSingleton(log);
             services.AddSingleton(generalSettings.PayApi);

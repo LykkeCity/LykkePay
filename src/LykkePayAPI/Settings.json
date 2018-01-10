@@ -1,22 +1,3 @@
 ﻿{
-    "PayApi": {
-        "Services": {
-            "MerchantAuthService": "http://pay-merchant-auth.lykke-pay.svc.cluster.local/api/auth",
-            "MerchantClientService": "http://pay-merchant-auth.lykke-pay.svc.cluster.local/api/merchant/clientId/",
-            "PayServiceService": "http://pay-rates.lykke-pay.svc.cluster.local/api/rate",
-            "GenerateAddressService": "http://pay-service-generate-address.lykke-service.svc.cluster.local/",
-            "StoreRequestService": "http://pay-service-store-request.lykke-service.svc.cluster.local/",
-            "BitcoinApi": "http://bitcoin-api.lykke-service.svc.cluster.local/",
-            "MarketProfileService": "http://market-profile.lykke-service.svc.cluster.local/api/MarketProfile/",
-            "ExchangeOperationsService": "http://exchange-operations.lykke-service.svc.cluster.local"
-        },
-        "Db": {
-            "BitcoinAppRepository": "DefaultEndpointsProtocol=https;AccountName=kubetestmerchant;AccountKey=JyRnjWnTduXE84Nx1kKSPIReIog7GVLkecYc+lROkBmoNBYmJ8C9jQuu/5gY7UH+G0qalG3XjhSVz7EuAEn7mQ=="
-        },
-        "HotWalletAddress": "mvKpGw1nbAmsW4LDFpTR7vAXvtG29SpsSC",
-        "LykkePayId": "863ee808-e5f7-46dc-9017-9bfdbd8b0668",
-        "SpredK": "1.4",
-        "LykkePayBaseUrl": "http://payapi-test.lykkex.net/api/",
-        "TransactionConfirmation": "3"
-    }
+
 }
