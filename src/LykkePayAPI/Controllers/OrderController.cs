@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -185,8 +186,9 @@ namespace LykkePay.API.Controllers
                 return null;
             }
 
-            
            
+
+
             store.OriginAmount = store.Amount;
             store.Amount = Math.Round((store.Amount ?? 0d) / rate.Bid, 8);
             await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(store);

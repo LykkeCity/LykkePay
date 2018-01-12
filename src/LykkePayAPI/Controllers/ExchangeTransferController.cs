@@ -72,6 +72,15 @@ namespace LykkePay.API.Controllers
                 return null;
             }
 
+            var newSessionId = rate.SessionId;
+
+            if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
+            {
+                throw new InvalidDataException("Session expired");
+            }
+
+            StoreNewSessionId(newSessionId);
+
             store.Amount = store.Amount / rate.Ask;
 
             var resultTransfer =  await PostTransfer(request.AssetPair.Replace(request.BaseAsset, string.Empty), store);

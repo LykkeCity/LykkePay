@@ -125,7 +125,7 @@ namespace LykkePay.API.Controllers
                                 TransferError = TransferError.INVALID_AMOUNT,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             },
-                            TransferRequestId = payRequest.RequestId
+                            TransferRequestId = "1"//payRequest.RequestId
                         });
                 }
 
@@ -164,7 +164,7 @@ namespace LykkePay.API.Controllers
                                 TransferError = TransferError.INVALID_AMOUNT,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             },
-                            TransferRequestId = payRequest.RequestId
+                            TransferRequestId = "2"//payRequest.RequestId
                         });
                 }
 
@@ -197,7 +197,7 @@ namespace LykkePay.API.Controllers
                                     TransferError = TransferError.INVALID_AMOUNT,
                                     TimeStamp = DateTime.UtcNow.Ticks
                                 },
-                                TransferRequestId = payRequest.RequestId
+                                TransferRequestId = "3"//payRequest.RequestId
                             });
                     }
 

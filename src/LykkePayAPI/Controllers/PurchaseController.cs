@@ -52,41 +52,42 @@ namespace LykkePay.API.Controllers
                 return isValid;
             }
             var store = request.GetRequest();
-            AssertPairRate rate;
-            try
+            var rate = await GetRatesWithSession(store.AssetPair, new AprRequest
             {
-                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
-
-                var response = JsonConvert.DeserializeObject<AssertListWithSession>(
-                    await (await HttpClient.GetAsync(rateServiceUrl)).Content
-                        .ReadAsStringAsync());
-
-                var newSessionId = response.SessionId;
-                var rates = response.Asserts;
-
-                if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
+                Markup = new AssertPairRateRequest
                 {
-                    throw new InvalidDataException("Session expired");
+                    Percent = store.Markup.Percent ?? 0,
+                    Pips = store.Markup.Pips ?? 0
                 }
-                StoreNewSessionId(newSessionId);
-                rate = rates.First(r => r.AssetPair.Equals(request.AssetPair, StringComparison.CurrentCultureIgnoreCase));
-                if (rate == null)
-                {
-                    await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found rate for {request.AssetPair}, return internal error");
-                    return await JsonAndStoreError(store,
-                        new TransferErrorReturn
+
+            });
+
+            if (rate == null)
+            {
+                await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found rate for {request.AssetPair}, return internal error");
+                return await JsonAndStoreError(store,
+                    new TransferErrorReturn
+                    {
+                        TransferResponse = new TransferErrorResponse
                         {
-                            TransferResponse = new TransferErrorResponse
-                            {
-                                TransferError = TransferError.INTERNAL_ERROR,
-                                TimeStamp = DateTime.UtcNow.Ticks
-                            }
-                        });
-                }
+                            TransferError = TransferError.INTERNAL_ERROR,
+                            TimeStamp = DateTime.UtcNow.Ticks
+                        }
+                    });
             }
-            catch(Exception exception)
+
+            var newSessionId = rate.SessionId;
+
+            if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
             {
-                await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), "Exception on get rate process", exception);
+                throw new InvalidDataException("Session expired");
+            }
+
+
+            var pairReal = await GetRate(request.AssetPair);
+            if (pairReal == null)
+            {
+                await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found asset pair {request.AssetPair}, return internal error");
 
                 return await JsonAndStoreError(store,
                     new TransferErrorReturn
@@ -99,43 +100,7 @@ namespace LykkePay.API.Controllers
                     });
             }
 
-            dynamic pairReal;
-            try
-            {
-                var respAssertPairList = await HttpClient.GetAsync(new Uri(PayApiSettings.Services.MarketProfileService));
-                var sAssertPairList = await respAssertPairList.Content.ReadAsStringAsync();
-                var pairsList = JsonConvert.DeserializeObject<List<dynamic>>(sAssertPairList);
-                pairReal = pairsList.First(r => request.AssetPair.Equals((string)r.AssetPair, StringComparison.CurrentCultureIgnoreCase));
-                if (pairReal == null)
-                {
-                    await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), $"Not found asset pair {request.AssetPair}, return internal error");
-
-                    return await JsonAndStoreError(store,
-                        new TransferErrorReturn
-                        {
-                            TransferResponse = new TransferErrorResponse
-                            {
-                                TransferError = TransferError.INTERNAL_ERROR,
-                                TimeStamp = DateTime.UtcNow.Ticks
-                            }
-                        });
-                }
-            }
-            catch(Exception exception)
-            {
-                await Log.WriteWarningAsync(nameof(PurchaseController), nameof(Purchase), LogContextPayRequest(store), "Exception on get pairReal process", exception);
-
-                return await JsonAndStoreError(store,
-                    new TransferErrorReturn
-                    {
-                        TransferResponse = new TransferErrorResponse
-                        {
-                            TransferError = TransferError.INTERNAL_ERROR,
-                            TimeStamp = DateTime.UtcNow.Ticks
-                        }
-                    });
-            }
-
+            
 
             string merchantClientId = string.Empty;
             try
