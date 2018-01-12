@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using System.Globalization;
 using Lykke.Core;
 
 namespace LykkePay.API.Models
@@ -9,7 +10,7 @@ namespace LykkePay.API.Models
     {
         public string SourceAddress { get; set; }
         public string DestinationAddress { get; set; }
-        public decimal Amount { get; set; }
+        public string Amount { get; set; }
         public string AssetId { get; set; }
         public string SuccessUrl { get; set; }
         public string ErrorUrl { get; set; }
@@ -18,7 +19,12 @@ namespace LykkePay.API.Models
 
         public Lykke.Pay.Service.StoreRequest.Client.Models.PayRequest GetRequest()
         {
-            double amount = (double) Math.Round(Amount, 8);
+            double amount = 0;
+            if (double.TryParse(Amount, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out amount))
+            {
+                amount = Math.Round(amount, 8);
+
+            }
             if (string.IsNullOrEmpty(DestinationAddress) || amount <= 0)
             {
                 return null;

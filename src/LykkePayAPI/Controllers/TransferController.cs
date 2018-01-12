@@ -48,7 +48,10 @@ namespace LykkePay.API.Controllers
             {
                 return isValid;
             }
-
+            if (request == null)
+            {
+                return BadRequest("Incorrect Json request");
+            }
             return await PostTransfer(request.AssetId, request.GetRequest());
 
         }

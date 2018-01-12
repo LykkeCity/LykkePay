@@ -1,5 +1,5 @@
 
-//#define TEST_ASSERT_ENABLE
+#define TEST_ASSERT_ENABLE
 
 
 using System;
@@ -14,6 +14,8 @@ using LykkePay.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+
+
 
 namespace LykkePay.API.Controllers
 {
