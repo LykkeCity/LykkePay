@@ -40,7 +40,10 @@ namespace LykkePay.API.Controllers
             {
                 return isValid;
             }
-
+            if (request == null)
+            {
+                return BadRequest("Incorrect Json request");
+            }
             if (request.PaidAmount <= 0)
             {
                 return Json(
@@ -53,36 +56,8 @@ namespace LykkePay.API.Controllers
                         }
                     });
             }
-
-            var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
-
-            var response = JsonConvert.DeserializeObject<AssertListWithSession>(
-                await (await HttpClient.GetAsync(rateServiceUrl)).Content
-                    .ReadAsStringAsync());
-
-            var newSessionId = response.SessionId;
-            var rates = response.Asserts;
-
-            if (!string.IsNullOrEmpty(MerchantSessionId) && !MerchantSessionId.Equals(newSessionId))
-            {
-                throw new InvalidDataException("Session expired");
-            }
-
-            StoreNewSessionId(newSessionId);
-
-           
             var store = request.GetRequest();
-            var result = await GetRate(store.AssetPair);
-
-            var post = result as StatusCodeResult;
-            if (post != null)
-            {
-                return null;
-            }
-
-            var rate = (AssertPairRateWithSession)result;
-
-            var arpRequest = new AprRequest
+            var rate = await GetRatesWithSession(store.AssetPair, new AprRequest
             {
                 Markup = new Lykke.Contracts.Pay.AssertPairRateRequest
                 {
@@ -90,10 +65,13 @@ namespace LykkePay.API.Controllers
                     Pips = store.Markup.Pips ?? 0
                 }
 
-            };
+            });
 
-            //rate.Bid = (float)CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
-            rate.Ask = (float)CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
+            if (rate == null)
+            {
+                return null;
+            }
+
             store.Amount = store.Amount / rate.Ask;
 
             var resultTransfer =  await PostTransfer(request.AssetPair.Replace(request.BaseAsset, string.Empty), store);

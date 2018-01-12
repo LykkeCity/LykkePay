@@ -170,17 +170,7 @@ namespace LykkePay.API.Controllers
 
             store.SourceAddress = address;
 
-            var result = await GetRate(store.AssetPair);
-
-            var post = result as StatusCodeResult;
-            if (post != null)
-            {
-                return null;
-            }
-
-            var rate = (AssertPairRateWithSession)result;
-
-            var arpRequest = new AprRequest
+            var rate = await GetRatesWithSession(store.AssetPair, new AprRequest
             {
                 Markup = new AssertPairRateRequest
                 {
@@ -188,12 +178,17 @@ namespace LykkePay.API.Controllers
                     Pips = store.Markup.Pips ?? 0
                 }
 
-            };
+            });
 
-            rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
-            //rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
+            if (rate == null)
+            {
+                return null;
+            }
+
+            
+           
             store.OriginAmount = store.Amount;
-            store.Amount = store.Amount / rate.Bid;
+            store.Amount = Math.Round((store.Amount ?? 0d) / rate.Bid, 8);
             await _storeRequestClient.ApiStoreOrderPostWithHttpMessagesAsync(store);
 
 

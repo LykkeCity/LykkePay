@@ -105,7 +105,25 @@ namespace LykkePay.API.Controllers
             return Ok();
         }
 
+        protected async Task<AssertPairRateWithSession> GetRatesWithSession(string assertPair, AprRequest arpRequest)
+        {
+            var result = await GetRate(assertPair);
 
+            var post = result as StatusCodeResult;
+            if (post != null)
+            {
+                return null;
+            }
+
+            var rate = (AssertPairRateWithSession)result;
+            if (rate == null || arpRequest == null)
+            {
+                return rate;
+            }
+            rate.Bid = CalculateValue(rate.Bid, rate.Accuracy, arpRequest, false);
+            rate.Ask = CalculateValue(rate.Ask, rate.Accuracy, arpRequest, true);
+            return rate;
+        }
 
         protected async Task<object> GetRate(string assertId)
         {
