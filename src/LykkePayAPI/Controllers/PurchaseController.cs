@@ -145,7 +145,7 @@ namespace LykkePay.API.Controllers
                         .Content
                         .ReadAsStringAsync();
             }
-            catch
+            catch (Exception e)
             {
 
             }

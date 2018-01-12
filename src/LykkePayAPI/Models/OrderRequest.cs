@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Common.Log;
 using Lykke.Core;
 using Lykke.Pay.Common;
 using PayFee = Lykke.Pay.Service.StoreRequest.Client.Models.PayFee;
@@ -8,6 +9,11 @@ namespace LykkePay.API.Models
 {
     public class OrderRequest
     {
+        private readonly ILog _log;
+        public OrderRequest(ILog log)
+        {
+            _log = log;
+        }
         public string Currency { get; set; }
         public string Amount { get; set; }
         public string ExchangeCurrency { get; set; }
@@ -57,8 +63,9 @@ namespace LykkePay.API.Models
                 };
 
             }
-            catch
+            catch (Exception e)
             {
+                _log.WriteErrorAsync(nameof(OrderRequest), nameof(GetRequest), e).GetAwaiter().GetResult();
                 return null;
             }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Log;
 using Lykke.AzureRepositories;
 using Lykke.Contracts.Pay;
 using Lykke.Contracts.Security;
@@ -23,13 +24,13 @@ namespace LykkePay.API.Controllers
     {
         protected readonly PayApiSettings PayApiSettings;
         protected readonly HttpClient HttpClient;
+        protected readonly ILog Log;
 
-
-        public BaseController(PayApiSettings payApiSettings, HttpClient client)
+        public BaseController(PayApiSettings payApiSettings, HttpClient client, ILog log)
         {
             PayApiSettings = payApiSettings;
             HttpClient = client;
-
+            Log = log;
         }
 
         protected string MerchantId => HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "";
@@ -134,8 +135,9 @@ namespace LykkePay.API.Controllers
                     return NotFound();
                 }
             }
-            catch
+            catch (Exception e)
             {
+                await Log.WriteErrorAsync(nameof(BaseController), nameof(GetRate), e);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
