@@ -56,7 +56,7 @@ namespace LykkePay.API.Controllers
             List<AssertPairRate> rates;
             try
             {
-                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
+                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService.TrimDoubleSplash()}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
 
                 var response = JsonConvert.DeserializeObject<AssertListWithSession>(
                     await (await HttpClient.GetAsync(rateServiceUrl)).Content
