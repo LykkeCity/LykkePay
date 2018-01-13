@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Log;
 using Lykke.AzureRepositories;
 using Lykke.Contracts.Pay;
 using Lykke.Contracts.Security;
@@ -23,13 +24,13 @@ namespace LykkePay.API.Controllers
     {
         protected readonly PayApiSettings PayApiSettings;
         protected readonly HttpClient HttpClient;
+        protected readonly ILog Log;
 
-
-        public BaseController(PayApiSettings payApiSettings, HttpClient client)
+        public BaseController(PayApiSettings payApiSettings, HttpClient client, ILog log)
         {
             PayApiSettings = payApiSettings;
             HttpClient = client;
-
+            Log = log;
         }
 
         protected string MerchantId => HttpContext.Request.Headers["Lykke-Merchant-Id"].ToString() ?? "";
@@ -41,7 +42,7 @@ namespace LykkePay.API.Controllers
         private IMerchantEntity GetCurrentMerchant()
         {
             _merchant = _merchant ?? (_merchant = JsonConvert.DeserializeObject<MerchantEntity>(
-                       HttpClient.GetAsync($"{PayApiSettings.Services.MerchantClientService}{MerchantId}").Result
+                       HttpClient.GetAsync($"{PayApiSettings.Services.MerchantClientService.TrimDoubleSplash()}{MerchantId}").Result
                        .Content.ReadAsStringAsync().Result));
 
             return _merchant;
@@ -54,7 +55,7 @@ namespace LykkePay.API.Controllers
 
         protected async Task<IActionResult> ValidateRequest()
         {
-            if (!string.IsNullOrEmpty(MerchantId) && !string.IsNullOrEmpty(TrasterSignIn))
+            if (!string.IsNullOrEmpty(MerchantId) && !string.IsNullOrEmpty(TrasterSignIn) && TrasterSignIn.Equals(PayApiSettings.LykkePayTrastedConnectionKey))
             {
                 return Ok();
             }
@@ -73,7 +74,7 @@ namespace LykkePay.API.Controllers
             }
             else
             {
-                strToSign = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path.ToString().TrimEnd('/')}{HttpContext.Request.QueryString}";
+                strToSign = $"{HttpContext.Request.Path.ToString().TrimEnd('/')}{HttpContext.Request.QueryString}";
             }
             Console.WriteLine($"strToSign {strToSign}");
             var strToSend = JsonConvert.SerializeObject(new MerchantAuthRequest
@@ -83,7 +84,7 @@ namespace LykkePay.API.Controllers
                 Sign = HttpContext.Request.Headers["Lykke-Merchant-Sign"].ToString() ?? ""
             });
             Console.WriteLine($"strToSend {strToSend}");
-            var respone = await HttpClient.PostAsync(PayApiSettings.Services.MerchantAuthService, new StringContent(
+            var respone = await HttpClient.PostAsync(PayApiSettings.Services.MerchantAuthService.TrimDoubleSplash(), new StringContent(
                 strToSend, Encoding.UTF8, "application/json"));
             var isValid = (SecurityErrorType)int.Parse(await respone.Content.ReadAsStringAsync());
             Console.WriteLine($"isValid {isValid}");
@@ -131,7 +132,7 @@ namespace LykkePay.API.Controllers
             var newSessionId = string.Empty;
             try
             {
-                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={(string.IsNullOrEmpty(MerchantSessionId) ? Guid.NewGuid().ToString() : MerchantSessionId)}&cacheTimeout={Merchant?.TimeCacheRates}";
+                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService.TrimDoubleSplash()}?sessionId={(string.IsNullOrEmpty(MerchantSessionId) ? Guid.NewGuid().ToString() : MerchantSessionId)}&cacheTimeout={Merchant?.TimeCacheRates}";
 
                 var response = JsonConvert.DeserializeObject<AssertListWithSession>(
                     await(await HttpClient.GetAsync(rateServiceUrl)).Content
@@ -152,8 +153,9 @@ namespace LykkePay.API.Controllers
                     return NotFound();
                 }
             }
-            catch
+            catch (Exception e)
             {
+                await Log.WriteErrorAsync(nameof(BaseController), nameof(GetRate), e);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 

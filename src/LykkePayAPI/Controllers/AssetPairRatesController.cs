@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Common.Log;
 using Lykke.Contracts.Pay;
 using LykkePay.API.Code;
 using LykkePay.API.Models;
@@ -24,11 +25,11 @@ namespace LykkePay.API.Controllers
     public class AssetPairRatesController : BaseController
     {
 
-
-        public AssetPairRatesController(PayApiSettings payApiSettings, HttpClient client)
-            : base(payApiSettings, client)
+        
+        public AssetPairRatesController(PayApiSettings payApiSettings, HttpClient client, ILog log)
+            : base(payApiSettings, client, log)
         {
-
+            
         }
 
 
@@ -57,7 +58,7 @@ namespace LykkePay.API.Controllers
             List<AssertPairRate> rates;
             try
             {
-                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
+                var rateServiceUrl = $"{PayApiSettings.Services.PayServiceService.TrimDoubleSplash()}?sessionId={MerchantSessionId}&cacheTimeout={Merchant?.TimeCacheRates}";
 
                 var response = JsonConvert.DeserializeObject<AssertListWithSession>(
                     await (await HttpClient.GetAsync(rateServiceUrl)).Content
@@ -72,8 +73,9 @@ namespace LykkePay.API.Controllers
                     return NotFound();
                 }
             }
-            catch
+            catch(Exception e)
             {
+                await Log.WriteErrorAsync(nameof(AssetPairRatesController), "Get real assert  pair rate", e);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
             var rate = rates.First(r => r.AssetPair.Equals(assertId, StringComparison.CurrentCultureIgnoreCase));

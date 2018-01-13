@@ -22,13 +22,11 @@ namespace LykkePay.API.Controllers
     public class InvoicesController : BaseController
     {
         private readonly IInvoicesservice _invoiceService;
-        private readonly ILog _log;
         private readonly PayApiSettings _payApiSettings;
 
-        public InvoicesController(PayApiSettings payApiSettings, HttpClient client, IInvoicesservice invoiceService, ILog log) : base(payApiSettings, client)
+        public InvoicesController(PayApiSettings payApiSettings, HttpClient client, IInvoicesservice invoiceService, ILog log) : base(payApiSettings, client, log)
         {
             _invoiceService = invoiceService;
-            _log = log;
             _payApiSettings = payApiSettings;
         }
 
@@ -58,8 +56,9 @@ namespace LykkePay.API.Controllers
                     throw new DataException("Can't save invoice in Lykke Pay API");
                 }
             }
-            catch
+            catch (Exception e)
             {
+                await Log.WriteErrorAsync(nameof(InvoicesController), nameof(SaveInvoice), e);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
@@ -78,7 +77,7 @@ namespace LykkePay.API.Controllers
                 entity.InvoiceId,
                 MerchantId
             };
-            await _log.WriteInfoAsync(nameof(InvoicesController), nameof(SaveInvoice), context.ToJson(), "Save new Invoce in system");
+            await Log.WriteInfoAsync(nameof(InvoicesController), nameof(SaveInvoice), context.ToJson(), "Save new Invoce in system");
 
             return Json(new InvoiceResponse(entity.Create(), _payApiSettings.LykkeInvoiceTemplate));
 
@@ -104,8 +103,9 @@ namespace LykkePay.API.Controllers
                 var resp = await _invoiceService.GetInvoiceByIdWithHttpMessagesAsync(invoiceId);
                 result = new InvoiceDetailResponse(resp.Body, _payApiSettings.LykkeInvoiceTemplate);
             }
-            catch
+            catch (Exception e)
             {
+                await Log.WriteErrorAsync(nameof(InvoicesController), nameof(GetInvoice), e);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 

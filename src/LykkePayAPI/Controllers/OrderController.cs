@@ -306,7 +306,7 @@ namespace LykkePay.API.Controllers
 
 
 
-            var request = new OrderRequest
+            var request = new OrderRequest(Log)
             {
                 Amount = oRequest.OriginAmount.ToString(),
                 Currency = oRequest.AssetId,

@@ -12,6 +12,7 @@ namespace LykkePay.API.Code
         public ServicesSettings Services { get; set; }
         public string HotWalletAddress { get; set; }
         public string LykkePayId { get; set; }
+        public string LykkePayTrastedConnectionKey { get; set; }
         public double SpredK { get; set; }
         public string LykkePayBaseUrl { get; set; }
         public int TransactionConfirmation { get; set; }

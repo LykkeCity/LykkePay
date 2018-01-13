@@ -12,6 +12,7 @@ using Lykke.Service.ExchangeOperations.Client;
 using Lykke.SettingsReader;
 using Lykke.SlackNotification.AzureQueue;
 using LykkePay.API.Code;
+using LykkePay.API.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
@@ -64,6 +65,8 @@ namespace LykkePay.API
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseMiddleware<RequestLogMiddleware>();
 
             app.Use(next => context => { context.Request.EnableRewind(); return next(context); });
             app.UseDeveloperExceptionPage();

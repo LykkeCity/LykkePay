@@ -23,13 +23,11 @@ namespace LykkePay.API.Controllers
     public class GenerateAddressController : BaseController
     {
         private readonly ILykkePayServiceGenerateAddressMicroService _gaService;
-        private readonly ILog _log;
 
         public GenerateAddressController(PayApiSettings payApiSettings, HttpClient client, ILykkePayServiceGenerateAddressMicroService gaService,
-            ILog log) : base(payApiSettings, client)
+            ILog log) : base(payApiSettings, client, log)
         {
             _gaService = gaService;
-            _log = log;
         }
 
         //todo: надо заменить на пост, нельзя по гету выполнять действия или менять состояние!!!
@@ -60,7 +58,7 @@ namespace LykkePay.API.Controllers
             };
 
             var context = new {MerchantId, AssertId = assertId, Address = publicKey };
-            await _log.WriteInfoAsync(nameof(GenerateAddressController), nameof(GenerateAddress), context.ToJson(), $"Generate address for mercahnt" );
+            await Log.WriteInfoAsync(nameof(GenerateAddressController), nameof(GenerateAddress), context.ToJson(), $"Generate address for mercahnt" );
             
             return Json(result);
         }

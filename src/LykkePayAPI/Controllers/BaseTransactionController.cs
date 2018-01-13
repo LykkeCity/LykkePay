@@ -32,7 +32,6 @@ namespace LykkePay.API.Controllers
         protected readonly ILykkePayServiceGenerateAddressMicroService GnerateAddressClient;
         protected readonly ILykkePayServiceStoreRequestMicroService StoreRequestClient;
         protected readonly IBitcoinApi BitcointApiClient;
-        protected readonly ILog Log;
         private readonly IPayWalletservice _payWalletservice;
 
 
@@ -41,12 +40,11 @@ namespace LykkePay.API.Controllers
             ILykkePayServiceStoreRequestMicroService storeRequestClient, 
             IBitcoinApi bitcointApiClient, IPayWalletservice payWalletservice,
             ILog log) 
-                : base(payApiSettings, client)
+                : base(payApiSettings, client, log)
         {
             GnerateAddressClient = gnerateAddressClient;
             StoreRequestClient = storeRequestClient;
             BitcointApiClient = bitcointApiClient;
-            Log = log;
             _payWalletservice = payWalletservice;
         }
 
