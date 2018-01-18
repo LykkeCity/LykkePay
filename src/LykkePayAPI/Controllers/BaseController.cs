@@ -55,6 +55,12 @@ namespace LykkePay.API.Controllers
 
         protected async Task<IActionResult> ValidateRequest()
         {
+            await Log.WriteInfoAsync("Lykke Pay", "Validate Trasted Sign", JsonConvert.SerializeObject(new
+            {
+                MerchantId,
+                TrasterSignIn,
+                PayApiSettings.LykkePayTrastedConnectionKey,
+            }), null);
             if (!string.IsNullOrEmpty(MerchantId) && !string.IsNullOrEmpty(TrasterSignIn) && TrasterSignIn.Equals(PayApiSettings.LykkePayTrastedConnectionKey))
             {
                 return Ok();
