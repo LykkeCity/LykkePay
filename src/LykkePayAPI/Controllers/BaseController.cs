@@ -104,7 +104,7 @@ namespace LykkePay.API.Controllers
                     case SecurityErrorType.SignEmpty:
                         return BadRequest();
                     case SecurityErrorType.SignIncorrect:
-                        return Forbid();
+                        return StatusCode(StatusCodes.Status401Unauthorized);
                     default:
                         return StatusCode(StatusCodes.Status500InternalServerError);
                 }
