@@ -52,7 +52,7 @@ namespace LykkePay.API.Controllers
             {
                 return BadRequest("Incorrect Json request");
             }
-            return await PostTransfer(request.AssetId, request.GetRequest());
+            return await PostTransfer(request.AssetId ?? "BTC", request.GetRequest());
 
         }
 
